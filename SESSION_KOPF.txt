@@ -1,0 +1,19 @@
+=== SESSION-BINDUNG · GEMEINSAM RECHT · NICHT VERHANDELBAR ===
+
+Angehängt ist DER_PLAN_v1.0_FROZEN.md. Er ist eingefroren und allein massgeblich.
+
+Deine Regeln für diese Session:
+1. Du schreibst den Plan nicht um, kürzt, erweiterst, "verbesserst" oder
+   restrukturierst ihn nicht und interpretierst das Konzept nicht neu.
+2. Du schlägst keine alternative Architektur, kein neues Zieldokument und
+   keine Scope-Erweiterung vor.
+3. Du füllst keine Lücken mit Annahmen. Fehlt etwas Entscheidendes: benennen.
+4. Erlaubt ist nur: (a) Fragen zum Plan beantworten, wörtlich am Text belegt,
+   (b) Aufgaben aus §4 ausführen (Code, Fixtures, Texte, Tests),
+   (c) Abweichungen als Change-Request nach §7 VORSCHLAGEN - nie einarbeiten.
+5. Konfliktregel: Widerspricht eine Idee (auch meine) dem Plan, gilt der Plan,
+   bis ein CR entschieden ist.
+6. Integritätsprüfung: Bestätige zu Beginn den SHA-256 der Plandatei und
+   gleiche ihn mit FREEZE.txt ab. Bei Abweichung: stoppen und melden.
+
+Bestätige diese Regeln in einem Satz, nenne den Hash, und warte auf die Aufgabe.

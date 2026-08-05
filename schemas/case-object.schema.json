@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gemeinsam-recht.ch/schemas/case-object.schema.json",
+  "title": "Fallobjekt v0.1 — Mietkündigung (Anfechtung/Prüfung)",
+  "description": "Strukturierte Sachverhaltserfassung für den M1-Flow. Berechnete Felder werden ausschliesslich vom deterministischen Kern gesetzt. Synthetische Fixtures MÜSSEN meta.fixture=true tragen.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "rechtsgebiet", "kanton", "rolle", "kuendigung", "wohnung", "vertrag", "sperrfrist", "meta"],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "rechtsgebiet": { "const": "mietrecht_kuendigung" },
+    "kanton": {
+      "type": "string",
+      "description": "M1: nur LU produktiv; Schema laesst alle Kantone zu.",
+      "enum": ["LU", "AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"]
+    },
+    "rolle": { "type": "string", "enum": ["mieter", "mitmieter", "untermieter"] },
+    "kuendigung": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zugestellt_am", "zustellart", "amtliches_formular", "unterschrieben", "begruendung_angegeben"],
+      "properties": {
+        "zugestellt_am": { "type": "string", "format": "date", "description": "Tag des Empfangs bzw. der Zustellfiktion; Klaerung der Fiktion via zustellart/abholfrist_ende." },
+        "zustellart": { "type": "string", "enum": ["einschreiben", "a_post", "persoenlich", "unbekannt"] },
+        "abholfrist_ende": { "type": "string", "format": "date", "description": "Nur bei Einschreiben und Nichtabholung relevant (Zustellfiktion)." },
+        "amtliches_formular": { "type": "boolean", "description": "Kuendigung durch Vermieter auf amtlich genehmigtem Formular (Art. 266l OR)?" },
+        "unterschrieben": { "type": "boolean" },
+        "begruendung_angegeben": { "type": "boolean" },
+        "begruendung_text": { "type": "string", "maxLength": 2000 },
+        "kuendigungstermin_gemaess_schreiben": { "type": "string", "format": "date" }
+      }
+    },
+    "wohnung": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["familienwohnung"],
+      "properties": {
+        "familienwohnung": { "type": "boolean", "description": "Ehe/eingetragene Partnerschaft (Art. 266n OR)." },
+        "separate_zustellung_beide": { "type": ["boolean", "null"], "description": "Pflichtfeld, wenn familienwohnung=true; sonst null." }
+      },
+      "if": { "properties": { "familienwohnung": { "const": true } } },
+      "then": { "required": ["familienwohnung", "separate_zustellung_beide"], "properties": { "separate_zustellung_beide": { "type": "boolean" } } }
+    },
+    "vertrag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beginn", "befristet"],
+      "properties": {
+        "beginn": { "type": "string", "format": "date" },
+        "befristet": { "type": "boolean" },
+        "orts_gemeinde": { "type": "string", "maxLength": 120, "description": "Fuer Zustaendigkeit der Schlichtungsbehoerde (M1: Kanton LU)." }
+      }
+    },
+    "sperrfrist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verfahren_letzte_3_jahre", "verfahren_haengig"],
+      "properties": {
+        "verfahren_letzte_3_jahre": { "type": "boolean", "description": "Schlichtungs-/Gerichtsverfahren aus dem Mietverhaeltnis in den letzten 3 Jahren (Art. 271a OR)." },
+        "verfahren_haengig": { "type": "boolean" },
+        "rechte_geltend_gemacht": { "type": "boolean", "description": "Kurz zuvor Maengel geruegt / Forderungen gestellt (Indiz Rachekuendigung)." }
+      }
+    },
+    "berechnet": {
+      "type": "object",
+      "description": "Wird ausschliesslich vom deterministischen Kern gesetzt; in Eingaben verboten.",
+      "additionalProperties": false,
+      "properties": {
+        "empfangsdatum_effektiv": { "type": "string", "format": "date" },
+        "anfechtungsfrist_bis": { "type": "string", "format": "date" },
+        "nichtigkeit_indiziert": { "type": "boolean" },
+        "regel_flags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["erfasst_am", "regelversion", "quellenstand", "fixture"],
+      "properties": {
+        "erfasst_am": { "type": "string", "format": "date-time" },
+        "regelversion": { "type": "string" },
+        "quellenstand": { "type": "string", "format": "date" },
+        "fixture": { "type": "boolean", "description": "true = synthetischer Testfall (Kennzeichnungspflicht), niemals als realer Fall darstellbar." },
+        "einwilligung_pilot": { "type": ["boolean", "null"], "description": "Nur fuer echte Pilotfaelle: dokumentierte Einwilligung vorhanden." }
+      }
+    }
+  }
+}
