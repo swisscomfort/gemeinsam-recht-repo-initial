@@ -1,14 +1,16 @@
 GEMEINSAM RECHT - FREEZE-RECORD
 ================================
-Datei:    DER_PLAN_v1.0_FROZEN.md
-Version:  v1.0
+Datei:    DER_PLAN_v1.1_FROZEN.md
+Version:  v1.1
 Datum:    2026-08-05
-SHA-256:  32b3b899d472a180d93784e5ad9e853ee4c24fac4943274bacd9a78bba75a314
+SHA-256:  4e42ba6d80668dc684dc16eebe3a86c3433c375c5e0c93536aedb223f19aa906
 
-Regel: Nur eine Datei mit exakt diesem Hash ist der gueltige Plan v1.0.
+Regel: Nur eine Datei mit exakt diesem Hash ist der gueltige Plan.
 Aenderungen ausschliesslich ueber Change-Requests (Plan §7);
 jede angenommene Aenderung erzeugt eine neue Version mit neuem Hash,
 der hier fortgeschrieben wird.
 
 Aenderungsprotokoll:
-v1.0  2026-08-05  Initialer Freeze  32b3b899d472a180d93784e5ad9e853ee4c24fac4943274bacd9a78bba75a314
+v1.0  2026-08-05  Initialer Freeze                                  32b3b899d472a180d93784e5ad9e853ee4c24fac4943274bacd9a78bba75a314
+                  (archiviert: docs/archiv/DER_PLAN_v1.0_FROZEN.md)
+v1.1  2026-08-05  CR-001 angenommen inkl. F1-F3                     4e42ba6d80668dc684dc16eebe3a86c3433c375c5e0c93536aedb223f19aa906

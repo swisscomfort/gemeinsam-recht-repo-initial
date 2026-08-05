@@ -2,13 +2,13 @@
 
 ## Leseordnung bei Sessionstart (Pflicht, vor jeder Aufgabe)
 1. `SESSION_KOPF.txt` — Bindungsklausel, gilt vollumfänglich auch für dich.
-2. `DER_PLAN_v1.0_FROZEN.md` — allein massgeblicher Plan. `sha256sum` bilden und mit `FREEZE.txt` abgleichen; bei Abweichung: stoppen und melden.
+2. `DER_PLAN_v1.1_FROZEN.md` — allein massgeblicher Plan. `sha256sum` bilden und mit `FREEZE.txt` abgleichen; bei Abweichung: stoppen und melden.
 3. `docs/LEGAL_AI_OPERATING_RULES.md` — bindend.
 4. `STATUS.md` — aktueller Stand.
 5. Den beauftragten Auftrag unter `auftraege/` — nur dieser definiert deinen Arbeitsumfang.
 
 ## Nicht verhandelbare Regeln
-- Du änderst `DER_PLAN_v1.0_FROZEN.md`, `FREEZE.txt` und `SESSION_KOPF.txt` niemals. Abweichungswünsche nur als Change-Request-Vorschlag (Plan §7), nie als Edit.
+- Du änderst `DER_PLAN_v1.1_FROZEN.md`, `FREEZE.txt` und `SESSION_KOPF.txt` niemals. Abweichungswünsche nur als Change-Request-Vorschlag (Plan §7), nie als Edit.
 - Du arbeitest ausschliesslich im Umfang des beauftragten Auftrags. Keine Nebenänderungen, keine Scope-Erweiterung, keine „Verbesserungen" ausserhalb des Auftrags.
 - Fristen, Beträge und Rechtsfolgen entstehen nur in deterministischem Code mit Tests. Kein LLM-Aufruf in der Fachbibliothek.
 - Jeder Rechtsparameter trägt Quelle, Zeitstand, Regelversion und Prüfstand. Bist du dir bei einem Rechtsparameter unsicher: **fragen, nicht raten** — Parameter als `pruefstand: "fachlich_zu_verifizieren"` anlegen und den Nutzer explizit darauf hinweisen.

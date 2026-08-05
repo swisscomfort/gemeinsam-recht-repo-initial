@@ -3,7 +3,7 @@
 **Stand:** 2026-08-05 · **Phase:** M0 — abgeschlossen, sobald dieses Repo angelegt und geschützt ist
 
 ## Kanon
-- **DER_PLAN_v1.0_FROZEN.md** (Wurzel) — allein massgeblich; Hash in FREEZE.txt
+- **DER_PLAN_v1.1_FROZEN.md** (Wurzel) — allein massgeblich; Hash in FREEZE.txt
 - SESSION_KOPF.txt · docs/LEGAL_AI_OPERATING_RULES.md · docs/DECISIONS/ (ADR-0002 Startfall, ADR-0003 Zielrepo; ADR-0001 abgelöst) · docs/archiv/
 
 ## Checkliste

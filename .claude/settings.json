@@ -1,0 +1,76 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(cp:*)",
+      "Bash(date:*)",
+      "Bash(diff:*)",
+      "Bash(echo:*)",
+      "Bash(find:*)",
+      "Bash(gh:*)",
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git init:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(git mv:*)",
+      "Bash(git remote:*)",
+      "Bash(git status:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(jq:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(pwd:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(sed:*)",
+      "Bash(sha256sum:*)",
+      "Bash(sort:*)",
+      "Bash(tail:*)",
+      "Bash(touch:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(which:*)",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Read",
+      "Write"
+    ],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(git push --force:*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/save-transcript.sh\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/save-transcript.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}
