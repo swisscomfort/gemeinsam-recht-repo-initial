@@ -12,7 +12,7 @@
 - [ ] Repo angelegt und Erstinhalt gepusht (Mensch/Agent)
 - [ ] Branch-Protection für main aktiv (PR-Pflicht, keine Direktpushes)
 - [ ] Alt-Repos gemeinsam-recht-case-system (main/march) archiviert
-- [ ] §4 Schritt 1 gestartet: `claude "Lies CLAUDE.md und führe auftraege/AUFTRAG-S1-FRISTENRECHNER.md vollständig aus."`
+- [x] §4 Schritt 1 gestartet: `claude "Lies CLAUDE.md und führe auftraege/AUFTRAG-S1-FRISTENRECHNER.md vollständig aus."`
 
 ## Regel
 Keine neuen Plandokumente, keine Review-Runden über Papier.
