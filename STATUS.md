@@ -14,6 +14,7 @@
 - [ ] Alt-Repos gemeinsam-recht-case-system (main/march) archiviert
 - [x] §4 Schritt 1 gestartet: `claude "Lies CLAUDE.md und führe auftraege/AUFTRAG-S1-FRISTENRECHNER.md vollständig aus."`
 - [x] §4 Schritt 2 (S2) technisch umgesetzt: Einschätzung/Brief/Chronologie/Webflow (berichte/AUFTRAG-S2-ABSCHLUSS.md) — fachliche Prüfung und Pilotfälle offen
+- [x] CR-001 Parallelbau: Feed-Prototyp F0 (privat, offline) technisch umgesetzt (berichte/AUFTRAG-F0-ABSCHLUSS.md) — interne Durchläufe (Ziel ≥100) offen
 
 ## Regel
 Keine neuen Plandokumente, keine Review-Runden über Papier.
