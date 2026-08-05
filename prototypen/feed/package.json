@@ -1,0 +1,18 @@
+{
+  "name": "@gemeinsam-recht/feed-prototyp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Privater Offline-Feed-Prototyp 'Morgenausgabe' (Plan v1.1 §4 stiller Parallelbau, CR-001 inkl. F1). Liest ausschliesslich synthetische, als FIKTIV gekennzeichnete Geschichten aus prototypen/stories/; kein Server, keine Uebertragung, kein Tracking. Nichts hiervon ist oeffentlich.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.0.0"
+  }
+}

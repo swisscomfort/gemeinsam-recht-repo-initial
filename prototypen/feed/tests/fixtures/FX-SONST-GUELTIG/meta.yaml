@@ -1,0 +1,12 @@
+id: FX-901
+titel: FX Synthetische Beispielgeschichte
+kennzeichnung: FIKTIV
+rechtsgebiet: testgebiet
+schutzstufe: S1
+etappen: 3
+missions_status: [eingereicht, recherche, abschluss]
+prinzipien: [testprinzip_a, testprinzip_b]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-05
+fixture: true

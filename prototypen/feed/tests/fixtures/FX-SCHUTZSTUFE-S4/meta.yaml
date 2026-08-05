@@ -1,0 +1,12 @@
+id: FX-904
+titel: FX Fixture mit Schutzstufe S4
+kennzeichnung: FIKTIV
+rechtsgebiet: testgebiet
+schutzstufe: S4
+etappen: 1
+missions_status: [eingereicht]
+prinzipien: [testprinzip_a]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-05
+fixture: true

@@ -1,0 +1,11 @@
+id: FX-902
+titel: FX Fixture ohne Kennzeichnungs-Schluessel
+rechtsgebiet: testgebiet
+schutzstufe: S1
+etappen: 1
+missions_status: [eingereicht]
+prinzipien: [testprinzip_a]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-05
+fixture: true

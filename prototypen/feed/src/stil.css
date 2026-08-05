@@ -1,0 +1,199 @@
+:root {
+  --tinte: #1c2430;
+  --grau: #5a6572;
+  --linie: #d7dde4;
+  --papier: #f6f4ef;
+  --karte: #ffffff;
+  --akzent: #274c77;
+  --warn: #8a4b08;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--papier);
+  color: var(--tinte);
+  line-height: 1.55;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 4rem;
+}
+
+.kopfhinweis {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  background: #fff8e6;
+  border: 1px solid #e6d9a8;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  margin: 0.8rem 0;
+  color: #5c4a12;
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin: 1.2rem 0 0.2rem;
+}
+
+.untertitel {
+  color: var(--grau);
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+form.datumwahl {
+  font-family: system-ui, sans-serif;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.5rem;
+}
+
+input[type="date"],
+textarea {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  background: var(--karte);
+}
+
+button {
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--akzent);
+  border-radius: 6px;
+  background: var(--akzent);
+  color: #fff;
+  cursor: pointer;
+}
+
+button.sekundaer {
+  background: transparent;
+  color: var(--akzent);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+article.karte {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0 0 1rem;
+}
+
+.badge {
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #7a1f1f;
+  background: #fdeaea;
+  border: 1px solid #e6b8b8;
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.karte h2 {
+  font-size: 1.15rem;
+  margin: 0.2rem 0;
+}
+
+.etappe-info {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--grau);
+  margin: 0 0 0.6rem;
+}
+
+.chips {
+  margin-top: 0.7rem;
+}
+
+.chip {
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: var(--akzent);
+  border: 1px solid var(--linie);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  margin: 0 0.3rem 0.3rem 0;
+  background: #f0f4f9;
+}
+
+article.abschluss {
+  text-align: center;
+  border-style: dashed;
+  color: var(--grau);
+}
+
+article.abschluss strong {
+  display: block;
+  font-size: 1.25rem;
+  color: var(--tinte);
+  margin-bottom: 0.2rem;
+}
+
+section.verweigert {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--linie);
+  margin-top: 2rem;
+  padding-top: 1rem;
+  color: var(--warn);
+}
+
+section.lauf {
+  font-family: system-ui, sans-serif;
+  border-top: 1px solid var(--linie);
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.emotionen {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.6rem 0;
+}
+
+.emotionen label {
+  border: 1px solid var(--linie);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
+  background: var(--karte);
+  font-size: 0.85rem;
+}
+
+.emotionen input {
+  margin-right: 0.3rem;
+}
+
+.hinweis-wenig {
+  font-family: system-ui, sans-serif;
+  color: var(--warn);
+  font-size: 0.9rem;
+}
+
+.zaehler {
+  font-size: 0.85rem;
+  color: var(--grau);
+}

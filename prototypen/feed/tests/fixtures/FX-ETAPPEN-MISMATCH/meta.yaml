@@ -1,0 +1,12 @@
+id: FX-906
+titel: FX Fixture mit Etappen-Mismatch
+kennzeichnung: FIKTIV
+rechtsgebiet: testgebiet
+schutzstufe: S1
+etappen: 2
+missions_status: [eingereicht, abschluss]
+prinzipien: [testprinzip_a]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-05
+fixture: true
