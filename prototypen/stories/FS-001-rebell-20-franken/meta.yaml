@@ -1,0 +1,11 @@
+id: FS-001
+titel: Der Rebell gegen die 20-Franken-Marke
+kennzeichnung: FIKTIV
+rechtsgebiet: verwaltungsrecht_gebuehren
+schutzstufe: S2
+etappen: 3
+missions_status: [eingereicht, recherche, urteil_erkenntnis]
+prinzipien: [aequivalenzprinzip, kostendeckungsprinzip, gewinnerzielungsverbot]
+emotions_ziel: ["Empoerung zu Neugier", "Aha-Moment", "Verstaendnis"]
+autor: projektinhaber
+erstellt: 2026-08-05
