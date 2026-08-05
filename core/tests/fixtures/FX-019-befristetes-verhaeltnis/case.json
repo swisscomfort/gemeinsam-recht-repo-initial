@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "rechtsgebiet": "mietrecht_kuendigung",
+  "kanton": "LU",
+  "rolle": "mieter",
+  "kuendigung": {
+    "zugestellt_am": "2026-09-02",
+    "zustellart": "a_post",
+    "amtliches_formular": true,
+    "unterschrieben": true,
+    "begruendung_angegeben": false
+  },
+  "wohnung": {
+    "familienwohnung": false
+  },
+  "vertrag": {
+    "beginn": "2024-04-01",
+    "befristet": true,
+    "orts_gemeinde": "Luzern"
+  },
+  "sperrfrist": {
+    "verfahren_letzte_3_jahre": false,
+    "verfahren_haengig": false,
+    "rechte_geltend_gemacht": false
+  },
+  "meta": {
+    "erfasst_am": "2026-08-05T12:00:00Z",
+    "regelversion": "0.1.0",
+    "quellenstand": "2026-08-05",
+    "fixture": true
+  }
+}

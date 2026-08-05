@@ -1,0 +1,23 @@
+{
+  "heute": "2026-10-15",
+  "ergebnis": {
+    "status": "LUECKE",
+    "fehlend": [
+      "kanton: 'ZH' ausserhalb des M1-Scope (nur LU)"
+    ],
+    "hinweis": "Der Fristenrechner unterstuetzt in M1 ausschliesslich den Kanton Luzern (LU). Fuer andere Kantone kann keine Einschaetzung gegeben werden.",
+    "trace": {
+      "gegenstand": "fristenberechnung_mietkuendigung",
+      "rolle": "fall-engine",
+      "basis": {
+        "fallobjekt_hash": "f869e104d73a3eb939633ac2482f0ab0503433f51785f5b36d6846524c4dbb22",
+        "regelversion": "0.1.0",
+        "quellenstand": "2026-08-05"
+      },
+      "alternativen": [
+        "Berechnung nach Nachlieferung der fehlenden Angaben"
+      ],
+      "begruendung": "Kanton ZH liegt ausserhalb des M1-Scope (ausserhalb_m1_scope); M1 deckt nur den Kanton LU ab."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "heute": "2026-10-15",
+  "ergebnis": {
+    "status": "LUECKE",
+    "fehlend": [
+      "widerspruch: empfangsdatum_effektiv (2026-11-01) liegt nach heute (2026-10-15)"
+    ],
+    "hinweis": "Bitte die unter 'fehlend' genannten Angaben nachliefern bzw. die genannten Widersprueche klaeren; erst dann wird eine Frist berechnet.",
+    "trace": {
+      "gegenstand": "fristenberechnung_mietkuendigung",
+      "rolle": "fall-engine",
+      "basis": {
+        "fallobjekt_hash": "5935200a70e5e750fe6da4dd4253fefedfea2eb1c8c0654902ef010b9c670a52",
+        "regelversion": "0.1.0",
+        "quellenstand": "2026-08-05"
+      },
+      "alternativen": [
+        "Berechnung nach Nachlieferung der fehlenden Angaben"
+      ],
+      "begruendung": "Entscheidende Angaben fehlen oder sind widerspruechlich; nach Invariante 3 wird kein Fristergebnis ausgegeben."
+    }
+  }
+}

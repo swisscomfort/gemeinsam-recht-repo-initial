@@ -1,0 +1,35 @@
+{
+  "heute": "2026-10-15",
+  "ergebnis": {
+    "status": "OK",
+    "fristen": {
+      "empfangsdatum_effektiv": "2026-08-31",
+      "anfechtungsfrist_bis": "2026-09-30",
+      "frist_abgelaufen": true
+    },
+    "flags": [
+      "frist_abgelaufen"
+    ],
+    "quellen": [
+      "P1",
+      "P2",
+      "P3",
+      "FEIERTAGE_LU"
+    ],
+    "regelversion": "0.1.0",
+    "quellenstand": "2026-08-05",
+    "trace": {
+      "gegenstand": "fristenberechnung_mietkuendigung",
+      "rolle": "fall-engine",
+      "basis": {
+        "fallobjekt_hash": "b07e33af79ddcb58b6112866074ac3ff3270b7444606e9bf63d0efa3a9d289bf",
+        "regelversion": "0.1.0",
+        "quellenstand": "2026-08-05"
+      },
+      "alternativen": [
+        "keine realistische Alternative"
+      ],
+      "begruendung": "Empfang effektiv 2026-08-31; Fristbeginn am Folgetag (P2); Anfechtungsfrist 30 Tage (P1); Fristende 2026-09-30 (P3 geprueft, keine Verschiebung)."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "heute": "2026-10-15",
+  "ergebnis": {
+    "status": "LUECKE",
+    "fehlend": [
+      "widerspruch: kuendigung.kuendigungstermin_gemaess_schreiben (2024-03-31) liegt vor vertrag.beginn (2024-04-01)"
+    ],
+    "hinweis": "Bitte die unter 'fehlend' genannten Angaben nachliefern bzw. die genannten Widersprueche klaeren; erst dann wird eine Frist berechnet.",
+    "trace": {
+      "gegenstand": "fristenberechnung_mietkuendigung",
+      "rolle": "fall-engine",
+      "basis": {
+        "fallobjekt_hash": "35b360ed8120818b43fcfd71530df24e9fe9d6cc0414aa5a427ad8f1af51a1d0",
+        "regelversion": "0.1.0",
+        "quellenstand": "2026-08-05"
+      },
+      "alternativen": [
+        "Berechnung nach Nachlieferung der fehlenden Angaben"
+      ],
+      "begruendung": "Entscheidende Angaben fehlen oder sind widerspruechlich; nach Invariante 3 wird kein Fristergebnis ausgegeben."
+    }
+  }
+}

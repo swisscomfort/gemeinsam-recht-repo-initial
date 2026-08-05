@@ -1,0 +1,36 @@
+{
+  "heute": "2026-09-15",
+  "ergebnis": {
+    "status": "OK",
+    "fristen": {
+      "empfangsdatum_effektiv": "2026-09-02",
+      "anfechtungsfrist_bis": "2026-10-02",
+      "frist_abgelaufen": false
+    },
+    "flags": [
+      "befristetes_verhaeltnis_sonderfall"
+    ],
+    "quellen": [
+      "P1",
+      "P2",
+      "P3",
+      "FEIERTAGE_LU",
+      "Q_BEFRISTET"
+    ],
+    "regelversion": "0.1.0",
+    "quellenstand": "2026-08-05",
+    "trace": {
+      "gegenstand": "fristenberechnung_mietkuendigung",
+      "rolle": "fall-engine",
+      "basis": {
+        "fallobjekt_hash": "87697c24697f9d1832aff87a4f8cd606856e9eecb965f1c4491d8f059902bcf5",
+        "regelversion": "0.1.0",
+        "quellenstand": "2026-08-05"
+      },
+      "alternativen": [
+        "keine realistische Alternative"
+      ],
+      "begruendung": "Empfang effektiv 2026-09-02; Fristbeginn am Folgetag (P2); Anfechtungsfrist 30 Tage (P1); Fristende 2026-10-02 (P3 geprueft, keine Verschiebung). Sonderrechtslage befristetes Mietverhaeltnis: Anwendbarkeit der Anfechtungsfrist fachlich zu verifizieren; berechnete Frist ist keine Anfechtungsfrist-Aussage."
+    }
+  }
+}
