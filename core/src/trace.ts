@@ -72,7 +72,12 @@ function rotr(x: number, n: number): number {
 }
 
 export function sha256Hex(text: string): string {
-  const msg = utf8Bytes(text);
+  return sha256HexBytes(utf8Bytes(text));
+}
+
+/** SHA-256 ueber rohe Bytes (S2: Datei-Hashing fuer die Chronologie). */
+export function sha256HexBytes(daten: Uint8Array | readonly number[]): string {
+  const msg = Array.from(daten);
   const bitLen = msg.length * 8;
 
   // Padding

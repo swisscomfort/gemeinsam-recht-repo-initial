@@ -33,7 +33,33 @@ export { berechneFristen, istIsoDatum, addTage, wochentag, istWochenende, zuTage
 export { FEIERTAGE_LU, FEIERTAGE_LU_JAHRE, istFeiertagLu } from "./feiertage_lu.js";
 export { FLAG_QUELLE, FLAG_REIHENFOLGE, pruefeRegeln, REGELVERSION } from "./regeln.js";
 export { QUELLEN, QUELLENSTAND, offeneRechtsparameter } from "./quellen.js";
-export { baueTrace, hashFallobjekt, sha256Hex, stableStringify } from "./trace.js";
+export { baueTrace, hashFallobjekt, sha256Hex, sha256HexBytes, stableStringify } from "./trace.js";
+export { erstelleEinschaetzung } from "./einschaetzung.js";
+export type {
+  Ampel,
+  Einschaetzung,
+  EinschaetzungLuecke,
+  EinschaetzungOk,
+  EinschaetzungOption,
+  FlagBegruendung,
+} from "./einschaetzung.js";
+export { erzeugeBrief, platzhalterInVorlage, PFLICHT_PLATZHALTER } from "./brief.js";
+export type {
+  Brief,
+  BriefVorlageId,
+  BriefWerte,
+  PflichtPlatzhalter,
+  PlatzhalterName,
+} from "./brief.js";
+export {
+  EINTRAG_TYPEN,
+  exportiereChronologieJson,
+  exportiereChronologieMarkdown,
+  hashDokument,
+  mitEintrag,
+  neueChronologie,
+} from "./chronologie.js";
+export type { ChronikEintrag, Chronologie, EintragTyp } from "./chronologie.js";
 export type * from "./types.js";
 
 const ZUSTELLARTEN: readonly string[] = [

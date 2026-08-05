@@ -1,0 +1,140 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Briefvorlagen M1/M2 > M1 (FX-001): HTML-Snapshot (druckfaehig) 1`] = `
+"<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Anfechtungsbegehren an die Schlichtungsbehoerde (Kanton LU)</title>
+<style>
+  @page { size: A4; margin: 25mm 20mm; }
+  body { font-family: "Times New Roman", Georgia, serif; font-size: 12pt;
+         line-height: 1.5; color: #000; max-width: 17cm; margin: 2rem auto;
+         padding: 0 1rem; background: #fff; }
+  p { margin: 0 0 0.9em; }
+  .adresse { white-space: pre-line; }
+  .ortdatum { text-align: right; margin-top: 1.5em; }
+  .betreff { font-weight: bold; margin: 1.5em 0 1.2em; }
+  .beilagen-titel { margin-bottom: 0.2em; }
+  ul { margin: 0 0 0.9em 1.2em; padding: 0; }
+  .unterschrift { margin-top: 3em; }
+  mark { background: #fff3a3; padding: 0 0.15em; }
+  @media print { body { margin: 0; max-width: none; } mark { background: none; } }
+</style>
+</head>
+<body>
+<p class="adresse"><mark>{{name_mieter}}</mark><br><mark>{{adresse_mieter}}</mark></p>
+<p class="adresse">Schlichtungsbehoerde Miete und Pacht<br><mark>VOM_NUTZER_ZU_ERGAENZEN</mark></p>
+<p class="ortdatum">Luzern, 2026-09-15</p>
+<p class="betreff">Anfechtungsbegehren betreffend Kuendigung der Wohnung <mark>{{wohnungsadresse}}</mark></p>
+<p>Sehr geehrte Damen und Herren</p>
+<p>Am 2026-09-02 wurde mir die Kuendigung des Mietverhaeltnisses fuer die Wohnung <mark>{{wohnungsadresse}}</mark> durch <mark>{{name_vermieter}}</mark>, <mark>{{adresse_vermieter}}</mark>, zugestellt.</p>
+<p>Hiermit reiche ich fristwahrend ein Begehren um Anfechtung dieser Kuendigung ein (Art. 273 Abs. 1 OR). Nach der mir vorliegenden Berechnung laeuft die Anfechtungsfrist bis am 2026-10-02.</p>
+<p>Ich ersuche die Schlichtungsbehoerde, die Kuendigung zu pruefen und einen Schlichtungstermin anzusetzen. Eine naehere Begruendung reiche ich auf Wunsch nach oder lege sie an der Verhandlung dar.</p>
+<p class="beilagen-titel">Beilagen:</p><ul><li>Kopie der Kuendigung</li><li>Kopie des Mietvertrags (soweit vorhanden)</li></ul>
+<p>Freundliche Gruesse</p>
+<p class="unterschrift"><mark>{{name_mieter}}</mark></p>
+</body>
+</html>
+"
+`;
+
+exports[`Briefvorlagen M1/M2 > M1 (FX-001): Markdown-Snapshot 1`] = `
+"# Anfechtungsbegehren an die Schlichtungsbehoerde (Kanton LU)
+
+{{name_mieter}}  
+{{adresse_mieter}}
+
+Schlichtungsbehoerde Miete und Pacht  
+VOM_NUTZER_ZU_ERGAENZEN
+
+Luzern, 2026-09-15
+
+**Anfechtungsbegehren betreffend Kuendigung der Wohnung {{wohnungsadresse}}**
+
+Sehr geehrte Damen und Herren
+
+Am 2026-09-02 wurde mir die Kuendigung des Mietverhaeltnisses fuer die Wohnung {{wohnungsadresse}} durch {{name_vermieter}}, {{adresse_vermieter}}, zugestellt.
+
+Hiermit reiche ich fristwahrend ein Begehren um Anfechtung dieser Kuendigung ein (Art. 273 Abs. 1 OR). Nach der mir vorliegenden Berechnung laeuft die Anfechtungsfrist bis am 2026-10-02.
+
+Ich ersuche die Schlichtungsbehoerde, die Kuendigung zu pruefen und einen Schlichtungstermin anzusetzen. Eine naehere Begruendung reiche ich auf Wunsch nach oder lege sie an der Verhandlung dar.
+
+Beilagen:
+- Kopie der Kuendigung
+- Kopie des Mietvertrags (soweit vorhanden)
+
+Freundliche Gruesse
+
+{{name_mieter}}
+"
+`;
+
+exports[`Briefvorlagen M1/M2 > M2 (FX-002): HTML-Snapshot (druckfaehig) 1`] = `
+"<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Mitteilung Nichtigkeit an die Vermieterschaft</title>
+<style>
+  @page { size: A4; margin: 25mm 20mm; }
+  body { font-family: "Times New Roman", Georgia, serif; font-size: 12pt;
+         line-height: 1.5; color: #000; max-width: 17cm; margin: 2rem auto;
+         padding: 0 1rem; background: #fff; }
+  p { margin: 0 0 0.9em; }
+  .adresse { white-space: pre-line; }
+  .ortdatum { text-align: right; margin-top: 1.5em; }
+  .betreff { font-weight: bold; margin: 1.5em 0 1.2em; }
+  .beilagen-titel { margin-bottom: 0.2em; }
+  ul { margin: 0 0 0.9em 1.2em; padding: 0; }
+  .unterschrift { margin-top: 3em; }
+  mark { background: #fff3a3; padding: 0 0.15em; }
+  @media print { body { margin: 0; max-width: none; } mark { background: none; } }
+</style>
+</head>
+<body>
+<p class="adresse"><mark>{{name_mieter}}</mark><br><mark>{{adresse_mieter}}</mark></p>
+<p class="adresse"><mark>{{name_vermieter}}</mark><br><mark>{{adresse_vermieter}}</mark></p>
+<p class="ortdatum">Luzern, 2026-09-15</p>
+<p class="betreff">Mitteilung zur Kuendigung der Wohnung <mark>{{wohnungsadresse}}</mark></p>
+<p>Sehr geehrte Damen und Herren</p>
+<p>Am 2026-09-02 habe ich Ihre Kuendigung des Mietverhaeltnisses fuer die Wohnung <mark>{{wohnungsadresse}}</mark> erhalten.</p>
+<p>Nach meinen Informationen deutet die Form dieser Kuendigung darauf hin, dass sie nichtig sein kann (Art. 266l / 266o OR; bei Familienwohnungen Art. 266n / 266o OR). Ich gehe deshalb bis zur Klaerung davon aus, dass das Mietverhaeltnis unveraendert weiterlaeuft.</p>
+<p>Ich bitte Sie um eine schriftliche Stellungnahme. Unabhaengig davon behalte ich mir vor, die Kuendigung bis am 2026-10-02 bei der zustaendigen Schlichtungsbehoerde anzufechten.</p>
+<p class="beilagen-titel">Beilagen:</p><ul><li>Kopie der Kuendigung</li></ul>
+<p>Freundliche Gruesse</p>
+<p class="unterschrift"><mark>{{name_mieter}}</mark></p>
+</body>
+</html>
+"
+`;
+
+exports[`Briefvorlagen M1/M2 > M2 (FX-002): Markdown-Snapshot 1`] = `
+"# Mitteilung Nichtigkeit an die Vermieterschaft
+
+{{name_mieter}}  
+{{adresse_mieter}}
+
+{{name_vermieter}}  
+{{adresse_vermieter}}
+
+Luzern, 2026-09-15
+
+**Mitteilung zur Kuendigung der Wohnung {{wohnungsadresse}}**
+
+Sehr geehrte Damen und Herren
+
+Am 2026-09-02 habe ich Ihre Kuendigung des Mietverhaeltnisses fuer die Wohnung {{wohnungsadresse}} erhalten.
+
+Nach meinen Informationen deutet die Form dieser Kuendigung darauf hin, dass sie nichtig sein kann (Art. 266l / 266o OR; bei Familienwohnungen Art. 266n / 266o OR). Ich gehe deshalb bis zur Klaerung davon aus, dass das Mietverhaeltnis unveraendert weiterlaeuft.
+
+Ich bitte Sie um eine schriftliche Stellungnahme. Unabhaengig davon behalte ich mir vor, die Kuendigung bis am 2026-10-02 bei der zustaendigen Schlichtungsbehoerde anzufechten.
+
+Beilagen:
+- Kopie der Kuendigung
+
+Freundliche Gruesse
+
+{{name_mieter}}
+"
+`;
