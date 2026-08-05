@@ -1,0 +1,18 @@
+{
+  "name": "@gemeinsam-recht/webflow",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gefuehrter lokaler Web-Flow fuer den Startfall Mietkuendigung LU (Plan §4 Schritt 2). Kein Server, keine Uebertragung, kein Tracking; Fachlogik ausschliesslich aus @gemeinsam-recht/core.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "vite": "^7.0.0",
+    "vitest": "^3.0.0"
+  }
+}

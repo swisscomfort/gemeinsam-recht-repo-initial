@@ -1,0 +1,214 @@
+/* Lokaler Web-Flow — schlicht, gut lesbar, ohne externe Ressourcen. */
+
+:root {
+  --tinte: #1c2733;
+  --grau: #5a6b7b;
+  --rand: #d5dde5;
+  --grund: #f5f7f9;
+  --akzent: #1a5fb4;
+  --gruen: #1b7f3b;
+  --gelb: #8a6d00;
+  --rot: #b3261e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--tinte);
+  background: var(--grund);
+  line-height: 1.55;
+}
+
+#app {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  margin: 0.5rem 0 0.2rem;
+}
+
+.karte {
+  background: #fff;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  margin: 1rem 0;
+}
+
+h2 {
+  font-size: 1.15rem;
+  margin: 0.2rem 0 0.6rem;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 1.1rem 0 0.4rem;
+}
+
+.fortschritt {
+  color: var(--grau);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.hilfe {
+  color: var(--grau);
+  font-size: 0.92rem;
+}
+
+.optionen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+}
+
+.option:hover {
+  border-color: var(--akzent);
+}
+
+input[type="date"],
+select,
+textarea,
+input[type="text"] {
+  width: 100%;
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  margin: 0.4rem 0;
+  background: #fff;
+  color: inherit;
+}
+
+.navigation {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+button {
+  font: inherit;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  border: 1px solid var(--akzent);
+}
+
+button.primaer {
+  background: var(--akzent);
+  color: #fff;
+}
+
+button.sekundaer {
+  background: #fff;
+  color: var(--akzent);
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+.fehler {
+  color: var(--rot);
+  font-size: 0.9rem;
+  min-height: 1.2em;
+  margin: 0.6rem 0 0;
+}
+
+.ampel {
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--rand);
+}
+
+.ampel-gruen {
+  background: #e5f4ea;
+  color: var(--gruen);
+  border-color: var(--gruen);
+}
+
+.ampel-gelb {
+  background: #fdf6de;
+  color: var(--gelb);
+  border-color: var(--gelb);
+}
+
+.ampel-rot {
+  background: #fbe9e7;
+  color: var(--rot);
+  border-color: var(--rot);
+}
+
+.fristwarnung {
+  font-weight: 600;
+  color: var(--rot);
+}
+
+.hinweis {
+  color: var(--gelb);
+  font-size: 0.92rem;
+}
+
+.hinweis.ok {
+  color: var(--gruen);
+}
+
+.quellen {
+  font-size: 0.88rem;
+  color: var(--grau);
+}
+
+.felder {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0.8rem 0;
+}
+
+.feld {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.92rem;
+  color: var(--grau);
+}
+
+.brief {
+  border-top: 1px solid var(--rand);
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+}
+
+.vorschau {
+  background: var(--grund);
+  border: 1px solid var(--rand);
+  border-radius: 8px;
+  padding: 0.9rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+
+footer {
+  color: var(--grau);
+  font-size: 0.82rem;
+  margin-top: 2rem;
+}
