@@ -27,7 +27,13 @@ export interface Ladeergebnis {
   verweigert: Verweigerung[];
 }
 
-export function ladeAlle(): Ladeergebnis {
+/**
+ * Laedt alle Geschichten. `heuteISO` (JJJJ-MM-TT) wird von der UI-Schicht
+ * injiziert und nur fuer die Vergangenheits-Pruefung von `entscheid_datum`
+ * der Kategorie NACHERZAEHLT_OEFFENTLICH gebraucht (R0 §1); ohne Datum
+ * wird diese Kategorie verweigert.
+ */
+export function ladeAlle(heuteISO?: string): Ladeergebnis {
   const verzeichnisse = new Set<string>();
   for (const pfad of Object.keys(metaDateien)) verzeichnisse.add(verzeichnisVon(pfad));
   for (const pfad of Object.keys(storyDateien)) verzeichnisse.add(verzeichnisVon(pfad));
@@ -46,7 +52,7 @@ export function ladeAlle(): Ladeergebnis {
       });
       continue;
     }
-    const ergebnis = pruefeStory(name, metaRoh, storyRoh);
+    const ergebnis = pruefeStory(name, metaRoh, storyRoh, heuteISO);
     if (ergebnis.ok) {
       akzeptiert.push(ergebnis.story);
     } else {

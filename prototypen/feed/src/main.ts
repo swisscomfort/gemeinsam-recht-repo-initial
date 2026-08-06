@@ -113,14 +113,16 @@ const FX001_ANTWORTEN: Antworten = {
 
 /* ---------- Zustand (im Speicher dieser Seite) ---------- */
 
-const geladen = ladeAlle();
+// Startdatum vor dem Laden bestimmen: die Vergangenheits-Pruefung von
+// NACHERZAEHLT_OEFFENTLICH (R0 §1) braucht ein injiziertes Heute-Datum.
+let simDatum = initialesDatum();
+const geladen = ladeAlle(simDatum);
 let sammlung: LaufSammlung = ladeSammlung(localStorage.getItem(LAUF_SPEICHER));
 let leseZustand: LeseZustand = ladeLeseZustand(localStorage.getItem(LESER_SPEICHER));
 let meinFall: MeinFall | null = ladeFall(localStorage.getItem(FALL_SPEICHER));
 let meldungen: RegelMeldung[] = ladeMeldungen(localStorage.getItem(MELDUNG_SPEICHER));
 let aktiverLauf: Lauf | null = null;
 let aktuelleAusgabe: JourneyAusgabe | null = null;
-let simDatum = initialesDatum();
 
 // Werkzeug (S2-Fragebaum) — Zustand nur im Speicher dieser Seite.
 let antworten: Antworten = {};
@@ -180,7 +182,7 @@ function bannerKompakt(): HTMLElement {
   return el(
     "p",
     "kopfhinweis kompakt",
-    "Privater Prototyp (Plan v1.1 §4, CR-001/F1) · alle Geschichten FIKTIV · alles bleibt lokal in diesem Browser.",
+    "Privater Prototyp (Plan v1.1 §4, CR-001/F1) · Geschichten FIKTIV oder nach echten, öffentlich publizierten Entscheiden nacherzählt (gekennzeichnet) · alles bleibt lokal in diesem Browser.",
   );
 }
 
@@ -188,7 +190,7 @@ function bannerVoll(): HTMLElement {
   return el(
     "p",
     "kopfhinweis",
-    "Privater Prototyp (Plan v1.1 §4, CR-001) · alle Geschichten sind synthetisch und als FIKTIV gekennzeichnet · nichts hiervon ist öffentlich · alle Daten bleiben in diesem Browser.",
+    "Privater Prototyp (Plan v1.1 §4, CR-001) · jede Geschichte ist gekennzeichnet: FIKTIV (synthetisch) oder NACHERZÄHLT (nach echtem, öffentlich publiziertem Entscheid, Namen ersetzt) · nichts hiervon ist öffentlich · alle Daten bleiben in diesem Browser.",
   );
 }
 

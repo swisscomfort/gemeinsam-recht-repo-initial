@@ -20,6 +20,7 @@ function testStory(id: string, etappenAnzahl: number): Story {
     meta: {
       id,
       titel: `${id} — synthetische Teststory`,
+      kennzeichnung: "FIKTIV",
       rechtsgebiet: "testgebiet",
       schutzstufe: "S1",
       etappen: etappenAnzahl,

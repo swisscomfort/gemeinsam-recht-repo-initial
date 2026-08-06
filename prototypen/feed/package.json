@@ -2,7 +2,7 @@
   "name": "@gemeinsam-recht/feed-prototyp",
   "version": "0.1.0",
   "private": true,
-  "description": "Privater Offline-Feed-Prototyp 'Morgenausgabe' (Plan v1.1 §4 stiller Parallelbau, CR-001 inkl. F1). Liest ausschliesslich synthetische, als FIKTIV gekennzeichnete Geschichten aus prototypen/stories/; kein Server, keine Uebertragung, kein Tracking. Nichts hiervon ist oeffentlich.",
+  "description": "Privater Offline-Feed-Prototyp 'Morgenausgabe' (Plan v1.1 §4 stiller Parallelbau, CR-001 inkl. F1). Liest ausschliesslich gekennzeichnete Geschichten aus prototypen/stories/ (FIKTIV oder NACHERZAEHLT_OEFFENTLICH nach echten, oeffentlich publizierten Entscheiden, R0); kein Server, keine Uebertragung, kein Tracking. Nichts hiervon ist oeffentlich.",
   "type": "module",
   "scripts": {
     "dev": "vite",

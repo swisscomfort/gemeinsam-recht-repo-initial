@@ -10,7 +10,7 @@
 // genutzt, nie veraendert): zuTagen/addTage/istIsoDatum sind dort getestet.
 
 import { addTage, istIsoDatum, zuTagen } from "@core/index";
-import { ABSCHLUSS, BADGE, MAX_KARTEN, MIN_KARTEN, fnv1a } from "./ausgabe";
+import { ABSCHLUSS, MAX_KARTEN, MIN_KARTEN, badgeFuer, fnv1a } from "./ausgabe";
 import type { Story } from "./story";
 
 export const UPDATE_HINWEIS = "Update zu deiner Serie";
@@ -85,7 +85,7 @@ function journeyKarte(story: Story, datumISO: string, zustand: LeseZustand): Jou
     text: etappe.text,
     missionsStatus: story.meta.missions_status[etappe.nr - 1] ?? "",
     prinzipien: [...story.meta.prinzipien],
-    badge: BADGE,
+    badge: badgeFuer(story),
     rechtsgebiet: story.meta.rechtsgebiet,
     updateHinweis: gefolgt && zuletzt !== undefined && zuletzt !== etappe.nr,
     betrifftMich: story.meta.rechtsgebiet.startsWith("mietrecht_"),

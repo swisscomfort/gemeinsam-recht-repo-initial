@@ -8,8 +8,21 @@ import type { Story } from "./story";
 
 export const ABSCHLUSS = "Fertig für heute";
 export const BADGE = "FIKTIVES LEHRSTÜCK";
+export const BADGE_NACHERZAEHLT_PRAEFIX = "Nach einem echten, öffentlich publizierten Entscheid";
 export const MIN_KARTEN = 3;
 export const MAX_KARTEN = 5;
+
+/**
+ * Sichtbare Kennzeichnung jeder Karte (R0 §1): FIKTIV-Karten tragen das
+ * Lehrstueck-Badge, NACHERZAEHLT_OEFFENTLICH-Karten den Hinweis
+ * "Nach einem echten, öffentlich publizierten Entscheid · <quelle>".
+ */
+export function badgeFuer(story: Story): string {
+  if (story.meta.kennzeichnung === "NACHERZAEHLT_OEFFENTLICH" && story.meta.quelle) {
+    return `${BADGE_NACHERZAEHLT_PRAEFIX} · ${story.meta.quelle}`;
+  }
+  return BADGE;
+}
 
 export interface Karte {
   id: string;
@@ -52,7 +65,7 @@ function kartenAusStory(story: Story): Karte[] {
     text: etappe.text,
     missionsStatus: story.meta.missions_status[etappe.nr - 1] ?? "",
     prinzipien: [...story.meta.prinzipien],
-    badge: BADGE,
+    badge: badgeFuer(story),
   }));
 }
 

@@ -1,0 +1,17 @@
+id: FX-108
+titel: FX Nacherzaehlt mit unbekanntem Schluessel
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_test
+schutzstufe: S2
+etappen: 2
+missions_status: [eingereicht, abschluss]
+prinzipien: [testprinzip_a]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-06
+quelle: "BGer 4A_999/2025"
+gericht: Bundesgericht
+entscheid_datum: 2025-03-14
+verfahren_abgeschlossen: true
+bonus_punkte: 5
+fixture: true

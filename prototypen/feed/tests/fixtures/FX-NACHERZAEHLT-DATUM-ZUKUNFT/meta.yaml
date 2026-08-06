@@ -1,0 +1,16 @@
+id: FX-104
+titel: FX Nacherzaehlt mit Zukunftsdatum
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_test
+schutzstufe: S2
+etappen: 2
+missions_status: [eingereicht, abschluss]
+prinzipien: [testprinzip_a]
+emotions_ziel: ["Test zu Test"]
+autor: test
+erstellt: 2026-08-06
+quelle: "BGer 4A_999/2025"
+gericht: Bundesgericht
+entscheid_datum: 2026-12-31
+verfahren_abgeschlossen: true
+fixture: true

@@ -23,6 +23,7 @@ function testStory(id: string, etappenAnzahl: number, rechtsgebiet = "testgebiet
     meta: {
       id,
       titel: `${id} — synthetische Teststory`,
+      kennzeichnung: "FIKTIV",
       rechtsgebiet,
       schutzstufe: "S1",
       etappen: etappenAnzahl,

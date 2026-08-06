@@ -1,4 +1,5 @@
-// story.ts — Laden und Pruefen synthetischer Geschichten (AUFTRAG-F0, Teil A).
+// story.ts — Laden und Pruefen der Geschichten (AUFTRAG-F0, Teil A;
+// erweitert durch AUFTRAG-R0 §1: Kategorie NACHERZAEHLT_OEFFENTLICH).
 //
 // Quelle ist ausschliesslich prototypen/stories/<ID>/meta.yaml + story.md.
 // Verweigerung ist die Standardreaktion auf jede Abweichung; unbekannte oder
@@ -7,7 +8,9 @@
 //
 // Der Parser ist bewusst KEIN YAML-Parser: Er liest exakt das in FS-001
 // belegte Subset (Skalare und einzeilige Listen) und lehnt alles andere ab.
-// Kein LLM, kein Netz, keine Systemzeit.
+// Kein LLM, kein Netz, keine Systemzeit — das Pruefdatum fuer
+// NACHERZAEHLT_OEFFENTLICH ("entscheid_datum in der Vergangenheit") wird
+// injiziert; ohne injiziertes Datum wird die Kategorie verweigert.
 
 export const PFLICHT_SCHLUESSEL = [
   "id",
@@ -23,12 +26,29 @@ export const PFLICHT_SCHLUESSEL = [
   "erstellt",
 ] as const;
 
+export const KENNZEICHNUNGEN = ["FIKTIV", "NACHERZAEHLT_OEFFENTLICH"] as const;
+export type Kennzeichnung = (typeof KENNZEICHNUNGEN)[number];
+
+/** Zusaetzliche Pflichtfelder der Kategorie NACHERZAEHLT_OEFFENTLICH (R0 §1). */
+export const NACHERZAEHLT_PFLICHT_SCHLUESSEL = [
+  "quelle",
+  "gericht",
+  "entscheid_datum",
+  "verfahren_abgeschlossen",
+] as const;
+
 // "fixture" ist als Markierung synthetischer Test-Stories zulaessig
 // (Invariante 2, Analogie zur Fixture-Regel in CLAUDE.md), fuehrt aber
 // immer zur Verweigerung fuer den Feed.
 export const ERLAUBTE_SCHLUESSEL: ReadonlySet<string> = new Set([
   ...PFLICHT_SCHLUESSEL,
   "fixture",
+]);
+
+/** Fuer NACHERZAEHLT_OEFFENTLICH sind zusaetzlich die Quellfelder erlaubt. */
+export const ERLAUBTE_SCHLUESSEL_NACHERZAEHLT: ReadonlySet<string> = new Set([
+  ...ERLAUBTE_SCHLUESSEL,
+  ...NACHERZAEHLT_PFLICHT_SCHLUESSEL,
 ]);
 
 export const LISTEN_SCHLUESSEL = ["missions_status", "prinzipien", "emotions_ziel"] as const;
@@ -38,6 +58,7 @@ export type MetaWert = string | string[];
 export interface StoryMeta {
   id: string;
   titel: string;
+  kennzeichnung: Kennzeichnung;
   rechtsgebiet: string;
   schutzstufe: string;
   etappen: number;
@@ -46,6 +67,10 @@ export interface StoryMeta {
   emotions_ziel: string[];
   autor: string;
   erstellt: string;
+  /** Nur bei NACHERZAEHLT_OEFFENTLICH gesetzt: Aktenzeichen, z. B. "BGer 4A_123/2025". */
+  quelle?: string;
+  gericht?: string;
+  entscheid_datum?: string;
 }
 
 export interface Etappe {
@@ -194,14 +219,31 @@ const SCHUTZSTUFEN = new Set(["S1", "S2", "S3", "S4", "S5"]);
 /**
  * Prueft eine Geschichte vollstaendig. Ergebnis ist entweder eine Story
  * oder eine Verweigerung mit ALLEN festgestellten Gruenden.
+ *
+ * `heuteISO` (JJJJ-MM-TT) wird von der UI-Schicht injiziert und dient
+ * ausschliesslich der Vergangenheits-Pruefung von `entscheid_datum`
+ * (R0 §1). Ohne injiziertes Datum wird NACHERZAEHLT_OEFFENTLICH
+ * verweigert — nie stillschweigend akzeptiert.
  */
-export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): PruefErgebnis {
+export function pruefeStory(
+  quelle: string,
+  metaRoh: string,
+  storyRoh: string,
+  heuteISO?: string,
+): PruefErgebnis {
+  if (heuteISO !== undefined && !/^\d{4}-\d{2}-\d{2}$/.test(heuteISO)) {
+    throw new Error("Pruefdatum muss injiziert werden und die Form JJJJ-MM-TT haben");
+  }
   const gruende: string[] = [];
   const { werte, gruende: parseGruende } = parseMetaYaml(metaRoh);
   gruende.push(...parseGruende);
 
+  const kennzeichnung = werte.get("kennzeichnung");
+  const istNacherzaehlt = kennzeichnung === "NACHERZAEHLT_OEFFENTLICH";
+  const erlaubte = istNacherzaehlt ? ERLAUBTE_SCHLUESSEL_NACHERZAEHLT : ERLAUBTE_SCHLUESSEL;
+
   for (const schluessel of werte.keys()) {
-    if (!ERLAUBTE_SCHLUESSEL.has(schluessel)) {
+    if (!erlaubte.has(schluessel)) {
       gruende.push(`Unbekannter oder falsch geschriebener Schluessel: "${schluessel}"`);
     }
   }
@@ -211,9 +253,13 @@ export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): 
     }
   }
 
-  const kennzeichnung = werte.get("kennzeichnung");
-  if (werte.has("kennzeichnung") && kennzeichnung !== "FIKTIV") {
-    gruende.push('Kennzeichnung ist nicht exakt "FIKTIV" — Geschichte wird verweigert (Invariante 2)');
+  if (
+    werte.has("kennzeichnung") &&
+    !(KENNZEICHNUNGEN as readonly string[]).includes(kennzeichnung as string)
+  ) {
+    gruende.push(
+      'Kennzeichnung ist nicht exakt "FIKTIV" oder "NACHERZAEHLT_OEFFENTLICH" — Geschichte wird verweigert (Invariante 2)',
+    );
   }
 
   if (werte.has("fixture")) {
@@ -228,9 +274,55 @@ export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): 
       gruende.push(
         `Schutzstufe ${schutzstufe} — wird im Feed-Prototyp nicht angezeigt (Belastungsschutz, F1; Operating Rules Nr. 8)`,
       );
+    } else if (istNacherzaehlt && schutzstufe === "S3") {
+      gruende.push(
+        "Schutzstufe S3 — fuer NACHERZAEHLT_OEFFENTLICH ist hoechstens S2 zulaessig (R0 §1)",
+      );
     }
   } else if (werte.has("schutzstufe")) {
     gruende.push("Schutzstufe muss ein Skalar sein");
+  }
+
+  /* Zusatzpruefungen der Kategorie NACHERZAEHLT_OEFFENTLICH (R0 §1). */
+  let nacherzaehltQuelle: string | null = null;
+  if (istNacherzaehlt) {
+    for (const schluessel of NACHERZAEHLT_PFLICHT_SCHLUESSEL) {
+      if (!werte.has(schluessel)) {
+        gruende.push(`Pflichtschluessel fehlt: "${schluessel}"`);
+        continue;
+      }
+      if (Array.isArray(werte.get(schluessel))) {
+        gruende.push(`"${schluessel}" muss ein Skalar sein`);
+      }
+    }
+    const quelleWert = werte.get("quelle");
+    if (typeof quelleWert === "string") {
+      if (quelleWert.trim() === "") {
+        gruende.push('"quelle" ist leer — ohne Aktenzeichen keine nacherzaehlte Geschichte (R0 §1)');
+      } else {
+        nacherzaehltQuelle = quelleWert.trim();
+      }
+    }
+    const entscheidDatum = werte.get("entscheid_datum");
+    if (typeof entscheidDatum === "string") {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(entscheidDatum)) {
+        gruende.push('"entscheid_datum" muss die Form JJJJ-MM-TT haben');
+      } else if (heuteISO === undefined) {
+        gruende.push(
+          "Kein Pruefdatum injiziert — NACHERZAEHLT_OEFFENTLICH kann ohne injiziertes Heute-Datum nicht geprueft werden (keine Systemzeit in der Fachlogik)",
+        );
+      } else if (entscheidDatum > heuteISO) {
+        gruende.push(
+          `"entscheid_datum" ${entscheidDatum} liegt in der Zukunft (Pruefdatum ${heuteISO}) — nur vergangene Entscheide (R0 §1)`,
+        );
+      }
+    }
+    const abgeschlossen = werte.get("verfahren_abgeschlossen");
+    if (werte.has("verfahren_abgeschlossen") && abgeschlossen !== "true") {
+      gruende.push(
+        '"verfahren_abgeschlossen" ist nicht exakt true — nur abgeschlossene Verfahren werden nacherzaehlt (R0 §1; keine Live-Faelle, Plan §3)',
+      );
+    }
   }
 
   let etappenSoll: number | null = null;
@@ -265,7 +357,26 @@ export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): 
   }
 
   const text = parseStoryText(storyRoh);
-  if (!text.kennzeichnungszeileVorhanden) {
+  if (istNacherzaehlt) {
+    // Pflichtzeile analog FIKTIV (R0 §1): "NACH ECHTEM ENTSCHEID — nacherzählt;
+    // Quelle: <quelle>. Namen ersetzt." — geprueft werden die drei festen
+    // Bestandteile auf EINER Zeile, inklusive der exakten Quelle aus meta.yaml.
+    const zeileVorhanden =
+      nacherzaehltQuelle !== null &&
+      storyRoh
+        .split(/\r?\n/)
+        .some(
+          (z) =>
+            z.includes("NACH ECHTEM ENTSCHEID") &&
+            z.includes(`Quelle: ${nacherzaehltQuelle}`) &&
+            z.includes("Namen ersetzt"),
+        );
+    if (!zeileVorhanden) {
+      gruende.push(
+        'story.md enthaelt keine sichtbare Kennzeichnungszeile ("NACH ECHTEM ENTSCHEID — nacherzählt; Quelle: <quelle>. Namen ersetzt.")',
+      );
+    }
+  } else if (!text.kennzeichnungszeileVorhanden) {
     gruende.push('story.md enthaelt keine sichtbare Kennzeichnungszeile ("KENNZEICHNUNG: FIKTIV…")');
   }
   if (etappenSoll !== null && text.etappen.length !== etappenSoll) {
@@ -281,6 +392,7 @@ export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): 
   const meta: StoryMeta = {
     id: werte.get("id") as string,
     titel: werte.get("titel") as string,
+    kennzeichnung: kennzeichnung as Kennzeichnung,
     rechtsgebiet: werte.get("rechtsgebiet") as string,
     schutzstufe: schutzstufe as string,
     etappen: etappenSoll as number,
@@ -290,5 +402,10 @@ export function pruefeStory(quelle: string, metaRoh: string, storyRoh: string): 
     autor: werte.get("autor") as string,
     erstellt: werte.get("erstellt") as string,
   };
+  if (istNacherzaehlt) {
+    meta.quelle = nacherzaehltQuelle as string;
+    meta.gericht = werte.get("gericht") as string;
+    meta.entscheid_datum = werte.get("entscheid_datum") as string;
+  }
   return { ok: true, story: { meta, etappen: text.etappen } };
 }
