@@ -37,12 +37,13 @@ describe("pruefeStory — Annahme", () => {
     expect(meta.schutzstufe).toBe("S2");
     expect(meta.etappen).toBe(3);
     expect(meta.missions_status).toEqual(["eingereicht", "recherche", "urteil_erkenntnis"]);
-    expect(meta.prinzipien).toHaveLength(3);
-    expect(meta.emotions_ziel).toEqual(["Empoerung zu Neugier", "Aha-Moment", "Verstaendnis"]);
+    expect(meta.prinzipien).toHaveLength(4);
+    expect(meta.prinzipien).toContain("transparenzpflicht");
+    expect(meta.emotions_ziel).toEqual(["Empoerung zu Neugier", "Aha-Moment", "Klarheit ohne Haeme"]);
     expect(etappen).toHaveLength(3);
     expect(etappen[0]!.titel).toContain("Der Rebell gegen die 20-Franken-Marke");
     expect(etappen[2]!.titel).toContain("Das Urteil");
-    expect(etappen[1]!.text).toContain("CHF 0.15");
+    expect(etappen[1]!.text).toContain("15 Rappen");
   });
 });
 
