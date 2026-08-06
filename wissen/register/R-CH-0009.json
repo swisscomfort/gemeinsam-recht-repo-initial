@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0009",
+  "regel": "Sonderrechtslage befristetes Mietverhaeltnis: Ob und wie die Anfechtungsfrist gilt, ist fachlich zu klaeren; es wird keine Fristaussage gemacht.",
+  "wenn": [
+    "vertrag.befristet=true"
+  ],
+  "dann": [
+    "flag:befristetes_verhaeltnis_sonderfall"
+  ],
+  "quellen": [
+    {
+      "artikel": "offen — Sonderrechtslage befristetes Mietverhaeltnis, fachlich zu klaeren",
+      "fundstelle": "AUFTRAG-S1 §4 (Flag-Katalog); keine Quellenangabe im Auftrag"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

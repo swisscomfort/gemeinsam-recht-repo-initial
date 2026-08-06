@@ -12,14 +12,25 @@
  *  P3 Fristende auf Sa/So/Feiertag (LU) verschiebt auf naechsten Werktag
  */
 import { istFeiertagLu, jahrAbgedeckt } from "./feiertage_lu.js";
+import { REGISTER_PARAMETER } from "./register.gen.js";
 import type { IsoDate } from "./types.js";
 
-/** P1: Dauer der Anfechtungsfrist in Tagen. Quelle: QUELLEN.P1. */
-export const P1_ANFECHTUNGSFRIST_TAGE = 30;
+/** Rechtsparameter aus dem Wissens-Register (eine Quelle der Wahrheit, W0 Teil B). */
+function registerParameter(name: string): number {
+  const wert = REGISTER_PARAMETER[name];
+  if (wert === undefined) {
+    throw new Error(`Wissens-Register: Parameter '${name}' fehlt in register.gen.ts`);
+  }
+  return wert;
+}
+
+/** P1: Dauer der Anfechtungsfrist in Tagen. Quelle: QUELLEN.P1 (Register R-CH-0001). */
+export const P1_ANFECHTUNGSFRIST_TAGE = registerParameter("anfechtungsfrist_tage");
 
 /** P4: Dauer der postalischen Abholfrist in Tagen (dokumentarisch; das
- *  Fristende wird als `abholfrist_ende` erfasst, nicht berechnet). Quelle: QUELLEN.P4. */
-export const P4_ABHOLFRIST_TAGE = 7;
+ *  Fristende wird als `abholfrist_ende` erfasst, nicht berechnet).
+ *  Quelle: QUELLEN.P4 (Register R-CH-0004). */
+export const P4_ABHOLFRIST_TAGE = registerParameter("abholfrist_tage");
 
 const DATUM_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 

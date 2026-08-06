@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0010",
+  "regel": "Produktiv abgedeckt ist in M1 ausschliesslich der Kanton Luzern; fuer andere Kantone wird keine Einschaetzung ausgegeben.",
+  "wenn": [
+    "kanton ungleich LU"
+  ],
+  "dann": [
+    "flag:ausserhalb_m1_scope"
+  ],
+  "quellen": [
+    {
+      "artikel": "M1-Scope: nur Kanton Luzern produktiv",
+      "fundstelle": "DER_PLAN_v1.0_FROZEN.md §3; ADR-0002"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "technisch_validiert",
+  "herkunft": "auftrag"
+}

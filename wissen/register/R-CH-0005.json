@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0005",
+  "regel": "Eine Kuendigung ohne amtliches Formular oder ohne Unterschrift kann nichtig sein.",
+  "wenn": [
+    "kuendigung.amtliches_formular=false oder kuendigung.unterschrieben=false"
+  ],
+  "dann": [
+    "flag:nichtig_formular_fehlt",
+    "flag:nichtig_unterschrift_fehlt"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 266l / 266o OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@gemeinsam-recht/wissen",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wissens-Register & Destillat-Pipeline (AUFTRAG-W0, Plan v1.1 §6 L1). Privates Fundament: versionierte, maschinenlesbare Erkenntnisse mit Quelle/Zeitstand/Regelversion/Pruefstand. Kein LLM, kein Netzwerk, keine Laufzeit-Abhaengigkeiten. KEINE Veroeffentlichung — dist/ wird nur lokal gebaut.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "migrate": "node tools/migrate.ts",
+    "uebernehmen": "node tools/uebernehmen.ts",
+    "quoten-sicht": "node tools/quoten-sicht.ts",
+    "build-dist": "node tools/build-dist.ts"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}

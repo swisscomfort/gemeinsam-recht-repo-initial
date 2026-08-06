@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0008",
+  "regel": "Wurden kurz vor der Kuendigung Rechte aus dem Mietverhaeltnis geltend gemacht, kann das ein Hinweis auf eine anfechtbare Rachekuendigung sein.",
+  "wenn": [
+    "sperrfrist.rechte_geltend_gemacht=true"
+  ],
+  "dann": [
+    "flag:rachekuendigung_indiz"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 271a OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "R-LU-0001",
+  "regel": "Fuer die Fristverschiebung nach R-CH-0003 gelten die gesetzlichen Feiertage des Kantons Luzern.",
+  "wenn": [
+    "kanton=LU",
+    "ein Fristende wird auf Verschiebung geprueft"
+  ],
+  "dann": [
+    "folge:feiertagsliste_lu_massgeblich"
+  ],
+  "quellen": [
+    {
+      "artikel": "Gesetzliche Feiertage Kanton Luzern",
+      "fundstelle": "kantonales Recht LU (Feiertagsliste, siehe feiertage_lu.ts)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

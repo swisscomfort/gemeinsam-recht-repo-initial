@@ -33,6 +33,14 @@ export { berechneFristen, istIsoDatum, addTage, wochentag, istWochenende, zuTage
 export { FEIERTAGE_LU, FEIERTAGE_LU_JAHRE, istFeiertagLu } from "./feiertage_lu.js";
 export { FLAG_QUELLE, FLAG_REIHENFOLGE, pruefeRegeln, REGELVERSION } from "./regeln.js";
 export { QUELLEN, QUELLENSTAND, offeneRechtsparameter } from "./quellen.js";
+export {
+  QUELLE_ZU_REGEL,
+  REGISTER,
+  REGISTER_PARAMETER,
+  REGISTER_REGELVERSION,
+  REGISTER_ZEITSTAND,
+} from "./register.gen.js";
+export type { RegisterEintrag, RegisterQuelle } from "./register.gen.js";
 export { baueTrace, hashFallobjekt, sha256Hex, sha256HexBytes, stableStringify } from "./trace.js";
 export { erstelleEinschaetzung } from "./einschaetzung.js";
 export type {

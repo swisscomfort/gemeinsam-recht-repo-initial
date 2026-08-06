@@ -2,9 +2,11 @@
  * Regel-Flags (AUFTRAG-S1 §4 — abschliessender Katalog), je mit quelle_id.
  * Deterministische Auswertung; keine LLM-Beteiligung.
  */
+import { REGISTER_REGELVERSION } from "./register.gen.js";
 import type { FlagId, IsoDate, QuelleId, Zustellart } from "./types.js";
 
-export const REGELVERSION = "0.1.0";
+/** Regelversion aus dem Wissens-Register (eine Quelle der Wahrheit, W0 Teil B). */
+export const REGELVERSION = REGISTER_REGELVERSION;
 
 /** Kanonische Reihenfolge des Flag-Katalogs (Auftrag §4). */
 export const FLAG_REIHENFOLGE: readonly FlagId[] = [

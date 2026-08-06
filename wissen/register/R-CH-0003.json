@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0003",
+  "regel": "Faellt das Fristende auf einen Samstag, Sonntag oder gesetzlichen Feiertag, verschiebt es sich auf den naechsten Werktag.",
+  "wenn": [
+    "ein berechnetes Fristende faellt auf Samstag, Sonntag oder Feiertag"
+  ],
+  "dann": [
+    "folge:fristende_verschiebung_auf_naechsten_werktag"
+  ],
+  "quellen": [
+    {
+      "artikel": "Fristenrecht/ZPO",
+      "fundstelle": "OR (SR 220) / ZPO (SR 272)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

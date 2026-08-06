@@ -1,0 +1,22 @@
+{
+  "id": "R-CH-0001",
+  "regel": "Die Kuendigung kann innert 30 Tagen nach Empfang bei der Schlichtungsbehoerde angefochten werden; nach Fristablauf gilt die Frist als abgelaufen.",
+  "wenn": [
+    "rechtsgebiet=mietrecht_kuendigung",
+    "empfangsdatum_effektiv liegt vor"
+  ],
+  "dann": [
+    "parameter:anfechtungsfrist_tage=30",
+    "flag:frist_abgelaufen"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 273 Abs. 1 OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

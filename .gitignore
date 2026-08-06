@@ -3,3 +3,8 @@ node_modules/
 .env.*
 dist/
 terminalausgabeclaudecli/
+
+# Ausnahme (AUFTRAG-W0/E2): wissen/dist wird versioniert — der Feed-Prototyp
+# konsumiert versionen.json als Client; wissen/tests/dist.test.ts sichert die
+# Aktualitaet. Kein Deploy — Veroeffentlichung bleibt menschlicher Entscheid.
+!wissen/dist/

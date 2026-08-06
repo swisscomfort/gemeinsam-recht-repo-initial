@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "gemeinsam-recht/wissen/kandidat.schema.json",
+  "title": "Eingangskorb — Kandidat oder Fehlermeldung",
+  "description": "Eintraege im Eingangskorb (AUFTRAG-W0 Teil C, Ergaenzung E1). Zwei Typen: status=kandidat (Erkenntnis-Vorschlag ohne id; id wird erst bei menschlicher Uebernahme vergeben) und status=fehlermeldung (Rueckkanal: 'diese Regel scheint falsch'). Beide Typen tragen NIE Falldaten: keine Namen, Adressen oder Datumsangaben eines konkreten Falls; als Herkunftsbezug sind nur fall_anker (Hash) oder entscheid_quelle erlaubt. Datumsangaben in Freitextfeldern werden strukturell abgewiesen (ISO- und dd.mm.yyyy-Muster). Unbekannte Felder sind ungueltig.",
+  "oneOf": [
+    { "$ref": "#/definitions/kandidat" },
+    { "$ref": "#/definitions/fehlermeldung" }
+  ],
+  "definitions": {
+    "freitextOhneFalldatum": {
+      "type": "string",
+      "minLength": 1,
+      "allOf": [
+        { "not": { "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}" } },
+        { "not": { "pattern": "[0-9]{1,2}\\.[ ]?[0-9]{1,2}\\.[ ]?[0-9]{2,4}" } }
+      ]
+    },
+    "kandidat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "regel", "wenn", "dann", "quellen", "zeitstand", "regelversion", "pruefstand", "herkunft", "begruendung"],
+      "properties": {
+        "status": { "const": "kandidat" },
+        "regel": { "$ref": "#/definitions/freitextOhneFalldatum" },
+        "wenn": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/freitextOhneFalldatum" }
+        },
+        "dann": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/freitextOhneFalldatum" }
+        },
+        "quellen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["artikel", "fundstelle"],
+            "properties": {
+              "artikel": { "type": "string", "minLength": 1 },
+              "fundstelle": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "zeitstand": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "regelversion": { "type": "string", "minLength": 1 },
+        "pruefstand": {
+          "enum": ["technisch_validiert", "fachlich_zu_verifizieren", "fachlich_verifiziert"]
+        },
+        "herkunft": {
+          "enum": ["gesetz", "entscheid", "auftrag", "fall_destillat", "redaktion"]
+        },
+        "begruendung": { "$ref": "#/definitions/freitextOhneFalldatum" },
+        "fall_anker": {
+          "description": "Nur Hash (SHA-256, klein geschrieben), nie Inhalt.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "entscheid_quelle": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fehlermeldung": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "regel_id", "begruendung"],
+      "properties": {
+        "status": { "const": "fehlermeldung" },
+        "regel_id": {
+          "type": "string",
+          "pattern": "^R-(CH|AG|AI|AR|BE|BL|BS|FR|GE|GL|GR|JU|LU|NE|NW|OW|SG|SH|SO|SZ|TG|TI|UR|VD|VS|ZG|ZH)-[0-9]{4}$"
+        },
+        "begruendung": { "$ref": "#/definitions/freitextOhneFalldatum" },
+        "regelversion": {
+          "description": "Die lokal verwendete Regelversion, auf die sich die Meldung bezieht.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "gemeinsam-recht/wissen/erkenntnis.schema.json",
+  "title": "Erkenntnis — Eintrag im Wissens-Register",
+  "description": "Ein versionierter, maschinenlesbarer Register-Eintrag (AUFTRAG-W0 Teil A). Konvention fuer 'dann': 'flag:<flag_id>' fuer Regel-Flags, 'parameter:<name>=<ganzzahl>' fuer Rechtsparameter, 'folge:<kurztext>' fuer sonstige Folgen. Unbekannte Felder sind ungueltig.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "regel", "wenn", "dann", "quellen", "zeitstand", "regelversion", "pruefstand", "herkunft"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^R-(CH|AG|AI|AR|BE|BL|BS|FR|GE|GL|GR|JU|LU|NE|NW|OW|SG|SH|SO|SZ|TG|TI|UR|VD|VS|ZG|ZH)-[0-9]{4}$"
+    },
+    "regel": { "type": "string", "minLength": 1 },
+    "wenn": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "dann": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "quellen": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artikel", "fundstelle"],
+        "properties": {
+          "artikel": { "type": "string", "minLength": 1 },
+          "fundstelle": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "zeitstand": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "regelversion": { "type": "string", "minLength": 1 },
+    "pruefstand": {
+      "enum": ["technisch_validiert", "fachlich_zu_verifizieren", "fachlich_verifiziert"]
+    },
+    "herkunft": {
+      "enum": ["gesetz", "entscheid", "auftrag", "fall_destillat", "redaktion"]
+    },
+    "fall_anker": {
+      "description": "Nur Hash (SHA-256, klein geschrieben), nie Inhalt — Invariante 1/11.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "entscheid_quelle": {
+      "description": "Aktenzeichen eines veroeffentlichten Entscheids.",
+      "type": "string",
+      "minLength": 1
+    },
+    "review": {
+      "description": "Review-Vermerk der menschlichen Uebernahme (AUFTRAG-W0 Teil C); wer/wann als freie Angabe.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wer", "wann"],
+      "properties": {
+        "wer": { "type": "string", "minLength": 1 },
+        "wann": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

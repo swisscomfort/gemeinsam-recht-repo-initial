@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0006",
+  "regel": "Bei einer Familienwohnung muss die Kuendigung beiden Partnern separat zugestellt werden; sonst kann sie nichtig sein.",
+  "wenn": [
+    "wohnung.familienwohnung=true",
+    "wohnung.separate_zustellung_beide=false"
+  ],
+  "dann": [
+    "flag:nichtig_familienwohnung_zustellung"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 266n / 266o OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

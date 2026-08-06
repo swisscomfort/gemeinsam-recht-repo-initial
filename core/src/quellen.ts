@@ -1,100 +1,51 @@
 /**
- * Quellenregister (AUFTRAG-S1 §3).
+ * Quellenregister (AUFTRAG-S1 §3, seit AUFTRAG-W0 aus dem Wissens-Register).
  *
  * Jeder Rechtsparameter traegt Quelle, Zeitstand und Pruefstand.
- * Bis zur fachlichen Abnahme durch einen Menschen gilt fuer alle
- * Rechtsparameter `pruefstand: "fachlich_zu_verifizieren"` (Auftrag §3).
- * Die Artikel-Angaben entsprechen woertlich der Parametertabelle des
- * Auftrags; sie sind bewusst nicht durch eigene Recherche "praezisiert".
+ * Quelle der Wahrheit ist das Wissens-Register (wissen/register/*.json);
+ * dessen Inhalt liegt hier als generiertes Modul register.gen.ts vor
+ * (eine Quelle der Wahrheit, kein Laufzeit-Dateizugriff — W0 Teil B).
+ * Die Werte sind unveraendert die der Parametertabelle aus AUFTRAG-S1;
+ * bis zur fachlichen Abnahme gilt fuer alle Rechtsparameter
+ * `pruefstand: "fachlich_zu_verifizieren"`.
  */
+import {
+  QUELLE_ZU_REGEL,
+  REGISTER,
+  REGISTER_ZEITSTAND,
+  type RegisterEintrag,
+} from "./register.gen.js";
 import type { IsoDate, Quelle, QuelleId } from "./types.js";
 
-/** Zeitstand aller Quellenangaben (Datum des Plan-Freeze / Auftragserteilung). */
-export const QUELLENSTAND: IsoDate = "2026-08-05";
+/** Zeitstand aller Quellenangaben (aus dem Wissens-Register). */
+export const QUELLENSTAND: IsoDate = REGISTER_ZEITSTAND;
 
-export const QUELLEN: Record<QuelleId, Quelle> = {
-  P1: {
-    id: "P1",
-    artikel: "Art. 273 Abs. 1 OR",
-    fundstelle: "OR (SR 220)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P2: {
-    id: "P2",
-    artikel: "Fristenrecht OR",
-    fundstelle: "OR (SR 220), allgemeines Fristenrecht",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P3: {
-    id: "P3",
-    artikel: "Fristenrecht/ZPO",
-    fundstelle: "OR (SR 220) / ZPO (SR 272)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P4: {
-    id: "P4",
-    artikel: "Zustellrecht",
-    fundstelle: "Zustellrecht (Zustellfiktion Einschreiben, 7-taegige Abholfrist)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P5: {
-    id: "P5",
-    artikel: "Art. 266l / 266o OR",
-    fundstelle: "OR (SR 220)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P6: {
-    id: "P6",
-    artikel: "Art. 266n / 266o OR",
-    fundstelle: "OR (SR 220)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P7: {
-    id: "P7",
-    artikel: "Art. 271a OR",
-    fundstelle: "OR (SR 220)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  P8: {
-    id: "P8",
-    artikel: "Art. 271a OR",
-    fundstelle: "OR (SR 220)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  FEIERTAGE_LU: {
-    id: "FEIERTAGE_LU",
-    artikel: "Gesetzliche Feiertage Kanton Luzern",
-    fundstelle: "kantonales Recht LU (Feiertagsliste, siehe feiertage_lu.ts)",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  // Der Flag-Katalog des Auftrags (§4) enthaelt `befristetes_verhaeltnis_sonderfall`,
-  // die Parametertabelle (§3) nennt dafuer aber keine Quelle. Offene fachliche
-  // Frage — bis zur Klaerung ohne Artikelangabe gefuehrt (nichts erfinden).
-  Q_BEFRISTET: {
-    id: "Q_BEFRISTET",
-    artikel: "offen — Sonderrechtslage befristetes Mietverhaeltnis, fachlich zu klaeren",
-    fundstelle: "AUFTRAG-S1 §4 (Flag-Katalog); keine Quellenangabe im Auftrag",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "fachlich_zu_verifizieren",
-  },
-  // Scope-Grenze ist eine Projektentscheidung, kein Rechtsparameter.
-  Q_SCOPE: {
-    id: "Q_SCOPE",
-    artikel: "M1-Scope: nur Kanton Luzern produktiv",
-    fundstelle: "DER_PLAN_v1.0_FROZEN.md §3; ADR-0002",
-    zeitstand: QUELLENSTAND,
-    pruefstand: "technisch_validiert",
-  },
-};
+function registerEintrag(regelId: string): RegisterEintrag {
+  const eintrag = REGISTER.find((e) => e.id === regelId);
+  if (!eintrag) {
+    throw new Error(`Wissens-Register: Eintrag ${regelId} fehlt in register.gen.ts`);
+  }
+  return eintrag;
+}
+
+function quelleAus(id: QuelleId): Quelle {
+  const eintrag = registerEintrag(QUELLE_ZU_REGEL[id]);
+  const quelle = eintrag.quellen[0];
+  if (!quelle) {
+    throw new Error(`Wissens-Register: Eintrag ${eintrag.id} ohne Quellen`);
+  }
+  return {
+    id,
+    artikel: quelle.artikel,
+    fundstelle: quelle.fundstelle,
+    zeitstand: eintrag.zeitstand,
+    pruefstand: eintrag.pruefstand,
+  };
+}
+
+export const QUELLEN: Record<QuelleId, Quelle> = Object.fromEntries(
+  (Object.keys(QUELLE_ZU_REGEL) as QuelleId[]).map((id) => [id, quelleAus(id)]),
+) as Record<QuelleId, Quelle>;
 
 /** Alle Quellen mit pruefstand=fachlich_zu_verifizieren (offene Punkte fuer die menschliche Pruefung). */
 export function offeneRechtsparameter(): Quelle[] {

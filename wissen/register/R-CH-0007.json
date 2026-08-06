@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0007",
+  "regel": "Wegen eines Verfahrens aus dem Mietverhaeltnis kann eine Sperrfrist bestehen; die Kuendigung kann anfechtbar sein.",
+  "wenn": [
+    "sperrfrist.verfahren_letzte_3_jahre=true oder sperrfrist.verfahren_haengig=true (haengiges Verfahren: offene fachliche Frage, siehe core/src/regeln.ts)"
+  ],
+  "dann": [
+    "flag:sperrfrist_271a_moeglich"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 271a OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

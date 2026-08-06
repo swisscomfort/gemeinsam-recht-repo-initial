@@ -1,0 +1,20 @@
+{
+  "id": "R-CH-0002",
+  "regel": "Der Empfangstag zaehlt nicht mit; die Frist laeuft ab dem Folgetag.",
+  "wenn": [
+    "eine Frist nach R-CH-0001 wird berechnet"
+  ],
+  "dann": [
+    "folge:fristbeginn_am_folgetag"
+  ],
+  "quellen": [
+    {
+      "artikel": "Fristenrecht OR",
+      "fundstelle": "OR (SR 220), allgemeines Fristenrecht"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}

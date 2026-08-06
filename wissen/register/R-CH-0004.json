@@ -1,0 +1,22 @@
+{
+  "id": "R-CH-0004",
+  "regel": "Ein nicht abgeholtes Einschreiben gilt am Ende der 7-taegigen Abholfrist als zugestellt (Zustellfiktion).",
+  "wenn": [
+    "kuendigung.zustellart=einschreiben",
+    "abholfrist_ende ist erfasst (nicht abgeholt)"
+  ],
+  "dann": [
+    "parameter:abholfrist_tage=7",
+    "folge:zustellfiktion_am_ende_der_abholfrist"
+  ],
+  "quellen": [
+    {
+      "artikel": "Zustellrecht",
+      "fundstelle": "Zustellrecht (Zustellfiktion Einschreiben, 7-taegige Abholfrist)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "auftrag"
+}
