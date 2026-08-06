@@ -197,3 +197,215 @@ section.lauf {
   font-size: 0.85rem;
   color: var(--grau);
 }
+
+/* ---------- F1: Leser-Journey ---------- */
+
+.kopfhinweis.kompakt {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  margin: 0.5rem 0;
+}
+
+.leser-kopf {
+  margin-bottom: 1rem;
+}
+
+.steuerung,
+.einstieg,
+.karten-aktionen,
+.navigation {
+  font-family: system-ui, sans-serif;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0.6rem 0;
+}
+
+button.primaer {
+  background: var(--akzent);
+  color: #fff;
+}
+
+button.klein {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+}
+
+.werkbank-link {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--grau);
+  margin-left: auto;
+}
+
+article.mein-fall {
+  border: 2px solid var(--akzent);
+}
+
+.badge-privat {
+  color: #1f4d7a;
+  background: #e8f0f9;
+  border-color: #b8cde6;
+}
+
+.update-hinweis {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--akzent);
+  margin: 0 0 0.2rem;
+}
+
+.grau-hinweis {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: #9aa4ae;
+}
+
+.emotion-erfassung {
+  font-family: system-ui, sans-serif;
+  border-top: 1px dashed var(--linie);
+  margin-top: 0.7rem;
+  padding-top: 0.5rem;
+}
+
+.emotion-frage {
+  font-size: 0.85rem;
+  color: var(--grau);
+  margin: 0 0 0.3rem;
+}
+
+.emotion-erfassung input.notiz {
+  font: inherit;
+  font-size: 0.85rem;
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  background: var(--karte);
+}
+
+.laufbar {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  position: sticky;
+  bottom: 0.5rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #fff8e6;
+  border: 1px solid #e6d9a8;
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  margin-top: 1.5rem;
+  color: #5c4a12;
+}
+
+/* ---------- F1: eingebetteter S2-Fragebaum ---------- */
+
+section.karte {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin: 0 0 1rem;
+}
+
+.fortschritt {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--grau);
+  margin: 0;
+}
+
+.hilfe {
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: var(--grau);
+}
+
+.fehler {
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: #8a1f1f;
+  min-height: 1.2rem;
+  margin: 0.4rem 0 0;
+}
+
+.optionen {
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.6rem 0;
+}
+
+.option {
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  background: var(--karte);
+}
+
+.option input {
+  margin-right: 0.5rem;
+}
+
+select,
+input[type="text"] {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  background: var(--karte);
+}
+
+.beispieldaten {
+  border-top: 1px dashed var(--linie);
+  margin-top: 0.7rem;
+  padding-top: 0.5rem;
+}
+
+.fristwarnung {
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--warn);
+}
+
+.ampel {
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+}
+
+.ampel-gruen {
+  background: #e7f3e7;
+  color: #1e5c1e;
+}
+
+.ampel-gelb {
+  background: #fdf6dd;
+  color: #6b5a10;
+}
+
+.ampel-rot {
+  background: #fdeaea;
+  color: #7a1f1f;
+}
+
+.quellenliste {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+.fusszeile {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--grau);
+  border-top: 1px solid var(--linie);
+  padding-top: 0.8rem;
+}
