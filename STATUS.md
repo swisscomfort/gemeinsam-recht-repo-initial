@@ -17,6 +17,7 @@
 - [x] CR-001 Parallelbau: Feed-Prototyp F0 (privat, offline) technisch umgesetzt (berichte/AUFTRAG-F0-ABSCHLUSS.md) — interne Durchläufe (Ziel ≥100) offen
 - [x] CR-001 Parallelbau: Leser-Journey F1 (privat, offline) technisch umgesetzt (berichte/AUFTRAG-F1-ABSCHLUSS.md) — vollständige Journey-Durchläufe (Ziel ≥100) offen
 - [x] §6 L1: Wissens-Register W0 (privat) technisch umgesetzt inkl. Ergänzungen E1–E3 Fehler-Rückkanal (berichte/AUFTRAG-W0-ABSCHLUSS.md) — fachliche Verifikation der Register-Einträge und Entscheid über Veröffentlichung/Repo-Split offen
+- [x] CR-001 Parallelbau: Redaktion R0 (privat) technisch umgesetzt — Feed-Kategorie NACHERZAEHLT_OEFFENTLICH + Beschaffungswerkzeug redaktion/ (entscheidsuche.ch, nur Metadaten/Links) + Vorlage (berichte/AUFTRAG-R0-ABSCHLUSS.md) — Nacherzählen selbst ist menschliche Redaktionsarbeit, noch keine FS-1xx-Story angelegt
 
 ## Regel
 Keine neuen Plandokumente, keine Review-Runden über Papier.
