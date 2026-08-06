@@ -5,7 +5,7 @@ rechtsgebiet: verwaltungsrecht_gebuehren
 schutzstufe: S2
 etappen: 3
 missions_status: [eingereicht, recherche, urteil_erkenntnis]
-prinzipien: [aequivalenzprinzip, kostendeckungsprinzip, gewinnerzielungsverbot]
-emotions_ziel: ["Empoerung zu Neugier", "Aha-Moment", "Verstaendnis"]
+prinzipien: [aequivalenzprinzip, kostendeckungsprinzip, gewinnerzielungsverbot, transparenzpflicht]
+emotions_ziel: ["Empoerung zu Neugier", "Aha-Moment", "Klarheit ohne Haeme"]
 autor: projektinhaber
-erstellt: 2026-08-05
+erstellt: 2026-08-06
