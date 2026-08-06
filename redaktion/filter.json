@@ -1,0 +1,26 @@
+{
+  "kommentar": "Konfigurierbare Rechtsgebiets-Filter fuer npm run kandidaten (AUFTRAG-R0 §2). 'aktiv' bestimmt, welche Gebiete abgefragt werden; die Suchanfragen sind Volltext-Anfragen (Lucene-Syntax) an entscheidsuche.ch und duerfen redaktionell verfeinert werden.",
+  "aktiv": ["mietrecht"],
+  "rechtsgebiete": {
+    "mietrecht": {
+      "name": "Mietrecht",
+      "suchanfrage": "Mietvertrag OR Mietverhältnis OR Mietzins OR Mieterausweisung OR \"Kündigung des Mietverhältnisses\" OR \"missbräuchliche Kündigung\" OR Mietzinserhöhung OR Nebenkostenabrechnung"
+    },
+    "arbeit": {
+      "name": "Arbeitsrecht",
+      "suchanfrage": "Arbeitsvertrag OR Arbeitsverhältnis OR \"missbräuchliche Kündigung\" OR Lohnfortzahlung OR Überstunden OR Arbeitszeugnis"
+    },
+    "konsum": {
+      "name": "Konsumrecht",
+      "suchanfrage": "Kaufvertrag OR Gewährleistung OR Konsumkredit OR \"allgemeine Geschäftsbedingungen\" OR Widerruf"
+    },
+    "nachbarschaft": {
+      "name": "Nachbarschaftsrecht",
+      "suchanfrage": "Nachbarrecht OR Immissionen OR Lärmklage OR Grenzabstand OR \"übermässige Einwirkungen\""
+    },
+    "strassenverkehr": {
+      "name": "Strassenverkehrsrecht",
+      "suchanfrage": "Strassenverkehrsgesetz OR Führerausweisentzug OR Geschwindigkeitsüberschreitung OR \"grobe Verkehrsregelverletzung\""
+    }
+  }
+}

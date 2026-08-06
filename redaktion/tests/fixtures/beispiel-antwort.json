@@ -1,0 +1,67 @@
+{
+  "took": 86,
+  "timed_out": false,
+  "hits": {
+    "total": { "value": 3, "relation": "eq" },
+    "hits": [
+      {
+        "_index": "entscheidsuche.v2-nw_gerichte",
+        "_type": "_doc",
+        "_id": "NW_OG_001_42529_2026-08-05",
+        "_score": null,
+        "_source": {
+          "date": "2026-08-05",
+          "hierarchy": ["NW", "NW_OG", "NW_OG_001"],
+          "abstract": {
+            "de": "Mieterausweisung (ZA 26 4)",
+            "it": "Mieterausweisung (ZA 26 4)",
+            "fr": "Mieterausweisung (ZA 26 4)"
+          },
+          "title": {
+            "de": "Nidwalden Gerichte 05.08.2026 42529",
+            "it": "Nidvaldo Gerichte 05.08.2026 42529",
+            "fr": "Nidwald Gerichte 05.08.2026 42529"
+          },
+          "reference": ["42529"]
+        }
+      },
+      {
+        "_index": "entscheidsuche.v2-ch_bstg",
+        "_type": "_doc",
+        "_id": "CH_BSTG_001_CA-2026-10_2026-07-22",
+        "_score": null,
+        "_source": {
+          "date": "2026-07-22",
+          "reference": ["CA.2026.10"],
+          "hierarchy": ["CH", "CH_BSTG", "CH_BSTG_001"],
+          "abstract": {
+            "de": "Gesuch um Kostenerlass; Nachträgliche Entscheide;;Gesuch um Kostenerlass; Nachträgliche Entscheide",
+            "it": "Gesuch um Kostenerlass; Nachträgliche Entscheide;;Gesuch um Kostenerlass; Nachträgliche Entscheide",
+            "fr": "Gesuch um Kostenerlass; Nachträgliche Entscheide;;Gesuch um Kostenerlass; Nachträgliche Entscheide"
+          },
+          "title": {
+            "de": "Bundesstrafgericht 22.07.2026 CA.2026.10",
+            "it": "Tribunale penale federale 22.07.2026 CA.2026.10",
+            "fr": "Tribunal pénal fédéral 22.07.2026 CA.2026.10"
+          }
+        }
+      },
+      {
+        "_index": "entscheidsuche.v2-ag_gerichte",
+        "_type": "_doc",
+        "_id": "AG_OG_001_ZVE-2026-16_2026-07-14",
+        "_score": null,
+        "_source": {
+          "date": "2026-07-14",
+          "reference": ["ZVE.2026.16"],
+          "hierarchy": ["AG", "AG_OG", "AG_OG_001"],
+          "title": {
+            "de": "Aargau Obergericht Zivilkammern 14.07.2026 ZVE.2026.16",
+            "it": "Argovia Obergericht Zivilkammern 14.07.2026 ZVE.2026.16",
+            "fr": "Argovie Obergericht Zivilkammern 14.07.2026 ZVE.2026.16"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@gemeinsam-recht/redaktion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internes Beschaffungswerkzeug (AUFTRAG-R0): holt Metadaten und Links oeffentlich publizierter Schweizer Gerichtsentscheide von entscheidsuche.ch als Kandidatenliste fuer die Redaktion. Keine Volltext-Archivierung, keine Veroeffentlichung, kein LLM.",
+  "type": "module",
+  "scripts": {
+    "kandidaten": "tsc -p tsconfig.build.json && node dist/kandidaten.js",
+    "test": "tsc --noEmit && vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}
