@@ -33,6 +33,20 @@ import {
   type MeinFall,
 } from "./fall";
 import {
+  MELDE_HINWEIS_OHNE_FALLDATEN,
+  REGEL_UPDATE_HINWEIS,
+  baueFehlermeldung,
+  baueRechenweg,
+  exportiereMeldungen,
+  ladeMeldungen,
+  regelAktualisiert,
+  type RechenwegSchritt,
+  type RegelMeldung,
+} from "./rechenweg";
+// Lokal gebaute Sicht des Wissens-Registers (E2): regel_id -> aktuelle
+// Regelversion. Statischer Import zur Bauzeit — kein Netzwerkzugriff.
+import VERSIONEN_ROH from "../../../wissen/dist/versionen.json";
+import {
   EMOTIONEN,
   SOLL_ERNSTFALL,
   bricheAb,
@@ -66,6 +80,9 @@ import {
 const LAUF_SPEICHER = "gemeinsam-recht-feed-laeufe-v1";
 const LESER_SPEICHER = "gemeinsam-recht-feed-leser-v1";
 const FALL_SPEICHER = "gemeinsam-recht-feed-mein-fall-v1";
+const MELDUNG_SPEICHER = "gemeinsam-recht-feed-regel-meldungen-v1";
+
+const VERSIONEN: Readonly<Record<string, string>> = VERSIONEN_ROH;
 
 const EMOTION_BESCHRIFTUNG: Record<(typeof EMOTIONEN)[number], string> = {
   verstanden: "Verstanden",
@@ -100,6 +117,7 @@ const geladen = ladeAlle();
 let sammlung: LaufSammlung = ladeSammlung(localStorage.getItem(LAUF_SPEICHER));
 let leseZustand: LeseZustand = ladeLeseZustand(localStorage.getItem(LESER_SPEICHER));
 let meinFall: MeinFall | null = ladeFall(localStorage.getItem(FALL_SPEICHER));
+let meldungen: RegelMeldung[] = ladeMeldungen(localStorage.getItem(MELDUNG_SPEICHER));
 let aktiverLauf: Lauf | null = null;
 let aktuelleAusgabe: JourneyAusgabe | null = null;
 let simDatum = initialesDatum();
@@ -131,6 +149,9 @@ function speichereFall(): void {
   } else {
     localStorage.setItem(FALL_SPEICHER, exportiereFall(meinFall));
   }
+}
+function speichereMeldungen(): void {
+  localStorage.setItem(MELDUNG_SPEICHER, exportiereMeldungen(meldungen));
 }
 
 /* ---------- Hilfsfunktionen ---------- */
@@ -277,6 +298,79 @@ function laufbar(aktuelleStelle: string): HTMLElement | null {
   return leiste;
 }
 
+/* ---------- Rechenweg-Ausklapper + Fehler-Rueckkanal (W0, Ergaenzung E3) ---------- */
+
+/**
+ * Ausklapper "Rechenweg anzeigen": laienlesbare Wiedergabe des vorhandenen
+ * DTM-Trace-Inhalts (Schritt, Regel-ID, Quelle, Zeitstand) plus der Knopf
+ * "Stimmt etwas nicht? Regel melden". Die Meldung wird ausschliesslich lokal
+ * gespeichert (E1-Schema, ohne Falldaten) — Export ueber die Werkbank;
+ * Pruefung und Uebernahme geschehen ausschliesslich durch Menschen.
+ */
+function rechenwegBlock(schritte: RechenwegSchritt[], regelversion: string): HTMLElement {
+  const ausklapper = el("details", "rechenweg");
+  ausklapper.append(el("summary", undefined, "Rechenweg anzeigen"));
+  ausklapper.append(
+    el(
+      "p",
+      "hilfe",
+      `So kam das Ergebnis zustande — jeder Schritt stammt aus dem deterministischen Kern (Regelversion ${regelversion}), nichts wurde von einer KI entschieden.`,
+    ),
+  );
+  const liste = el("ol", "rechenweg-schritte");
+  for (const schritt of schritte) {
+    const punkt = el("li");
+    punkt.append(el("p", undefined, schritt.schritt));
+    punkt.append(
+      el(
+        "p",
+        "rechenweg-meta",
+        `Regel ${schritt.regelId} · Quelle: ${schritt.quelle} · Zeitstand ${schritt.zeitstand}`,
+      ),
+    );
+    liste.append(punkt);
+  }
+  ausklapper.append(liste);
+
+  const formular = el("div", "melde-formular verborgen");
+  const auswahl = document.createElement("select");
+  for (const schritt of schritte) {
+    const option = document.createElement("option");
+    option.value = schritt.regelId;
+    option.textContent = `${schritt.regelId} — ${schritt.schritt}`;
+    auswahl.append(option);
+  }
+  const eingabe = document.createElement("textarea");
+  eingabe.rows = 3;
+  eingabe.maxLength = 500;
+  eingabe.placeholder = "Warum scheint diese Regel nicht zu stimmen?";
+  const rueckmeldung = el("p", "melde-rueckmeldung", "");
+  formular.append(
+    el("p", "hilfe", MELDE_HINWEIS_OHNE_FALLDATEN),
+    auswahl,
+    eingabe,
+    knopf("Meldung lokal speichern", "sekundaer klein", () => {
+      try {
+        meldungen.push(baueFehlermeldung(auswahl.value, eingabe.value, regelversion));
+        speichereMeldungen();
+        eingabe.value = "";
+        rueckmeldung.textContent =
+          "Meldung lokal gespeichert — Export über die Werkbank. Prüfung und Übernahme geschehen ausschliesslich durch Menschen (Review-Gate).";
+      } catch (fehler) {
+        rueckmeldung.textContent = fehler instanceof Error ? fehler.message : String(fehler);
+      }
+    }),
+    rueckmeldung,
+  );
+  ausklapper.append(
+    knopf("Stimmt etwas nicht? Regel melden", "sekundaer klein", () => {
+      formular.classList.toggle("verborgen");
+    }),
+    formular,
+  );
+  return ausklapper;
+}
+
 /* ---------- Leser-Modus (Standard beim Oeffnen, F1 §1) ---------- */
 
 function meinFallKarte(fall: MeinFall): HTMLElement {
@@ -286,8 +380,14 @@ function meinFallKarte(fall: MeinFall): HTMLElement {
   artikel.append(
     el("p", "etappe-info", `Aus dem Fragebaum vom ${fall.erstelltAm} (simulierte Zeit).`),
   );
+  if (regelAktualisiert(fall, VERSIONEN)) {
+    artikel.append(el("p", "update-hinweis", REGEL_UPDATE_HINWEIS));
+  }
   for (const zeile of fallStatusZeilen(fall)) {
     artikel.append(el("p", undefined, zeile));
+  }
+  if (fall.rechenweg.length > 0 && fall.regelversion !== null) {
+    artikel.append(rechenwegBlock(fall.rechenweg, fall.regelversion));
   }
   artikel.append(el("p", "grau-hinweis", PHASE_S_HINWEIS));
   const zeile = emotionsZeile("mein-fall", "mein_fall");
@@ -734,6 +834,10 @@ function zeigeErgebnis(): void {
         "Brief-Vorlagen und Fallchronologie stehen im S2-Webflow bereit; diese Journey merkt sich den Status als private Fallkarte in Ihrer nächsten Ausgabe.",
       ),
     );
+    const schritte = baueRechenweg(einschaetzung);
+    if (schritte.length > 0) {
+      karte.append(rechenwegBlock(schritte, einschaetzung.regelversion));
+    }
   }
 
   const zeile = emotionsZeile("ergebnis", "ergebnis");
@@ -810,6 +914,29 @@ function zeigeWerkbank(): void {
     );
   }
   haupt.append(laufBereich);
+
+  const meldeBereich = el("section", "meldungen");
+  meldeBereich.append(el("h2", undefined, `Regel-Meldungen (${meldungen.length})`));
+  meldeBereich.append(
+    el(
+      "p",
+      "hilfe",
+      "Lokal erzeugte Fehlermeldungen nach wissen/schema/kandidat.schema.json (Typ fehlermeldung, ohne Falldaten). " +
+        "Der Export ist für den Eingangskorb wissen/eingang/ gedacht; Prüfung und Übernahme geschehen ausschliesslich durch Menschen (Review-Gate).",
+    ),
+  );
+  meldeBereich.append(
+    knopf("Meldungen als JSON exportieren", "sekundaer", () => {
+      const blob = new Blob([exportiereMeldungen(meldungen)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "regel-meldungen-export.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }),
+  );
+  haupt.append(meldeBereich);
 
   const verweigert = el("section", "verweigert");
   verweigert.append(el("h2", undefined, `Verweigerte Geschichten (${geladen.verweigert.length})`));

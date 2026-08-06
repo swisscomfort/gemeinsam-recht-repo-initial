@@ -409,3 +409,62 @@ input[type="text"] {
   border-top: 1px solid var(--linie);
   padding-top: 0.8rem;
 }
+
+/* ---------- Rechenweg + Fehler-Rueckkanal (W0, Ergaenzung E3) ---------- */
+
+.verborgen {
+  display: none;
+}
+
+details.rechenweg {
+  margin: 0.8rem 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+
+details.rechenweg summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.rechenweg-schritte {
+  margin: 0.5rem 0;
+  padding-left: 1.4rem;
+}
+
+.rechenweg-schritte li {
+  margin-bottom: 0.5rem;
+}
+
+.rechenweg-schritte p {
+  margin: 0.1rem 0;
+}
+
+.rechenweg-meta {
+  font-size: 0.8rem;
+  color: var(--grau);
+}
+
+.melde-formular {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.melde-formular select,
+.melde-formular textarea {
+  font: inherit;
+  padding: 0.3rem;
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+.melde-rueckmeldung {
+  font-size: 0.85rem;
+  margin: 0.2rem 0;
+}

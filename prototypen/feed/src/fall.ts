@@ -7,6 +7,7 @@
 // automatische Story-Werdung (Phase S bleibt Vision, wird nicht gebaut).
 
 import type { Einschaetzung } from "@core/index";
+import { baueRechenweg, type RechenwegSchritt } from "./rechenweg";
 
 export const PRIVAT_BADGE = "PRIVAT — nur auf diesem Gerät";
 export const PHASE_S_HINWEIS = "Später: als anonyme Geschichte teilen (Phase S)";
@@ -19,10 +20,22 @@ export interface MeinFall {
   fristDatum: string | null;
   fristAbgelaufen: boolean;
   briefBereit: boolean;
+  /** Regelversion der Einschaetzung (E3; null bei Altbestand vor W0). */
+  regelversion: string | null;
+  /** Verwendete Register-Regel-IDs — Grundlage des Versionsabgleichs (E2/E3). */
+  regelIds: string[];
+  /** Laienlesbarer Rechenweg (E3); leer bei LUECKE und Altbestand. */
+  rechenweg: RechenwegSchritt[];
 }
 
 /** Status-Auszug aus einer abgeschlossenen Einschaetzung (nur Wiedergabe). */
 export function fallStatusAus(einschaetzung: Einschaetzung, datumISO: string): MeinFall {
+  const rechenweg = baueRechenweg(einschaetzung);
+  const basis = {
+    regelversion: einschaetzung.regelversion,
+    regelIds: rechenweg.map((schritt) => schritt.regelId),
+    rechenweg,
+  };
   if (einschaetzung.status === "LUECKE") {
     return {
       erstelltAm: datumISO,
@@ -31,6 +44,7 @@ export function fallStatusAus(einschaetzung: Einschaetzung, datumISO: string): M
       fristDatum: null,
       fristAbgelaufen: false,
       briefBereit: false,
+      ...basis,
     };
   }
   return {
@@ -40,6 +54,7 @@ export function fallStatusAus(einschaetzung: Einschaetzung, datumISO: string): M
     fristDatum: einschaetzung.frist_datum,
     fristAbgelaufen: einschaetzung.frist_abgelaufen,
     briefBereit: einschaetzung.optionen.some((o) => o.brief !== null),
+    ...basis,
   };
 }
 
@@ -66,14 +81,31 @@ export function exportiereFall(fall: MeinFall): string {
   return JSON.stringify(fall, null, 2);
 }
 
-const ERLAUBTE_SCHLUESSEL = [
+const PFLICHT_SCHLUESSEL = [
   "erstelltAm",
   "status",
   "ampel",
   "fristDatum",
   "fristAbgelaufen",
   "briefBereit",
-].join(",");
+];
+
+/** Neue Schluessel seit E3 — optional, damit Altbestand ladbar bleibt. */
+const OPTIONALE_SCHLUESSEL = ["regelversion", "regelIds", "rechenweg"];
+
+const SCHRITT_SCHLUESSEL = ["schritt", "regelId", "quelle", "zeitstand"].sort().join(",");
+
+function istRechenweg(wert: unknown): wert is RechenwegSchritt[] {
+  if (!Array.isArray(wert)) return false;
+  return wert.every((schritt) => {
+    if (typeof schritt !== "object" || schritt === null || Array.isArray(schritt)) return false;
+    const s = schritt as Record<string, unknown>;
+    if (Object.keys(s).sort().join(",") !== SCHRITT_SCHLUESSEL) return false;
+    return ["schritt", "regelId", "quelle", "zeitstand"].every(
+      (feld) => typeof s[feld] === "string",
+    );
+  });
+}
 
 /** Laedt einen gespeicherten Fall-Status; bei jeder Abweichung: kein Fall. */
 export function ladeFall(rohJson: string | null): MeinFall | null {
@@ -84,7 +116,13 @@ export function ladeFall(rohJson: string | null): MeinFall | null {
       return null;
     }
     const kandidat = geparst as Record<string, unknown>;
-    if (Object.keys(kandidat).sort().join(",") !== ERLAUBTE_SCHLUESSEL.split(",").sort().join(",")) {
+    const schluessel = Object.keys(kandidat);
+    if (PFLICHT_SCHLUESSEL.some((s) => !schluessel.includes(s))) return null;
+    if (
+      schluessel.some(
+        (s) => !PFLICHT_SCHLUESSEL.includes(s) && !OPTIONALE_SCHLUESSEL.includes(s),
+      )
+    ) {
       return null;
     }
     const status = kandidat["status"];
@@ -95,6 +133,12 @@ export function ladeFall(rohJson: string | null): MeinFall | null {
     if (kandidat["fristDatum"] !== null && typeof kandidat["fristDatum"] !== "string") return null;
     if (typeof kandidat["fristAbgelaufen"] !== "boolean") return null;
     if (typeof kandidat["briefBereit"] !== "boolean") return null;
+    const regelversion = kandidat["regelversion"] ?? null;
+    if (regelversion !== null && typeof regelversion !== "string") return null;
+    const regelIds = kandidat["regelIds"] ?? [];
+    if (!Array.isArray(regelIds) || regelIds.some((id) => typeof id !== "string")) return null;
+    const rechenweg = kandidat["rechenweg"] ?? [];
+    if (!istRechenweg(rechenweg)) return null;
     return {
       erstelltAm: kandidat["erstelltAm"],
       status,
@@ -102,6 +146,9 @@ export function ladeFall(rohJson: string | null): MeinFall | null {
       fristDatum: kandidat["fristDatum"] as string | null,
       fristAbgelaufen: kandidat["fristAbgelaufen"],
       briefBereit: kandidat["briefBereit"],
+      regelversion,
+      regelIds: regelIds as string[],
+      rechenweg,
     };
   } catch {
     return null;
