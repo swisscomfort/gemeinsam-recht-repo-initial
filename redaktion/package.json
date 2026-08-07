@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "kandidaten": "tsc -p tsconfig.build.json && node dist/kandidaten.js",
+    "sieben": "tsc -p tsconfig.build.json && node dist/sieben.js",
     "test": "tsc --noEmit && vitest run"
   },
   "devDependencies": {

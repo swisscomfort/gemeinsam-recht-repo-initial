@@ -1,0 +1,58 @@
+{
+  "kommentar": "Konfiguration des Metadaten-Siebs npm run sieben (AUFTRAG-R1 §1). Startbelegung — redaktionell nachjustierbar. Muster werden auf normalisiertem Text (Kleinschreibung, ae/oe/ue, Akzente entfernt) mit Wortgrenzen geprueft.",
+  "version": "1.0",
+  "stand": "2026-08-07",
+  "punkte": {
+    "positiv": 4,
+    "negativ": -8,
+    "gericht_hoch": 3,
+    "gericht_mittel": 2,
+    "gericht_tief": 0,
+    "kanton_lu_bonus": 1
+  },
+  "positiv": [
+    { "kuerzel": "kuendigung", "muster": ["kuendigung"] },
+    { "kuerzel": "anfechtung", "muster": ["anfechtung"] },
+    { "kuerzel": "erstreckung", "muster": ["erstreckung"] },
+    { "kuerzel": "mietzins", "muster": ["mietzins"] },
+    { "kuerzel": "mietzinserhoehung", "muster": ["mietzinserhoehung"] },
+    { "kuerzel": "anfangsmietzins", "muster": ["anfangsmietzins"] },
+    { "kuerzel": "nebenkosten", "muster": ["nebenkosten"] },
+    { "kuerzel": "kaution", "muster": ["kaution"] },
+    { "kuerzel": "mietzinsdepot", "muster": ["mietzinsdepot"] },
+    { "kuerzel": "maengel", "muster": ["maengel"] },
+    { "kuerzel": "schimmel", "muster": ["schimmel"] },
+    { "kuerzel": "untermiete", "muster": ["untermiete"] },
+    { "kuerzel": "ausweisung", "muster": ["ausweisung", "mietausweisung", "mieterausweisung"] },
+    { "kuerzel": "rueckgabe", "muster": ["rueckgabe", "uebergabe"] },
+    { "kuerzel": "familienwohnung", "muster": ["familienwohnung"] },
+    { "kuerzel": "rachekuendigung", "muster": ["rachekuendigung"] },
+    { "kuerzel": "271a", "muster": ["271a"] }
+  ],
+  "negativ": [
+    { "kuerzel": "uR", "muster": ["unentgeltliche rechtspflege", "unentgeltlichen rechtspflege", "unentgeltlicher rechtspflege", "unentgeltliche prozessfuehrung"] },
+    { "kuerzel": "nE", "muster": ["nichteintreten"] },
+    { "kuerzel": "frist", "muster": ["fristwiederherstellung", "wiederherstellung der frist", "fristenlauf", "fristlauf"] },
+    { "kuerzel": "kV", "muster": ["kostenvorschuss"] },
+    { "kuerzel": "kE", "muster": ["kostenentscheid"] },
+    { "kuerzel": "ausstand", "muster": ["ausstand"] },
+    { "kuerzel": "revision", "muster": ["revision"] },
+    { "kuerzel": "rVz", "muster": ["rechtsverzoegerung"] },
+    { "kuerzel": "rVw", "muster": ["rechtsverweigerung"] },
+    { "kuerzel": "sist", "muster": ["sistierung"] },
+    { "kuerzel": "ggl", "muster": ["gegenstandslos"] }
+  ],
+  "gericht": {
+    "hoch_signaturen": ["CH_BGer", "CH_BGE"],
+    "mittel_gerichtsteile": ["OG", "KG", "TC", "APG"],
+    "hoch_kuerzel": "BGer"
+  },
+  "sprache": {
+    "fr_it_kantone": ["VD", "GE", "NE", "JU", "TI"],
+    "fr_it_muster": [
+      "expulsion", "resiliation", "bail", "loyer", "conge", "arret",
+      "recours", "requete", "chambre", "tribunal cantonal",
+      "locazione", "disdetta", "ricorso", "sentenza", "pigione", "tribunale"
+    ]
+  }
+}
