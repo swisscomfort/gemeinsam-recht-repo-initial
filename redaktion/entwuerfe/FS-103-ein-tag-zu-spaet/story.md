@@ -40,16 +40,11 @@ Automatismus.
 **Was den Unterschied gemacht hätte:** Die Post einen Tag früher. Nicht das
 bessere Argument fehlte Rolf, sondern ein Tag im Kalender — deshalb hat nie
 jemand geprüft, ob seine Einwände gegen das Urteil berechtigt gewesen wären.
-Wer eine Frist selber ausrechnet, sollte das Ergebnis gegenprüfen (die
-unentgeltliche Mietrechtsberatung oder die Schlichtungsbehörde nennt einem das
-Fristende auf Anfrage).
+Wer eine Frist selber ausrechnet, sollte das Ergebnis gegenprüfen lassen — zum Beispiel bei einer Mietrechts-Beratungsstelle.
 
 **Quelle & Stand:** Obergericht des Kantons Zürich, II. Zivilkammer ·
 NG250015 · Beschluss vom 27. Oktober 2025 ·
 https://entscheidsuche.ch/view/ZH_OG_001_NG250015_2025-10-27
-[REDAKTION: pruefen — ob ein Weiterzug ans Bundesgericht erfolgte, ist aus der
-Quelle nicht ersichtlich; Rechtskraft vor Veröffentlichung verifizieren.
-Zudem pruefen — Aussage «unentgeltliche Mietrechtsberatung nennt das
-Fristende»: als Serviceangabe verifizieren oder streichen.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (geprüft am 7. August 2026).
 
 *Rubrik: WARNWEISER — Recht gehabt (auf Prüfung), nicht bekommen.*

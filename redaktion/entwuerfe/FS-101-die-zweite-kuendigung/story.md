@@ -48,8 +48,7 @@ erst in einem Jahr beginnt und vier Wochen dauert, ist nicht dringend.
 **Quelle & Stand:** Obergericht des Kantons Solothurn, Zivilkammer ·
 ZKBER.2025.43 · Urteil vom 19. November 2025 ·
 https://entscheidsuche.ch/view/SO_OG_004_ZKBER-2025-43_2025-11-19
-[REDAKTION: pruefen — ob ein Weiterzug ans Bundesgericht erfolgte, ist aus der
-Quelle nicht ersichtlich; Rechtskraft vor Veröffentlichung verifizieren.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (geprüft am 7. August 2026).
 
 *Rubrik: WEGWEISER — Recht gehabt & bekommen.*
 
