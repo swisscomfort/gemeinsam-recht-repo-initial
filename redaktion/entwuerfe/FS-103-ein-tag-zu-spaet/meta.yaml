@@ -1,0 +1,15 @@
+id: FS-103
+titel: Ein Tag zu spät
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung_frist
+schutzstufe: S2
+etappen: 3
+missions_status: [kuendigung_angefochten, erstreckung_erhalten, beschwerde_verspaetet]
+prinzipien: [rechtsmittelfrist, fristenstillstand_gerichtsferien]
+emotions_ziel: ["Fristangst zu Handlungssicherheit", "Orientierung"]
+autor: redaktion_entwurf
+erstellt: 2026-08-07
+quelle: "OGer ZH NG250015"
+gericht: Obergericht des Kantons Zürich
+entscheid_datum: 2025-10-27
+verfahren_abgeschlossen: true

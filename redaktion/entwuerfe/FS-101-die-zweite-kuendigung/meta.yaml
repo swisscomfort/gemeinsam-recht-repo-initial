@@ -1,0 +1,15 @@
+id: FS-101
+titel: Die zweite Kündigung
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [kuendigung_angefochten, urteil_erstinstanz, berufung_abgewiesen]
+prinzipien: [sperrfrist_271a, dringender_eigenbedarf]
+emotions_ziel: ["Angst zu Zuversicht", "Orientierung"]
+autor: redaktion_entwurf
+erstellt: 2026-08-07
+quelle: "OGer SO ZKBER.2025.43"
+gericht: Obergericht des Kantons Solothurn
+entscheid_datum: 2025-11-19
+verfahren_abgeschlossen: true

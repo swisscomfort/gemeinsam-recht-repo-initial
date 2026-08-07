@@ -18,6 +18,7 @@
 - [x] CR-001 Parallelbau: Leser-Journey F1 (privat, offline) technisch umgesetzt (berichte/AUFTRAG-F1-ABSCHLUSS.md) — vollständige Journey-Durchläufe (Ziel ≥100) offen
 - [x] §6 L1: Wissens-Register W0 (privat) technisch umgesetzt inkl. Ergänzungen E1–E3 Fehler-Rückkanal (berichte/AUFTRAG-W0-ABSCHLUSS.md) — fachliche Verifikation der Register-Einträge und Entscheid über Veröffentlichung/Repo-Split offen
 - [x] CR-001 Parallelbau: Redaktion R0 (privat) technisch umgesetzt — Feed-Kategorie NACHERZAEHLT_OEFFENTLICH + Beschaffungswerkzeug redaktion/ (entscheidsuche.ch, nur Metadaten/Links) + Vorlage (berichte/AUFTRAG-R0-ABSCHLUSS.md) — Nacherzählen selbst ist menschliche Redaktionsarbeit, noch keine FS-1xx-Story angelegt
+- [x] CR-001 Parallelbau: Redaktion R1 v2 (privat) umgesetzt — Trichter Sieb (npm run sieben, 1000→983/6/11) → Mappe 2026-08-07 (TOP 9, 27 verworfen) → Entwürfe FS-101–103 mit Parser-Formatgarantie (berichte/AUFTRAG-R1-ABSCHLUSS.md) — Übernahme in den Feed erst nach schriftlicher Freigabe («FS-1xx freigegeben»); Rechtskraft-Verifikation der Quellen offen
 
 ## Regel
 Keine neuen Plandokumente, keine Review-Runden über Papier.
