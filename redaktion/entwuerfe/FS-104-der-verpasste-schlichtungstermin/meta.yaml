@@ -1,0 +1,15 @@
+id: FS-104
+titel: Der verpasste Schlichtungstermin
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [kuendigung_angefochten, verfahren_abgeschrieben, berufung_abgewiesen]
+prinzipien: [teilnahmepflicht_schlichtung, verschiebung_nur_durch_gericht]
+emotions_ziel: ["Fehler vermeidbar machen", "Orientierung"]
+autor: redaktion_entwurf
+erstellt: 2026-08-07
+quelle: "OGer ZH LU250008"
+gericht: Obergericht des Kantons Zürich
+entscheid_datum: 2025-11-26
+verfahren_abgeschlossen: true

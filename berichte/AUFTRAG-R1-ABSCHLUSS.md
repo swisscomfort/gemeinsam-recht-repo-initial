@@ -162,3 +162,90 @@ keine anderen Quellen als entscheidsuche.ch.
   "begruendung": "Dreistufiger Trichter vollstaendig umgesetzt; jede Rechtsaussage der Entwuerfe stammt aus dem jeweils gelesenen Entscheid und traegt Quelle/Datum/Link; Unsicherheiten sind als REDAKTION-pruefen markiert statt gefuellt."
 }
 ```
+
+---
+
+## 7. Ergänzung vom 2026-08-07 — Folgeauftrag: Entwürfe FS-104 bis FS-109
+
+Auf Weisung des Auftraggebers (gleiche Regeln wie AUFTRAG-R1, gleiche
+Netz-Erlaubnis auf entscheidsuche.ch, gedrosselt) wurden für die sechs
+verbleibenden Mappe-Kandidaten (TOP 4–9 der Mappe 2026-08-07) vollständige
+Nacherzähl-Entwürfe nach Norm §4 verfasst.
+
+### 7.1 Die sechs Entwürfe
+
+| Entwurf | Rubrik | Quelle | Kern-Lehre |
+|---|---|---|---|
+| `FS-104-der-verpasste-schlichtungstermin` | WARNWEISER | OGer ZH LU250008 (26.11.2025) | Ein Verschiebungsgesuch ist kein Freipass — der Termin gilt, bis er bewilligt abgenommen ist; Krankheit zählt nur belegt. |
+| `FS-105-der-termin-sei-verschoben` | WARNWEISER | OGer ZH RU250068 (08.10.2025) | Termin-Auskünfte der Gegenseite zählen nicht; unentschuldigtes Fernbleiben kostet seit 1.1.2025 zusätzlich Ordnungsbusse (Art. 206 Abs. 4 ZPO). |
+| `FS-106-offene-waende` | WEGWEISER | MGer Winterthur MJ250016 (21.04.2026) | Behebung und Herabsetzung zugleich; Mieterverschulden muss die Vermieterschaft beweisen; Ursache waren Baumängel (Gutachten). |
+| `FS-107-die-erhoehung-nach-der-sanierung` | TEILWEISE | KGer BL 400 2024 279 (03.06.2025) | Gegen die 50–70-%-Vermutung (Art. 14 Abs. 1 VMWG) hilft nur konkretes Aufschlüsseln; nachrechenbare Punkte (Referenzzinssatz) werden korrigiert. |
+| `FS-108-sieben-jahre-hinterlegt` | SACKGASSE | MGer Pfäffikon MJ250002 (21.01.2026) | Hinterlegen heisst nicht gewinnen: ohne substantiierte Mängel geht alles an die Vermieterschaft; Nebenkosten-Rückforderung braucht eine eigene Leistungsklage. |
+| `FS-109-beziffern-in-zweiter-instanz` | SACKGASSE | OGer ZH NG250008 (16.03.2026) | Bei Anfechtung einer Erhöhung ist das Maximalziel der bisherige Mietzins — diese Zahl ist bekannt und gehört ins Begehren. |
+
+Alle sechs exakt nach Norm §4 (Pflichtzeile mit Quelle, sechs Blöcke,
+Schlussblock «Der Unterschied» / bei WARNWEISER «Was den Unterschied gemacht
+hätte» / bei SACKGASSE «Der Irrtum» + «So erkennst du es vorher»,
+Rubrik-Zeile). «Ausgang verbessert.» nur bei FS-106, wo es zutrifft. Fakten
+und Zahlen ausschliesslich aus den gelesenen Entscheiden, Namen ersetzt.
+
+### 7.2 Netz-Abrufe und Lese-Weg
+
+Sechs Abrufe am 2026-08-07 (einer je Entscheid), derselbe Lese-Weg wie in
+Auslegung 7 (`_search.php`, Feld `attachment.content`), gedrosselt 1/s,
+klarer User-Agent. Arbeitskopien nur im Session-Scratchpad ausserhalb des
+Repos; im Repo wurde kein Volltext gespeichert.
+
+### 7.3 Rechtskraft-Markierungen
+
+In allen sechs Entwürfen ist der Rechtskraft-Stand als
+`[REDAKTION: pruefen — …]` markiert: FS-104/105/107/109 sind Endentscheide
+mit Beschwerdemöglichkeit ans Bundesgericht (Weiterzug aus der Quelle nicht
+ersichtlich); FS-106/108 sind **erstinstanzliche** Urteile mit
+Berufungsmöglichkeit ans Obergericht — hier ist die Verifikation vor einer
+Freigabe besonders wichtig (bei FS-108 war die Auszahlung der hinterlegten
+Mietzinse laut Urteil erst nach unbenütztem Ablauf der Berufungsfrist
+vorgesehen).
+
+### 7.4 Formatgarantie und Tests
+
+`redaktion/tests/entwuerfe.test.ts` wurde vom abgeschlossenen Stand
+(FS-101–103, inzwischen per Freigabe in den Feed übernommen) auf FS-104–109
+umgestellt; jeder Entwurf wird gegen den unveränderten Feed-Parser geprüft
+(`pruefeStory`, injiziertes Heute-Datum 2026-08-07), plus Gegenprobe ohne
+Datum. Stand 2026-08-07: redaktion **34/34 grün** · core 136 · feed 95 ·
+wissen 44 · webflow 9 — an core/feed/wissen/webflow wurde nichts geändert.
+
+### 7.5 Übernahme-Weg (bleibt menschlich)
+
+Nach schriftlicher Freigabe («FS-1xx freigegeben») je Entwurf genau ein
+Befehl:
+
+```bash
+git mv redaktion/entwuerfe/FS-104-der-verpasste-schlichtungstermin prototypen/stories/FS-104-der-verpasste-schlichtungstermin
+git mv redaktion/entwuerfe/FS-105-der-termin-sei-verschoben prototypen/stories/FS-105-der-termin-sei-verschoben
+git mv redaktion/entwuerfe/FS-106-offene-waende prototypen/stories/FS-106-offene-waende
+git mv redaktion/entwuerfe/FS-107-die-erhoehung-nach-der-sanierung prototypen/stories/FS-107-die-erhoehung-nach-der-sanierung
+git mv redaktion/entwuerfe/FS-108-sieben-jahre-hinterlegt prototypen/stories/FS-108-sieben-jahre-hinterlegt
+git mv redaktion/entwuerfe/FS-109-beziffern-in-zweiter-instanz prototypen/stories/FS-109-beziffern-in-zweiter-instanz
+```
+
+### 7.6 DTM-Trace (Ergänzung)
+
+```json
+{
+  "gegenstand": "Folgeauftrag zu R1: sechs Nacherzaehl-Entwuerfe FS-104..109 (TOP 4-9 der Mappe 2026-08-07) nach Norm §4 mit Parser-Formatgarantie",
+  "zeitpunkt": "2026-08-07",
+  "rolle": "redaktion",
+  "basis": {
+    "fallobjekt_hash": "entfaellt (kein Fallbezug)",
+    "regelversion": "keine Aenderung an Rechtsregeln (core unveraendert)",
+    "quellenstand": "entscheidsuche.ch, 6 Abrufe am 2026-08-07 (1/s, kein Volltext im Repo)"
+  },
+  "alternativen": [
+    "FS-109 wegen thematischer Naehe zu FS-102 weglassen — verworfen: der Auftrag nennt ausdruecklich alle sechs verbleibenden Kandidaten; die obergerichtliche Bestaetigung samt Kostenfolge ist eine eigenstaendige Lehre",
+    "Rechtskraft-Hinweise weglassen, weil die Mappe sie schon traegt — verworfen: Unsicherheiten gehoeren sichtbar in den Entwurf (Auftrag §3, Operating Rules Nr. 4)"
+  ],
+  "begruendung": "Jede Rechtsaussage stammt aus dem jeweils vollstaendig gelesenen Entscheid und traegt Quelle/Datum/Link; Unsicherheiten (insb. Rechtskraft der beiden erstinstanzlichen Urteile) sind als REDAKTION-pruefen markiert; Uebernahme in den Feed nur per git mv nach schriftlicher Freigabe."
+}
+```
