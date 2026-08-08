@@ -1,0 +1,28 @@
+id: FS-114
+titel: Zu spät erinnert
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [gekuendigt, erstinstanz_verloren, berufung_gewonnen]
+prinzipien: [treu_und_glauben_271, vorgeschobener_kuendigungsgrund, langes_zuwarten_als_indiz]
+emotions_ziel: ["Empoerung zu Zuversicht", "Orientierung"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ240077-L; OGer ZH NG250008-O"
+gericht: Obergericht des Kantons Zürich
+entscheid_datum: 2026-07-06
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ240077-L"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Wegweiser
+regel_id: "OFFEN:S-2026-08-08-C:MJ240077-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 271 OR (SR 220)"
+ausgang: durchgesetzt
+rechtskraft_status: weitergezogen
+scheiterpunkt: [beweis_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: strittig
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|beweis_fehlte|Die Berufungsbeklagten behaupten und belegen gerade für das letzte Jahr vor den Kündigungen keine konkreten Ereignisse, deretwegen sie die Kündigungen ausgesprochen haben", "claude-opus-5|2026-08-08|gegenpartei_nicht_substantiiert|Für das ganze letzte Jahr vor der Kündigung konnten sie weder eine einzige neue Beschwerde noch einen Polizeieinsatz belegen."]

@@ -1,0 +1,28 @@
+id: FS-112
+titel: Kein Schutz für die verheimlichte Wohnnutzung
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [abgemahnt, gekuendigt, klage_abgewiesen]
+prinzipien: [ausserordentliche_kuendigung_257f, treu_und_glauben_271, beweislast_baubewilligung]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ240050-L"
+gericht: Bezirksgericht Zürich (Mietgericht)
+entscheid_datum: 2025-07-08
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ240050-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-C:MJ240050-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 257f Abs. 3 OR; Art. 271 OR (SR 220)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [beweis_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: doppelt_bestaetigt
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|beweis_fehlte|Vorliegend wurde weder eine Baubewilligung noch ein Nachweis über eine feuerpolizeiliche Abnahme vorgelegt", "claude-opus-5|2026-08-08|beweis_fehlte|Léa berief sich auf jahrelange Duldung, konnte aber keine Baubewilligung für die Umnutzung vorlegen"]

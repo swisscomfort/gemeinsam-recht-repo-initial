@@ -24,5 +24,5 @@ ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [substantiierung_fehlte, falscher_verfahrensweg]
 kodierliste_version: "1.0.0"
-kodierung_status: vorschlag
-kodierung_quellen: ["cli-1|2026-08-08|substantiierung_fehlte,falscher_verfahrensweg|Karin konnte keinen Mangel im Rechtssinn dartun; fuer die Nebenkosten haette es eine eigene, bezifferte Leistungsklage gebraucht, und die fehlte"]
+kodierung_status: strittig
+kodierung_quellen: ["cli-1|2026-08-08|substantiierung_fehlte,falscher_verfahrensweg|Karin konnte keinen Mangel im Rechtssinn dartun; fuer die Nebenkosten haette es eine eigene, bezifferte Leistungsklage gebraucht, und die fehlte", "claude-opus-5|2026-08-08|substantiierung_fehlte,antrag_unbeziffert|Der tragende Grund: Karin konnte keinen Mangel im Rechtssinn dartun. … für die Nebenkosten hätte es eine eigene, bezifferte Leistungsklage gebraucht, und die fehlte"]

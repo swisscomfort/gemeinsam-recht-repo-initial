@@ -24,5 +24,5 @@ ausgang: nicht_durchgesetzt
 rechtskraft_status: weitergezogen
 kodierliste_version: "1.0.0"
 scheiterpunkt: [substantiierung_fehlte]
-kodierung_status: vorschlag
-kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Damit fehlt es – auch bei wohlwollender Leseart – an einer Auseinandersetzung mit dem angefochtenen Entscheid bzw. an einer Darlegung, an welchen Mängeln der angefochtene Entscheid leidet"]
+kodierung_status: strittig
+kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Damit fehlt es – auch bei wohlwollender Leseart – an einer Auseinandersetzung mit dem angefochtenen Entscheid bzw. an einer Darlegung, an welchen Mängeln der angefochtene Entscheid leidet", "claude-opus-5|2026-08-08|falscher_verfahrensweg,substantiierung_fehlte|Elias' Ausführungen richteten sich gegen die ursprüngliche Sistierung und gegen die Vollstreckung der (bereits rechtskräftigen) Ausweisung — nicht gegen den Abschreibungsbeschluss vom 19. Januar 2026, der allein Gegenstand der Berufung war."]
