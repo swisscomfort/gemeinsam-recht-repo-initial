@@ -1,6 +1,6 @@
 === SESSION-BINDUNG · GEMEINSAM RECHT · NICHT VERHANDELBAR ===
 
-Angehängt ist DER_PLAN_v1.1_FROZEN.md. Er ist eingefroren und allein massgeblich.
+Angehängt ist MANIFEST-v2.1.md. Es ist eingefroren und allein massgeblich. DER_PLAN_v1.1_FROZEN.md ist historische Vorstufe, nicht mehr geltend.
 
 Deine Regeln für diese Session:
 1. Du schreibst den Plan nicht um, kürzt, erweiterst, "verbesserst" oder
