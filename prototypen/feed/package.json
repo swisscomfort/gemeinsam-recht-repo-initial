@@ -8,6 +8,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "vorschau-lan": "vite preview --host",
+    "symbole": "node tools/icons.mjs",
     "test": "vitest run"
   },
   "devDependencies": {

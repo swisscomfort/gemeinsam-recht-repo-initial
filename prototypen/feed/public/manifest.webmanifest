@@ -1,0 +1,35 @@
+{
+  "name": "Morgenausgabe — privater Feed-Prototyp (Gemeinsam Recht)",
+  "short_name": "Morgenausgabe",
+  "description": "Privater, offline laufender Feed-Prototyp. Alle Geschichten sind zur Bauzeit eingebettet; zur Laufzeit gibt es keinen Server, keine Übertragung und kein Tracking.",
+  "lang": "de-CH",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "id": "gemeinsam-recht-feed-prototyp",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f6f4ef",
+  "theme_color": "#274c77",
+  "categories": ["news", "education"],
+  "icons": [
+    {
+      "src": "./symbol-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./symbol-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./symbol-maskierbar-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

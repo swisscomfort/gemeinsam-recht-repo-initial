@@ -10,6 +10,7 @@
 // deterministischen Kern (core) — hier wird nur gerendert.
 
 import "./stil.css";
+import { registriereServiceWorker } from "./pwa";
 import { ladeAlle } from "./quelle";
 import { MIN_KARTEN } from "./ausgabe";
 import {
@@ -965,3 +966,6 @@ function zeigeWerkbank(): void {
 /* ---------- Start: Leser-Modus ist der Standard (F1 §1) ---------- */
 
 zeigeLeser();
+
+// Offline-Faehigkeit der gebauten Fassung; im Dev-Server ohne Wirkung.
+registriereServiceWorker();
