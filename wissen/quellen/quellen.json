@@ -1,0 +1,110 @@
+[
+  {
+    "id": "Q-001",
+    "kategorie": "bundesstatistik",
+    "bezeichnung": "BWO Statistik der Schlichtungsverfahren Miete/Pacht",
+    "url": "https://www.bwo.admin.ch/de/statistik-der-schlichtungsverfahren",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-002",
+    "kategorie": "bundesstatistik",
+    "bezeichnung": "BWO Schlichtungsverfahren Miete/Pacht Grundlagen",
+    "url": "https://www.bwo.admin.ch/de/schlichtungsverfahren",
+    "relevanz": "mittel",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-003",
+    "kategorie": "kantonsstatistik",
+    "bezeichnung": "Obergericht ZH Rechenschaftsberichte",
+    "url": "https://www.gerichte-zh.ch/organisation/obergericht/rechenschaftsbericht.html",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-004",
+    "kategorie": "kantonsstatistik",
+    "bezeichnung": "Gerichte AG Geschaeftsberichte inkl. 10-Jahres-Reihen",
+    "url": "https://www.ag.ch/de/ueber-uns/gerichte-kanton-aargau/zahlen-fakten",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-005",
+    "kategorie": "korpus",
+    "bezeichnung": "OpenCaseLaw MCP-Endpunkt (Streamable HTTP, keine Auth)",
+    "url": "https://mcp.opencaselaw.ch",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-006",
+    "kategorie": "korpus",
+    "bezeichnung": "OpenCaseLaw MCP Werkzeugliste und Einrichtung",
+    "url": "https://opencaselaw.ch/mcp/",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-007",
+    "kategorie": "korpus",
+    "bezeichnung": "OpenCaseLaw Repository (Code MIT, Daten CC0)",
+    "url": "https://github.com/jonashertner/caselaw-repo-1",
+    "relevanz": "hoch",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-008",
+    "kategorie": "vergleichsprojekt",
+    "bezeichnung": "UK Find Case Law (Start April 2022)",
+    "url": "https://caselaw.nationalarchives.gov.uk/about-find-case-law",
+    "relevanz": "mittel",
+    "http_status": "200",
+    "status": "erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+,
+  {
+    "id": "Q-009",
+    "kategorie": "vergleichsprojekt",
+    "bezeichnung": "CourtListener / Free Law Project",
+    "url": "https://www.courtlistener.com/",
+    "relevanz": "niedrig",
+    "http_status": "403",
+    "status": "nicht erreichbar",
+    "geprueft_am": "2026-08-08",
+    "inhalt_geprueft": false
+  }
+
+]
