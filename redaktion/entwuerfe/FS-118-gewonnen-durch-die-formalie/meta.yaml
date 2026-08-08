@@ -1,0 +1,28 @@
+id: FS-118
+titel: Gewonnen durch die Formalie der Gegenseite
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [schlichtungsvorschlag_erhalten, vermieterin_klagt, klage_nicht_eingetreten]
+prinzipien: [parteibezeichnung_244_zpo, entscheidvorschlag_wird_rechtskraeftig]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Orientierung"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ250078-L"
+gericht: Bezirksgericht Zürich (Mietgericht)
+entscheid_datum: 2026-01-15
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ250078-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Wegweiser
+regel_id: "OFFEN:S-2026-08-08-C:MJ250078-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 244 Abs. 1 lit. a, b und d ZPO (SR 272)"
+ausgang: durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [substantiierung_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die klagende Partei darf es nicht mit einer offenen Formulierung dem Gericht überlassen, die Gegenpartei genau zu bezeichnen"]

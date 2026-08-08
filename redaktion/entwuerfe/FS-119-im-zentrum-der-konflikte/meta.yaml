@@ -1,0 +1,28 @@
+id: FS-119
+titel: Im Zentrum der Konflikte
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [gekuendigt, klage_abgewiesen, erstreckung_abgewiesen]
+prinzipien: [hausfrieden_als_kuendigungsmotiv_257f_271, abklaerungspflicht_vermieterin, gleichwertiges_ersatzangebot]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ250038-L"
+gericht: Bezirksgericht Zürich (Mietgericht)
+entscheid_datum: 2026-04-23
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ250038-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-C:MJ250038-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 257f Abs. 1 und 2 OR; Art. 271 f. OR (SR 220)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [substantiierung_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Anhaltspunkte, wonach die Informationen und Beschwerden nicht glaubhaft gewesen wären oder nicht der Wahrheit entsprochen hätten, sind weder substantiiert behauptet oder anderweitig aus den Unterlagen ersichtlich"]

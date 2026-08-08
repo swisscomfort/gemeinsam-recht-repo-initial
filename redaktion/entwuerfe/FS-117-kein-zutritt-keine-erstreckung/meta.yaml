@@ -1,0 +1,28 @@
+id: FS-117
+titel: Kein Zutritt, keine Erstreckung
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [besichtigung_verweigert, gekuendigt, klage_abgewiesen]
+prinzipien: [duldungspflicht_257h, ordentliche_kuendigung_gueltig, haerte_als_erstreckungsvoraussetzung_272]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ250037-L; OGer ZH NG260001-O"
+gericht: Bezirksgericht Zürich (Mietgericht)
+entscheid_datum: 2025-12-01
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ250037-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-C:MJ250037-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 257h OR; Art. 272 Abs. 1 OR (SR 220)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: weitergezogen
+scheiterpunkt: [folgenabwaegung_trug_entscheid]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|folgenabwaegung_trug_entscheid|Bei der Klägerin liegt nach dem Gesagten offensichtlich keine Härte vor, weshalb eine Erstreckung des Mietverhältnisses nicht in Frage kommt"]

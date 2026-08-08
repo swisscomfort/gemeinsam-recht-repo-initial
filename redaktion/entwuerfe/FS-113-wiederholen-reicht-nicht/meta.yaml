@@ -1,0 +1,28 @@
+id: FS-113
+titel: Wiederholen reicht nicht
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [klage_abgewiesen, berufung_eingereicht, berufung_nicht_eingetreten]
+prinzipien: [begruendungsobliegenheit_berufung_311_zpo, auseinandersetzung_mit_erwaegungen]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "OGer ZH NG250009"
+gericht: Obergericht des Kantons Zürich
+entscheid_datum: 2025-07-09
+verfahren_abgeschlossen: true
+aktenzeichen: "NG250009"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-C:NG250009"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 311 Abs. 1 ZPO (SR 272)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [substantiierung_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die Berufungsklägerin setzt sich mit der vorinstanzlichen Würdigung nicht auseinander. Sie nimmt in ihren Ausführungen nicht darauf Bezug, sondern lässt es dabei bewenden, ihre bereits im erstinstanzlichen Verfahren vorgebrachten Tatsachenbehauptungen zu wiederholen"]

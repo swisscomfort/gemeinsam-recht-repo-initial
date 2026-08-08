@@ -1,0 +1,28 @@
+id: FS-116
+titel: Die abstrakte Gefahr
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_maengel
+schutzstufe: S2
+etappen: 3
+missions_status: [maengel_gemeldet, klage_eingereicht, klage_abgewiesen]
+prinzipien: [mangel_im_rechtssinn_259a, keine_vereinbarung_kein_anspruch, substantiierung_der_beeintraechtigung]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Hinwil MJ250005"
+gericht: Bezirksgericht Hinwil (Mietgericht)
+entscheid_datum: 2025-11-14
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ250005"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: R-CH-0014
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 259a Abs. 1 und Art. 259d OR (SR 220)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [beweis_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|beweis_fehlte|Zusammenfassend ist festzuhalten, dass nicht erstellt ist, dass die Beklagte die Blumenwiese vor der Wohnung des Klägers entfernt hat"]
