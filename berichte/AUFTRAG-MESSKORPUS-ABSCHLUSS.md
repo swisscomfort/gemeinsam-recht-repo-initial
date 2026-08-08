@@ -258,20 +258,62 @@ Gleichheit, auch für jede reale Messdefinition.
 | messkorpus | 167 |
 | **gesamt** | **576** |
 
-## 8. Genau diese Entscheidungen fehlen
+## 8. MD-001 ist eingefroren
 
-1. ~~Rechtskraft-Regel bestätigen~~ — **erledigt**, Art. 61 BGG, eng auf das
-   Bundesgericht gefasst.
-2. **Norm und Kriterien von MD-001 bestätigen** (`norm.pruefstand` →
-   `fachlich_bestaetigt`).
-3. **Abschlussregel bestätigen** (`abschluss_regel.pruefstand`) — ist der
-   Umgang mit Rückweisungen so richtig?
-4. **MD-001 einfrieren** (`status` → `eingefroren`).
-5. **CR-02 entscheiden** — danach beide Kodierläufe für die betroffenen Fälle
-   vollständig neu, ohne automatische Übersetzung.
-6. **`entscheidsuche.ch` in der Egress-Liste freigeben**, wenn die Erhebung in
-   einer Web-Session laufen soll (auf dem eigenen Rechner nicht nötig).
+Alle drei Prüfstände sind menschlich bestätigt (2026-08-08):
 
-Solange 2–4 offen sind, ist der Meilenstein blockiert — technisch, nicht nur
-konventionell: die Sperre steht in `darfQuoteMaterialisieren()` und ist durch
-Tests gesichert.
+| Prüfstand | Entscheidung |
+| --- | --- |
+| `norm` | MD-001 misst ausschliesslich die Durchsetzung des Kündigungsschutzes nach Art. 271/271a OR — Anfechtbarkeit wegen Verstosses gegen Treu und Glauben (Art. 271) bzw. besondere Anfechtungsgründe (Art. 271a). Die Härte-/Erstreckungsfrage gehört zu Art. 272 OR und zählt nicht als Erfolg dieser Definition. |
+| `abschluss_regel` | Massgeblich ist Endentscheid gegen Vor-/Zwischenentscheid: ein Endentscheid schliesst das Verfahren in der Hauptsache ab. Eine Rückweisung mit offenem materiellem Entscheidungsbedarf ist zur Messfrage **nicht** abgeschlossen; ein verknüpfter späterer Endentscheid kann die Streitigkeit abschliessen. |
+| `rechtskraft_regel` | Art. 61 BGG, eng auf das Bundesgericht (bereits vorher bestätigt). |
+
+```
+MD-001  Fassung 2.0.0  status: eingefroren
+SHA-256 a9b2143bd2873f1b5df2b9bebaf8247283158c9bb86d9f233fbb330f860244af
+```
+
+`darfQuoteMaterialisieren()` gibt damit frei. Was noch fehlt, ist keine
+Entscheidung mehr, sondern eine Erhebung.
+
+### CR-02 steht nicht mehr auf dem kritischen Pfad
+
+MANIFEST §5 verlangt die Doppelkodierung für die **Scheiterpunkt**-Auswertung.
+Die erste Quote nach MD-001 misst den messdefinitionsgebundenen
+**Normausgang** — dafür wird kein zweiter Modelllauf gebraucht. Die
+Scheiterpunkt-Statistik bleibt separat gesperrt, bis ihre Governance erfüllt
+ist; die acht strittigen Legacy-Kodierungen bleiben unangetastet, und
+`wissen/scheiterpunkte.json` steht weiter auf 1.0.0.
+
+## 9. Nächster Schritt: ML-001 erheben
+
+Die Erhebung läuft nicht in einer Web-Session — `entscheidsuche.ch` ist dort
+durch die Egress-Policy gesperrt (403 am Proxy). Auf dem eigenen Rechner:
+
+```bash
+set -Eeuo pipefail
+cd "$(git -C "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" rev-parse --show-toplevel)"
+
+# 1. main auf den gemergten Stand bringen — nur Fast-Forward
+git checkout main
+git pull --ff-only origin main
+
+# 2. eingefrorene MD-001 validieren, bevor irgendetwas geholt wird
+cd messkorpus && npm install --silent && npm run pruefen
+
+# 3. erheben (gedrosselt, nur Metadaten; ueberschreibt nie einen bestehenden Lauf)
+cd ../redaktion && npm install --silent
+npm run messlauf-erheben -- --definition MD-001-kuendigungsschutz-bger.json --lauf ML-001
+
+# 4. den erhobenen Lauf validieren
+cd ../messkorpus && npm run pruefen
+```
+
+Das Werkzeug **urteilt nicht**: jeder Treffer landet als `ungeklaert`. Nichts
+wird automatisch ein- oder ausgeschlossen — das ist redaktionelle Arbeit nach
+den in MD-001 vorher festgelegten Kriterien.
+
+Erwartet: `messkorpus/laeufe/ML-001/lauf.json` entsteht, `npm run pruefen`
+zeigt die Bilanz (`N roh · 0 eingeschlossen · 0 ausgeschlossen · N ungeklaert`)
+und meldet die Quote als gesperrt, solange Treffer ungeklärt sind. Das ist der
+richtige Zustand direkt nach der Erhebung.

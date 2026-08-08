@@ -1,12 +1,12 @@
 {
   "id": "MD-001",
   "version": "2.0.0",
-  "status": "entwurf",
+  "status": "eingefroren",
   "stand": "2026-08-08",
   "messfrage": "In wie vielen der vom Bundesgericht endgueltig entschiedenen Streitigkeiten, in denen sich eine Mietpartei gegen eine Kuendigung auf den Kuendigungsschutz nach Art. 271/271a OR berief, wurde dieser Kuendigungsschutz durchgesetzt — also die Kuendigung als missbraeuchlich aufgehoben? Eine Erstreckung des Mietverhaeltnisses nach Art. 272 OR zaehlt hier NICHT als Erfolg; sie ist eine andere Rechtsfolge und gehoert in eine eigene Messdefinition.",
   "norm": {
     "norm_fundstelle": "Art. 271 und Art. 271a OR (SR 220)",
-    "pruefstand": "fachlich_zu_verifizieren"
+    "pruefstand": "fachlich_bestaetigt"
   },
   "quelle": {
     "name": "entscheidsuche.ch",
@@ -68,8 +68,8 @@
   },
   "abschluss_regel": {
     "art": "endentscheid_zur_messfrage",
-    "begruendung": "Rechtskraft und Fallabschluss sind zwei verschiedene Dinge. Ein Bundesgerichtsentscheid ist ab Ausfaellung rechtskraeftig und kann die Sache trotzdem zur neuen materiellen Beurteilung zurueckweisen; dann ist offen, ob der Kuendigungsschutz am Ende durchdrang. Zaehlfaehig ist eine Streitigkeit erst, wenn die gemessene Rechtsfrage endgueltig entschieden ist: entweder entscheidet das Bundesgericht sie selbst, oder ein verknuepfter abschliessender Folgeentscheid liegt vor. Reine Zwischen- und Nebenentscheide zaehlen nie.",
-    "pruefstand": "fachlich_zu_verifizieren"
+    "begruendung": "Rechtskraft und Fallabschluss sind zwei verschiedene Dinge. Ein Bundesgerichtsentscheid ist ab Ausfaellung rechtskraeftig und kann die Sache trotzdem zur neuen materiellen Beurteilung zurueckweisen; dann ist offen, ob der Kuendigungsschutz am Ende durchdrang. Massgeblich ist die Unterscheidung Endentscheid / Vor- und Zwischenentscheid: ein Endentscheid schliesst das Verfahren in der Hauptsache ab, ein Entscheid, der das Verfahren nicht abschliesst, tut es nicht. Zaehlfaehig ist eine Streitigkeit deshalb erst, wenn zur Messfrage keine neue materielle Entscheidung mehr noetig ist: entweder entscheidet das Bundesgericht sie selbst, oder ein verknuepfter abschliessender Folgeentscheid liegt vor. Eine Rueckweisung mit offenem materiellem Entscheidungsbedarf ist nicht abgeschlossen; reine Zwischen- und Nebenentscheide zaehlen nie.",
+    "pruefstand": "fachlich_bestaetigt"
   },
   "zaehleinheit": {
     "art": "streitigkeit",

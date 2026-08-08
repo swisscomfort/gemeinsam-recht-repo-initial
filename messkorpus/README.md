@@ -110,19 +110,27 @@ vielen Treffern bricht ab, statt still zu verlieren.
 
 ## Stand
 
-`MD-001` (Kündigungsschutz Art. 271/271a OR, Bundesgericht) liegt in Fassung
-**2.0.0** als **Entwurf** vor.
+`MD-001` (Kündigungsschutz Art. 271/271a OR, Bundesgericht) ist **eingefroren**:
 
-- **Rechtskraft-Regel: entschieden** (`fachlich_bestaetigt`). Entscheide des
-  Bundesgerichts erwachsen am Tag ihrer Ausfällung in Rechtskraft (Art. 61
-  BGG); die Revision nach Art. 121 ff. BGG ändert daran nichts. Die Regel
-  heisst ausdrücklich `bundesgericht_art61_bgg` und **nicht** generisch
-  „letztinstanzlich" — ein kantonaler letztinstanzlicher Entscheid kann ans
-  Bundesgericht weitergezogen werden, seine Rechtskraft folgt nicht aus der
-  Instanz. Ein Test hält das fest.
-- **Offen: Norm und Kriterien** fachlich bestätigen (`norm.pruefstand`).
-- **Offen: Abschlussregel** fachlich bestätigen (`abschluss_regel.pruefstand`)
-  — der Umgang mit Rückweisungen.
+```
+Fassung 2.0.0 · status: eingefroren
+SHA-256 a9b2143bd2873f1b5df2b9bebaf8247283158c9bb86d9f233fbb330f860244af
+```
 
-Solange eines davon offen ist oder `status` auf `entwurf` steht, sperrt
-`darfQuoteMaterialisieren()` jede Quote.
+Alle drei Prüfstände sind menschlich bestätigt:
+
+- **Norm** — gemessen wird ausschliesslich die Durchsetzung des
+  Kündigungsschutzes nach Art. 271/271a OR; die Erstreckung nach Art. 272 OR
+  ist eine andere Rechtsfolge und zählt nicht als Erfolg.
+- **Abschluss** — Endentscheid gegen Vor-/Zwischenentscheid: eine Rückweisung
+  mit offenem materiellem Entscheidungsbedarf ist zur Messfrage nicht
+  abgeschlossen.
+- **Rechtskraft** — Art. 61 BGG, ausdrücklich `bundesgericht_art61_bgg` und
+  **nicht** generisch „letztinstanzlich": ein kantonaler letztinstanzlicher
+  Entscheid kann ans Bundesgericht weitergezogen werden, seine Rechtskraft
+  folgt nicht aus der Instanz. Ein Test hält das fest.
+
+Es fehlen jetzt keine Entscheidungen mehr, sondern Daten: **ML-001 erheben**
+(Befehl in `berichte/AUFTRAG-MESSKORPUS-ABSCHLUSS.md` §9). Direkt danach ist
+die Quote weiterhin gesperrt — richtigerweise, weil alle Treffer `ungeklaert`
+sind und erst zugeordnet werden müssen.
