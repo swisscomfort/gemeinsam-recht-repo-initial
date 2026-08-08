@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-SI0 — Sichter-Modus im Prototyp (privat, offline)
 
 ```yaml

@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-R0 — Redaktion: echte Schweizer Entscheide als Zeitungsstoff (privat)
 
 ```yaml

@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-K0 — Leserstimmen-Prototyp (privat, offline)
 
 ```yaml

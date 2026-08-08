@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-R1 v2 — Sieb, Redaktionsmappe & Nacherzaehl-Entwuerfe (autonom, privat)
 
 ```yaml

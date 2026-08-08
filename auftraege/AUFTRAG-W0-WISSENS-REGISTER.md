@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-W0 — Wissens-Register & Destillat-Pipeline (privates Fundament)
 
 ```yaml

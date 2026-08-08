@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-F1 — Leser-wird-Nutzer-Journey (privat, offline)
 
 ```yaml

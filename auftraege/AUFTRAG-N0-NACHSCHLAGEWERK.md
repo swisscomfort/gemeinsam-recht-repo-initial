@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-N0 — Nachschlagewerk: Situationsseiten (privat, offline)
 
 ```yaml

@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-A0 — Anfragen-Feed der Community (privat, offline)
 
 ```yaml
