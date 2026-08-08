@@ -75,6 +75,18 @@ export interface Befund {
   fehler: string[];
 }
 
+/**
+ * Gehoert ein Normausgang zu dieser Messdefinition? Geprueft wird ID UND
+ * Fassung: eine neue Version kann Messfrage oder Kriterien geaendert haben,
+ * dann ist eine unter der alten Fassung kodierte Aussage nicht mehr dieselbe.
+ */
+export function gehoertZu(messausgang: Messausgang, definition: Messdefinition): boolean {
+  return (
+    messausgang.messdefinition_id === definition.id &&
+    messausgang.messdefinition_version === definition.version
+  );
+}
+
 /* ---------- Fingerprint der Quellmetadaten ---------- */
 
 /** Genau die Felder, die der Lauf aus der Quelle uebernimmt. */
@@ -263,10 +275,11 @@ export function pruefeLauf(lauf: Messlauf, definition: Messdefinition): Befund {
       );
     }
 
-    if (treffer.messausgang && treffer.messausgang.messdefinition_id !== definition.id) {
+    if (treffer.messausgang && !gehoertZu(treffer.messausgang, definition)) {
       fehler.push(
-        `Lauf ${lauf.id}: Treffer ${treffer.quelle_id} traegt einen Messausgang zu ${treffer.messausgang.messdefinition_id}, ` +
-          `der Lauf gehoert aber zu ${definition.id}. Ein Normausgang gilt nur fuer seine eigene Messdefinition.`,
+        `Lauf ${lauf.id}: Treffer ${treffer.quelle_id} traegt einen Messausgang zu ${treffer.messausgang.messdefinition_id}@${treffer.messausgang.messdefinition_version}, ` +
+          `der Lauf gehoert aber zu ${definition.id}@${definition.version}. Ein Normausgang gilt nur fuer seine eigene Messdefinition ` +
+          `UND deren Fassung — mit einer neuen Version koennen sich Messfrage und Kriterien geaendert haben, dann ist die alte Kodierung nicht mehr dieselbe Aussage.`,
       );
     }
   }
@@ -379,7 +392,7 @@ export function zaehleinheiten(lauf: Messlauf, definition: Messdefinition): Zaeh
 
     const ausgaenge = treffer
       .map((t) => t.messausgang)
-      .filter((m): m is Messausgang => m !== undefined && m.messdefinition_id === definition.id);
+      .filter((m): m is Messausgang => m !== undefined && gehoertZu(m, definition));
     const werte = new Set(ausgaenge.map((m) => m.wert));
     if (werte.size > 1) {
       fehler.push(

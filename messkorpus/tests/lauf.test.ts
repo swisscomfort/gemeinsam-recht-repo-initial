@@ -80,6 +80,44 @@ describe("pruefeLauf", () => {
     expect(befund.fehler.join(" ")).toContain("Version");
   });
 
+  it("lehnt einen Normausgang ab, der unter einer aelteren Fassung derselben Definition kodiert wurde", () => {
+    // Eine neue Version kann Messfrage oder Kriterien geaendert haben — dann
+    // ist die alte Kodierung nicht mehr dieselbe Aussage.
+    const alt = treffer({
+      quelle_id: "a5",
+      status: "eingeschlossen",
+      story_id: "FS-101",
+      zaehleinheit: "s1",
+      abschluss_status: "abgeschlossen",
+      messausgang: {
+        messdefinition_id: DEFINITION.id,
+        messdefinition_version: "0.9.0",
+        wert: "durchgesetzt",
+        beleg: "Dispositiv Ziffer 1.",
+      },
+    });
+    const befund = pruefeLauf(lauf([alt]), DEFINITION);
+    expect(befund.ok).toBe(false);
+    expect(befund.fehler.join(" ")).toContain("MD-999@0.9.0");
+  });
+
+  it("nimmt einen Normausgang derselben Fassung an", () => {
+    const passend = treffer({
+      quelle_id: "a6",
+      status: "eingeschlossen",
+      story_id: "FS-101",
+      zaehleinheit: "s1",
+      abschluss_status: "abgeschlossen",
+      messausgang: {
+        messdefinition_id: DEFINITION.id,
+        messdefinition_version: DEFINITION.version,
+        wert: "durchgesetzt",
+        beleg: "Dispositiv Ziffer 1.",
+      },
+    });
+    expect(pruefeLauf(lauf([passend]), DEFINITION).fehler).toEqual([]);
+  });
+
   it("lehnt einen Normausgang einer fremden Messdefinition ab", () => {
     const fremd = treffer({
       quelle_id: "a4",

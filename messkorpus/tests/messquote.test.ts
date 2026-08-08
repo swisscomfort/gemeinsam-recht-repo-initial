@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from "vitest";
 import type { Messdefinition } from "../tools/definition.ts";
-import { berechneMessquote, eingeschlosseneOhneFall, korpusFaelle, sperren } from "../tools/messquote.ts";
+import { berechneMessquote, eingeschlosseneOhneFall, korpusFaelle, quoteBericht, sperren } from "../tools/messquote.ts";
 import { DEFINITION, abruf, fall, korpus, lauf, treffer } from "./fixtures.ts";
 import type { KodierteStory } from "../../wissen/tools/kodierung-quoten.ts";
 
@@ -200,10 +200,49 @@ describe("berechneMessquote", () => {
     expect(normausgang.get("FS-101")).toBe("nicht_durchgesetzt");
   });
 
+  it("fuehrt die Fassung der Kodierliste mit, wenn alle Faelle dieselbe tragen", () => {
+    const { lauf: l, faelle } = korpus(12, 5);
+    for (const [id, story] of faelle) faelle.set(id, { ...story, kodierliste_version: "1.0.0" } as KodierteStory);
+    const quote = berechneMessquote(l, DEFINITION, faelle, { wert: "durchgesetzt", zeitstand: HEUTE });
+    expect(quote.kodierliste_version).toBe("1.0.0");
+  });
+
+  it("nennt keine Fassung, wenn sie uneinheitlich ist oder bei einem Fall fehlt", () => {
+    const { lauf: l, faelle } = korpus(12, 5);
+    for (const [id, story] of faelle) faelle.set(id, { ...story, kodierliste_version: "1.0.0" } as KodierteStory);
+    const eines = faelle.get("FS-100");
+    if (eines) faelle.set("FS-100", { ...eines, kodierliste_version: undefined } as KodierteStory);
+    const quote = berechneMessquote(l, DEFINITION, faelle, { wert: "durchgesetzt", zeitstand: HEUTE });
+    expect(quote.kodierliste_version).toBeNull();
+  });
+
   it("uebernimmt keinen Normausgang aus einem Fall ohne Zaehleinheit", () => {
     const einzeln: KodierteStory = fall("FS-900");
     const l = lauf([treffer({ quelle_id: "x", status: "eingeschlossen", story_id: "FS-900" })]);
     const { faelle: liste } = korpusFaelle(l, DEFINITION, new Map([["FS-900", einzeln]]));
     expect(liste).toEqual([]);
+  });
+});
+
+describe("quoteBericht", () => {
+  it("nennt die Quote samt Nenner, Ausschluessen und Definitions-Hash", () => {
+    const { lauf: l, faelle } = korpus(12, 5);
+    const bericht = quoteBericht(l, DEFINITION, faelle, { wert: "durchgesetzt", zeitstand: HEUTE });
+    expect(bericht.ok).toBe(true);
+    const text = bericht.zeilen.join("\n");
+    expect(text).toContain("Quote: 5 von 12 Faellen");
+    expect(text).toContain("12 Zaehleinheiten");
+    expect(text).toContain("Normausgang, nicht der allgemeine Verfahrensausgang");
+    expect(text).toMatch(/sha256: [0-9a-f]{64}/);
+  });
+
+  it("liefert bei einer Sperre die Gruende statt einer Zahl", () => {
+    const { lauf: l, faelle } = korpus(12, 5);
+    const ersterTreffer = l.treffer[0];
+    if (ersterTreffer) ersterTreffer.abschluss_status = "rueckweisung_offen";
+    const bericht = quoteBericht(l, DEFINITION, faelle, { wert: "durchgesetzt", zeitstand: HEUTE });
+    expect(bericht.ok).toBe(false);
+    expect(bericht.zeilen.join("\n")).toContain("Gesperrt durch:");
+    expect(bericht.zeilen.join("\n")).not.toMatch(/Quote: \d+ von/);
   });
 });

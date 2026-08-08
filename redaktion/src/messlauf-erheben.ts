@@ -44,6 +44,7 @@ interface Messdefinition {
   id: string;
   version: string;
   status: string;
+  quelle: { name: string; endpunkt: string; abrufart: string };
   abfrage: { suchanfrage: string; gerichtsfilter: string[] };
   zeitraum: { von: string; bis: string };
 }
@@ -183,6 +184,19 @@ async function haupt(): Promise<void> {
   const definitionsPfad = join(wurzel, "messkorpus", "definitionen", definitionsName);
   const definition = JSON.parse(readFileSync(definitionsPfad, "utf8")) as Messdefinition;
   const hash = definitionsHash(definition);
+
+  // Fail-closed statt stillschweigend woanders holen: die Definition nennt
+  // ihren Endpunkt, und ihr Hash behauptet spaeter, von dort erhoben worden
+  // zu sein. Weicht er ab, wird nicht erhoben. Der abweichende Endpunkt wird
+  // auch NICHT einfach benutzt — Beschaffung ist nur bei der im Auftrag
+  // benannten Quelle erlaubt (CLAUDE.md), nicht bei jeder, die in einer
+  // Datei steht.
+  if (definition.quelle.endpunkt !== SUCH_ENDPUNKT) {
+    throw new Error(
+      `${definition.id} nennt den Endpunkt ${definition.quelle.endpunkt}, dieses Werkzeug beschafft ausschliesslich bei ${SUCH_ENDPUNKT}. ` +
+        `Nichts erhoben. Entweder die Definition korrigieren oder die Quelle im Auftrag ausdruecklich benennen.`,
+    );
+  }
 
   const ziel = join(wurzel, "messkorpus", "laeufe", laufId);
   if (existsSync(join(ziel, "lauf.json"))) {

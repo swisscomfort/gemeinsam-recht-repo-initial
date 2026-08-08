@@ -31,7 +31,9 @@ import {
   type Uebereinstimmungsquote,
 } from "../../wissen/tools/kodierung-quoten.ts";
 import { darfQuoteMaterialisieren, type Messdefinition } from "./definition.ts";
+import { leseFaelle } from "./faelle.ts";
 import { bilanz, pruefeLauf, zaehleinheiten, type Bilanz, type MessausgangWert, type Messlauf } from "./lauf.ts";
+import { istDirektAufruf, leseDefinitionen, leseLaeufe } from "./umgebung.ts";
 
 export { MINDESTFALLZAHL };
 
@@ -53,6 +55,15 @@ export interface Messquote {
 export interface Sperre {
   ok: boolean;
   gruende: string[];
+}
+
+/**
+ * Faelle tragen die Fassung der Kodierliste; KodierteStory in wissen/ kennt
+ * das Feld nicht, weil es dort fuer die Zaehlung ohne Belang ist. Hier wird
+ * es gebraucht — leseFaelle() liest es mit.
+ */
+export interface MitKodierliste {
+  kodierliste_version?: string;
 }
 
 /**
@@ -169,9 +180,13 @@ export function berechneMessquote(
   const { faelle, normausgang } = korpusFaelle(lauf, definition, stories);
   const roh = quoteNachPraedikat(faelle, (story) => normausgang.get(story.id) === auftrag.wert);
   const scheiter = scheiterpunktQuote(faelle, "");
-  const kodierlisten = new Set(
-    faelle.map((f) => (f as { kodierliste_version?: string }).kodierliste_version).filter(Boolean),
-  );
+
+  // Die Fassung der Kodierliste gehoert in jede Quote (MANIFEST §10). Sie
+  // steht nur dann drin, wenn ALLE Faelle dieselbe tragen — uneinheitliche
+  // oder fehlende Angaben werden nicht zu einer plausiblen zusammengefasst.
+  const versionen = faelle.map((fall) => (fall as MitKodierliste).kodierliste_version);
+  const einheitlich =
+    versionen.length > 0 && versionen.every((v) => v !== undefined && v === versionen[0]);
 
   return {
     messdefinition: { id: definition.id, version: definition.version, sha256: lauf.messdefinition.sha256 },
@@ -183,6 +198,87 @@ export function berechneMessquote(
     ohne_fall: eingeschlosseneOhneFall(lauf, stories).length,
     quote: mitMindestfallzahl(roh),
     uebereinstimmungsquote: scheiter.uebereinstimmungsquote,
-    kodierliste_version: kodierlisten.size === 1 ? ([...kodierlisten][0] as string) : null,
+    kodierliste_version: einheitlich ? (versionen[0] as string) : null,
   };
+}
+
+/* ---------- CLI ---------- */
+
+/**
+ * Bericht zu einem Lauf: entweder die Quote oder die Gruende, warum es
+ * keine gibt. Rein — Lauf, Definition, Faelle und Zeitstand kommen von
+ * aussen, damit dieselbe Funktion in Tests laeuft wie im CLI.
+ */
+export function quoteBericht(
+  lauf: Messlauf,
+  definition: Messdefinition,
+  stories: ReadonlyMap<string, KodierteStory>,
+  auftrag: QuoteAuftrag,
+): { zeilen: string[]; ok: boolean } {
+  const sperre = sperren(lauf, definition, stories);
+  if (!sperre.ok) {
+    return {
+      ok: false,
+      zeilen: [
+        `Keine Quote fuer ${lauf.id} (${definition.id} v${definition.version}, gemessen: ${auftrag.wert}).`,
+        "Gesperrt durch:",
+        ...sperre.gruende.map((grund) => `  · ${grund}`),
+      ],
+    };
+  }
+
+  const quote = berechneMessquote(lauf, definition, stories, auftrag);
+  return {
+    ok: true,
+    zeilen: [
+      `${definition.id} v${definition.version} · Lauf ${quote.messlauf} · Stand ${quote.zeitstand}`,
+      `Gemessen: ${quote.gemessener_wert} (Normausgang, nicht der allgemeine Verfahrensausgang)`,
+      `Quote: ${quote.quote.anzeige}`,
+      `Nenner: ${quote.zaehleinheiten} Zaehleinheiten aus ${quote.korpus.eingeschlossen} eingeschlossenen Treffern`,
+      `Korpus: ${quote.korpus.roh} roh · ${quote.korpus.ausgeschlossen} ausgeschlossen · ${quote.korpus.ungeklaert} ungeklaert · ${quote.korpus.duplikate} Duplikate`,
+      ...quote.korpus.ausschluesse.map((a) => `  ausgeschlossen ${a.anzahl}x ${a.grund}`),
+      ...quote.quote.ausschluesse.map((a) => `  nicht gezaehlt ${a.anzahl}x ${a.grund}`),
+      `Uebereinstimmung der Kodierlaeufe: ${quote.uebereinstimmungsquote.zaehler}/${quote.uebereinstimmungsquote.nenner}`,
+      `Kodierliste: ${quote.kodierliste_version ?? "uneinheitlich oder fehlend"}`,
+      `Messdefinition sha256: ${quote.messdefinition.sha256}`,
+    ],
+  };
+}
+
+if (istDirektAufruf(import.meta.url)) {
+  const arg = (name: string): string | null => {
+    const stelle = process.argv.indexOf(`--${name}`);
+    return stelle === -1 ? null : (process.argv[stelle + 1] ?? null);
+  };
+  const laufId = arg("lauf");
+  const wert = (arg("wert") ?? "durchgesetzt") as MessausgangWert;
+  const zeitstand = arg("zeitstand");
+
+  if (!laufId || !zeitstand) {
+    console.error(
+      "Aufruf: npm run quote -- --lauf ML-001 --zeitstand JJJJ-MM-TT [--wert durchgesetzt]\n" +
+        "Der Zeitstand wird uebergeben, nicht aus der Uhr gelesen — jede Quote traegt ihn (MANIFEST §10).",
+    );
+    process.exitCode = 1;
+  } else {
+    const laeufe = leseLaeufe();
+    const eintrag = laeufe.find((l) => (l.inhalt as Messlauf).id === laufId);
+    if (!eintrag) {
+      console.error(`Messlauf ${laufId} nicht gefunden. Vorhanden: ${laeufe.map((l) => l.verzeichnis).join(", ") || "(keiner)"}`);
+      process.exitCode = 1;
+    } else {
+      const lauf = eintrag.inhalt as Messlauf;
+      const definition = leseDefinitionen()
+        .map((d) => d.inhalt as Messdefinition)
+        .find((d) => d.id === lauf.messdefinition.id);
+      if (!definition) {
+        console.error(`Messdefinition ${lauf.messdefinition.id} nicht gefunden.`);
+        process.exitCode = 1;
+      } else {
+        const bericht = quoteBericht(lauf, definition, leseFaelle(), { wert, zeitstand });
+        for (const zeile of bericht.zeilen) console.log(zeile);
+        if (!bericht.ok) process.exitCode = 1;
+      }
+    }
+  }
 }

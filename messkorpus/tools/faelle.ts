@@ -22,6 +22,12 @@ export const FALL_VERZEICHNISSE = [
 export interface FallMitHerkunft extends KodierteStory {
   /** true, wenn der Fall noch Entwurf ist (redaktion/entwuerfe/). */
   entwurf: boolean;
+  /**
+   * Fassung der Kodierliste, unter der die Werte vergeben wurden. Muss
+   * mitgelesen werden: jede materialisierte Quote fuehrt sie mit, sonst
+   * fehlt der Rueckbezug auf die Liste, gegen die kodiert wurde.
+   */
+  kodierliste_version?: string;
 }
 
 function ausMeta(roh: string, entwurf: boolean): FallMitHerkunft | null {
@@ -38,6 +44,7 @@ function ausMeta(roh: string, entwurf: boolean): FallMitHerkunft | null {
     kodierung_status: (status as KodierungStatus | null) ?? undefined,
     ausgang: leseSkalar(roh, "ausgang") ?? undefined,
     scheiterpunkt: leseListe(roh, "scheiterpunkt") ?? undefined,
+    kodierliste_version: leseSkalar(roh, "kodierliste_version") ?? undefined,
     entwurf,
   };
 }
