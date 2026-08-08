@@ -17,6 +17,9 @@ aktenzeichen: "NG250015"
 instanz: zweite_instanz
 kanton: ZH
 rubrik: Warnweiser
+regel_id: R-CH-0012
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 145 Abs. 1 lit. b ZPO (SR 272)"
 ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [frist_verpasst]

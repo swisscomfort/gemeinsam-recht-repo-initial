@@ -22,40 +22,33 @@ describe("ladeAlle", () => {
 describe("ladeAlle — uebernommene Nacherzaehl-Geschichten (mit injiziertem Pruefdatum)", () => {
   // FS-104/105/107/109 wurden am 2026-08-08 freigegeben und per git mv aus
   // redaktion/entwuerfe/ nach prototypen/stories/ uebernommen (FS-106/108
-  // bleiben Entwurf). Ohne injiziertes Datum verweigert der Parser jede
-  // NACHERZAEHLT_OEFFENTLICH-Geschichte (keine Systemzeit in der Fachlogik) —
-  // deshalb ein eigener Test mit fest injiziertem Pruefdatum.
-  const PRUEF_DATUM = "2026-08-07";
+  // bleiben Entwurf, siehe redaktion/tests/entwuerfe.test.ts). Ohne
+  // injiziertes Datum verweigert der Parser jede NACHERZAEHLT_OEFFENTLICH-
+  // Geschichte (keine Systemzeit in der Fachlogik) — deshalb ein eigener
+  // Test mit fest injiziertem Pruefdatum.
+  //
+  // Registeraufbau aus RUECKHOLUNG-NORMEN.md (berichte/): sieben neue
+  // Eintraege R-CH-0011..0017 liefern regel_id/regel_version/norm_fundstelle
+  // fuer FS-102/103/105/106/107/108/109. FS-107s Rubrik-Zeile ("TEILWEISE")
+  // ist Altbestand aus der Zeit vor dem Dreier-Enum und bleibt bewusst offen
+  // (Redaktionsaufgabe, §10.2) — das ist der einzige noch fehlende Pflicht-
+  // schluessel unter den sieben §3-Feldern.
+  const PRUEF_DATUM = "2026-08-08";
 
-  it("akzeptiert FS-101 und FS-104 aus prototypen/stories/ (alle sieben §3-Felder ableitbar)", () => {
+  it("akzeptiert FS-101, 102, 103, 104, 105 und 109 (alle sieben §3-Felder vorhanden)", () => {
     const ergebnis = ladeAlle(PRUEF_DATUM);
     const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
-    expect(ids).toContain("FS-101");
-    expect(ids).toContain("FS-104");
+    for (const id of ["FS-101", "FS-102", "FS-103", "FS-104", "FS-105", "FS-109"]) {
+      expect(ids, `${id} sollte akzeptiert werden`).toContain(id);
+    }
   });
 
-  // MANIFEST v2.1 §3: die sieben Pflichtfelder sind fuer FS-102/103/105/107/109
-  // nicht vollstaendig aus Storytext/Aktenzeichen ableitbar (kein passender
-  // wissen/register-Eintrag bzw. bei FS-107 eine Rubrik ausserhalb des
-  // Dreier-Enums) und bleiben deshalb unvollstaendig — das loest absichtlich
-  // einen Ladefehler aus (berichte/AUFTRAG-KODIERUNG-V2-ABSCHLUSS.md §9.3:
-  // "das ist beabsichtigt, nicht zu umgehen"), bis ein Mensch regel_id/
-  // norm_fundstelle (bzw. bei FS-107 die Rubrik) ergaenzt.
-  it("verweigert FS-102, 103, 105, 107, 109 wegen fehlender §3-Felder (beabsichtigt)", () => {
+  it("verweigert FS-107 einzig wegen der noch offenen Rubrik", () => {
     const ergebnis = ladeAlle(PRUEF_DATUM);
     const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
-    for (const id of ["FS-102", "FS-103", "FS-105", "FS-107", "FS-109"]) {
-      expect(ids).not.toContain(id);
-    }
-    const verweigerungFuer = (id: string) =>
-      ergebnis.verweigert.find((v) => v.quelle === id || v.quelle.startsWith(`${id}-`));
-    for (const id of ["FS-102", "FS-103", "FS-105", "FS-109"]) {
-      const verweigerung = verweigerungFuer(id);
-      expect(verweigerung, `${id} sollte verweigert werden`).toBeDefined();
-      expect(verweigerung!.gruende.some((g) => g.includes('Pflichtschluessel fehlt: "regel_id"'))).toBe(true);
-    }
-    const fs107 = verweigerungFuer("FS-107");
+    expect(ids).not.toContain("FS-107");
+    const fs107 = ergebnis.verweigert.find((v) => v.quelle.startsWith("FS-107-"));
     expect(fs107, "FS-107 sollte verweigert werden").toBeDefined();
-    expect(fs107!.gruende.some((g) => g.includes('Pflichtschluessel fehlt: "rubrik"'))).toBe(true);
+    expect(fs107!.gruende).toEqual(['Pflichtschluessel fehlt: "rubrik"']);
   });
 });

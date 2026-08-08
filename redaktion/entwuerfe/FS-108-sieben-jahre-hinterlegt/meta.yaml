@@ -17,6 +17,9 @@ aktenzeichen: "MJ250002"
 instanz: erste_instanz
 kanton: ZH
 rubrik: Sackgasse
+regel_id: R-CH-0016
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 259g OR (SR 220)"
 ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [substantiierung_fehlte, falscher_verfahrensweg]

@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0016",
+  "regel": "Der Mieter kann bei einem Mangel den Mietzins hinterlegen; das Gericht entscheidet danach ueber die Verwendung, in erster Linie zugunsten des Beseitigungsanspruchs, nicht als eigenes Maengelrecht.",
+  "wenn": [
+    "mietzins.hinterlegt=true"
+  ],
+  "dann": [
+    "folge:gericht_entscheidet_ueber_verwendung_hinterlegter_mietzinse"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 259g OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "MJ250002"
+}

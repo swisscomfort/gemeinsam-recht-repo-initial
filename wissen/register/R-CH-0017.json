@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0017",
+  "regel": "Wird mit der Klage eine Geldleistung verlangt, ist diese im Rechtsbegehren stets zu beziffern.",
+  "wenn": [
+    "klage.geldleistung=true"
+  ],
+  "dann": [
+    "flag:bezifferung_im_rechtsbegehren_erforderlich"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 84 Abs. 2 ZPO",
+      "fundstelle": "ZPO (SR 272)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "NG250008"
+}

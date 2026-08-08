@@ -17,6 +17,9 @@ aktenzeichen: "RU250068"
 instanz: zweite_instanz
 kanton: ZH
 rubrik: Warnweiser
+regel_id: R-CH-0013
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 206 Abs. 1 und Abs. 4 ZPO (SR 272)"
 ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [termin_versaeumt]

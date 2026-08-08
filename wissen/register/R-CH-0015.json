@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0015",
+  "regel": "Bei einer umfassenden Ueberholung wird gesetzlich vermutet, dass die getaetigten Investitionen in einem pauschal festgelegten Umfang (50-70 %) wertvermehrend sind; wer das widerlegen will, muss selbst konkret aufschluesseln.",
+  "wenn": [
+    "sanierung.umfassende_ueberholung=true"
+  ],
+  "dann": [
+    "flag:vermutung_pauschaler_wertvermehrungsanteil"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 14 Abs. 1 Satz 2 VMWG",
+      "fundstelle": "VMWG (SR 221.213.11)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "400 2024 279"
+}

@@ -17,6 +17,9 @@ aktenzeichen: "MJ250016"
 instanz: erste_instanz
 kanton: ZH
 rubrik: Wegweiser
+regel_id: R-CH-0014
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 259a Abs. 1 und Art. 259d OR (SR 220)"
 ausgang: teilweise
 rechtskraft_status: unbekannt
 scheiterpunkt: [beweis_fehlte]

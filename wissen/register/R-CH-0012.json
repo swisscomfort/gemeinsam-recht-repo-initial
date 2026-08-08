@@ -1,0 +1,21 @@
+{
+  "id": "R-CH-0012",
+  "regel": "Waehrend der Gerichtsferien stehen gesetzliche und gerichtliche Fristen still; das verschiebt den Fristenlauf, verlaengert ihn aber nicht.",
+  "wenn": [
+    "ein Fristenlauf faellt in den Zeitraum der Gerichtsferien"
+  ],
+  "dann": [
+    "folge:fristenstillstand_gerichtsferien"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 145 Abs. 1 lit. b ZPO",
+      "fundstelle": "ZPO (SR 272)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "NG250015"
+}

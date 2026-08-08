@@ -1,0 +1,23 @@
+{
+  "id": "R-CH-0013",
+  "regel": "Bleibt eine Partei der Schlichtungsverhandlung unentschuldigt fern, wird das Verfahren als gegenstandslos abgeschrieben; seit 1. Januar 2025 kann zusaetzlich eine Ordnungsbusse bis Fr. 1'000.- verhaengt werden.",
+  "wenn": [
+    "partei.erscheint_nicht_zur_schlichtungsverhandlung=true",
+    "partei.entschuldigung=false"
+  ],
+  "dann": [
+    "folge:verfahren_gegenstandslos_abgeschrieben",
+    "flag:ordnungsbusse_moeglich_bis_1000"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 206 Abs. 1 und Abs. 4 ZPO",
+      "fundstelle": "ZPO (SR 272)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "RU250068"
+}

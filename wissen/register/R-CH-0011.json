@@ -1,0 +1,23 @@
+{
+  "id": "R-CH-0011",
+  "regel": "Eine Geldforderung ist im Rechtsbegehren grundsaetzlich zu beziffern; unbeziffert zulaessig nur, wenn die Bezifferung zu Beginn unmoeglich oder unzumutbar ist.",
+  "wenn": [
+    "rechtsgebiet=mietrecht_anfangsmietzins",
+    "klage.geldforderung=true"
+  ],
+  "dann": [
+    "flag:bezifferung_erforderlich",
+    "flag:ausnahme_bei_unmoeglichkeit_oder_unzumutbarkeit"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 85 ZPO",
+      "fundstelle": "ZPO (SR 272)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "MJ250072-L"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "R-CH-0014",
+  "regel": "Bei einem Mangel kann der Mieter Behebung verlangen und den Mietzins ab Kenntnis des Vermieters bis zur Behebung verhaeltnismaessig herabsetzen.",
+  "wenn": [
+    "mietsache.mangel=true",
+    "mangel.vom_vermieter_zu_vertreten=true"
+  ],
+  "dann": [
+    "flag:anspruch_auf_behebung",
+    "flag:anspruch_auf_herabsetzung_ab_kenntnis"
+  ],
+  "quellen": [
+    {
+      "artikel": "Art. 259a Abs. 1 und Art. 259d OR",
+      "fundstelle": "OR (SR 220)"
+    }
+  ],
+  "zeitstand": "2026-08-05",
+  "regelversion": "0.1.0",
+  "pruefstand": "fachlich_zu_verifizieren",
+  "herkunft": "entscheid",
+  "entscheid_quelle": "MJ250016"
+}

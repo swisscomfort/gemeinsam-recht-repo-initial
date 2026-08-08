@@ -238,6 +238,159 @@ export const REGISTER: readonly RegisterEintrag[] = [
     "herkunft": "auftrag"
   },
   {
+    "id": "R-CH-0011",
+    "regel": "Eine Geldforderung ist im Rechtsbegehren grundsaetzlich zu beziffern; unbeziffert zulaessig nur, wenn die Bezifferung zu Beginn unmoeglich oder unzumutbar ist.",
+    "wenn": [
+      "rechtsgebiet=mietrecht_anfangsmietzins",
+      "klage.geldforderung=true"
+    ],
+    "dann": [
+      "flag:bezifferung_erforderlich",
+      "flag:ausnahme_bei_unmoeglichkeit_oder_unzumutbarkeit"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 85 ZPO",
+        "fundstelle": "ZPO (SR 272)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "MJ250072-L"
+  },
+  {
+    "id": "R-CH-0012",
+    "regel": "Waehrend der Gerichtsferien stehen gesetzliche und gerichtliche Fristen still; das verschiebt den Fristenlauf, verlaengert ihn aber nicht.",
+    "wenn": [
+      "ein Fristenlauf faellt in den Zeitraum der Gerichtsferien"
+    ],
+    "dann": [
+      "folge:fristenstillstand_gerichtsferien"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 145 Abs. 1 lit. b ZPO",
+        "fundstelle": "ZPO (SR 272)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "NG250015"
+  },
+  {
+    "id": "R-CH-0013",
+    "regel": "Bleibt eine Partei der Schlichtungsverhandlung unentschuldigt fern, wird das Verfahren als gegenstandslos abgeschrieben; seit 1. Januar 2025 kann zusaetzlich eine Ordnungsbusse bis Fr. 1'000.- verhaengt werden.",
+    "wenn": [
+      "partei.erscheint_nicht_zur_schlichtungsverhandlung=true",
+      "partei.entschuldigung=false"
+    ],
+    "dann": [
+      "folge:verfahren_gegenstandslos_abgeschrieben",
+      "flag:ordnungsbusse_moeglich_bis_1000"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 206 Abs. 1 und Abs. 4 ZPO",
+        "fundstelle": "ZPO (SR 272)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "RU250068"
+  },
+  {
+    "id": "R-CH-0014",
+    "regel": "Bei einem Mangel kann der Mieter Behebung verlangen und den Mietzins ab Kenntnis des Vermieters bis zur Behebung verhaeltnismaessig herabsetzen.",
+    "wenn": [
+      "mietsache.mangel=true",
+      "mangel.vom_vermieter_zu_vertreten=true"
+    ],
+    "dann": [
+      "flag:anspruch_auf_behebung",
+      "flag:anspruch_auf_herabsetzung_ab_kenntnis"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 259a Abs. 1 und Art. 259d OR",
+        "fundstelle": "OR (SR 220)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "MJ250016"
+  },
+  {
+    "id": "R-CH-0015",
+    "regel": "Bei einer umfassenden Ueberholung wird gesetzlich vermutet, dass die getaetigten Investitionen in einem pauschal festgelegten Umfang (50-70 %) wertvermehrend sind; wer das widerlegen will, muss selbst konkret aufschluesseln.",
+    "wenn": [
+      "sanierung.umfassende_ueberholung=true"
+    ],
+    "dann": [
+      "flag:vermutung_pauschaler_wertvermehrungsanteil"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 14 Abs. 1 Satz 2 VMWG",
+        "fundstelle": "VMWG (SR 221.213.11)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "400 2024 279"
+  },
+  {
+    "id": "R-CH-0016",
+    "regel": "Der Mieter kann bei einem Mangel den Mietzins hinterlegen; das Gericht entscheidet danach ueber die Verwendung, in erster Linie zugunsten des Beseitigungsanspruchs, nicht als eigenes Maengelrecht.",
+    "wenn": [
+      "mietzins.hinterlegt=true"
+    ],
+    "dann": [
+      "folge:gericht_entscheidet_ueber_verwendung_hinterlegter_mietzinse"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 259g OR",
+        "fundstelle": "OR (SR 220)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "MJ250002"
+  },
+  {
+    "id": "R-CH-0017",
+    "regel": "Wird mit der Klage eine Geldleistung verlangt, ist diese im Rechtsbegehren stets zu beziffern.",
+    "wenn": [
+      "klage.geldleistung=true"
+    ],
+    "dann": [
+      "flag:bezifferung_im_rechtsbegehren_erforderlich"
+    ],
+    "quellen": [
+      {
+        "artikel": "Art. 84 Abs. 2 ZPO",
+        "fundstelle": "ZPO (SR 272)"
+      }
+    ],
+    "zeitstand": "2026-08-05",
+    "regelversion": "0.1.0",
+    "pruefstand": "fachlich_zu_verifizieren",
+    "herkunft": "entscheid",
+    "entscheid_quelle": "NG250008"
+  },
+  {
     "id": "R-LU-0001",
     "regel": "Fuer die Fristverschiebung nach R-CH-0003 gelten die gesetzlichen Feiertage des Kantons Luzern.",
     "wenn": [

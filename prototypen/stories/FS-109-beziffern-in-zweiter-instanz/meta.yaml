@@ -17,6 +17,9 @@ aktenzeichen: "NG250008"
 instanz: zweite_instanz
 kanton: ZH
 rubrik: Sackgasse
+regel_id: R-CH-0017
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 84 Abs. 2 ZPO (SR 272)"
 ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [antrag_unbeziffert]
