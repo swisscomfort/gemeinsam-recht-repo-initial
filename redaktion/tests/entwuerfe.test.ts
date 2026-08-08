@@ -5,13 +5,13 @@
 // keine Systemzeit im Test.
 //
 // Seit MANIFEST v2.1 §3 sind aktenzeichen/instanz/kanton/rubrik/regel_id/
-// regel_version/norm_fundstelle Pflicht. Nach dem Registeraufbau aus
-// berichte/RUECKHOLUNG-NORMEN.md (R-CH-0014 fuer FS-106 Art. 259a/259d OR,
-// R-CH-0016 fuer FS-108 Art. 259g OR) tragen beide Entwuerfe alle sieben
-// Felder — die Formatgarantie gilt wieder wie vor MANIFEST v2.1 §3. FS-106/
-// 108 bleiben trotzdem Entwurf (erstinstanzlich, Rechtskraft-Verifikation
-// offen, berichte/AUFTRAG-R1-ABSCHLUSS.md §7.3) — das ist unabhaengig davon,
-// ob der Parser die Datei annehmen wuerde.
+// regel_version/norm_fundstelle Pflicht. Die Anzahl der Entwuerfe ist
+// bewusst NICHT fest kodiert (frueher: "genau FS-106 und FS-108") — neue
+// Entwuerfe (z. B. aus AUFTRAG-FALLAUFNAHME-Laeufen, regel_id ggf. mit dem
+// Praefix "OFFEN:", vom Parser akzeptiert) duerfen dazukommen, ohne dass
+// dieser Test bricht. Geprueft wird jeder vorhandene Ordner einzeln gegen
+// den Parser; ob ein Entwurf spaeter freigegeben wird, ist redaktionelle
+// Entscheidung und nicht Gegenstand dieses Tests.
 
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -29,12 +29,8 @@ const ordner = readdirSync(entwuerfeVerzeichnis, { withFileTypes: true })
   .sort();
 
 describe("Entwuerfe — Parser-Pruefung (pruefeStory, injiziertes Heute-Datum)", () => {
-  // FS-101..103 wurden am 2026-08-07 freigegeben; FS-104/105/107/109 wurden
-  // am 2026-08-08 freigegeben und per git mv in den Feed uebernommen.
-  // FS-106/108 bleiben ausdruecklich Entwurf (erstinstanzlich, parkiert bis
-  // die Rechtskraft-Verifikation abgeschlossen ist).
-  it("es liegen genau zwei Entwuerfe FS-106 und FS-108 vor", () => {
-    expect(ordner.map((o) => o.slice(0, 6))).toEqual(["FS-106", "FS-108"]);
+  it("mindestens ein Entwurf ist vorhanden (sonst liefe die folgende Schleife leer und stumm)", () => {
+    expect(ordner.length).toBeGreaterThan(0);
   });
 
   for (const name of ordner) {

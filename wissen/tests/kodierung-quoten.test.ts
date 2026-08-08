@@ -75,6 +75,24 @@ describe("ausgangQuote — Ausschluesse", () => {
     expect(quote.nenner).toBe(3);
     expect(quote.ausschluesse).toEqual([]);
   });
+
+  it('regel_id mit Praefix "OFFEN:" zaehlt nie (AUFTRAG-FALLAUFNAHME §2.3)', () => {
+    const stories = [
+      story({ id: "FX-1", regel_id: "OFFEN:S-2026-08-08-B:MJ250041-L", ausgang: "durchgesetzt" }),
+      story({ id: "FX-2", regel_id: "R-CH-0001", ausgang: "durchgesetzt" }),
+    ];
+    const quote = ausgangQuote(stories, "durchgesetzt");
+    expect(quote.nenner).toBe(1);
+    expect(quote.zaehler).toBe(1);
+    expect(quote.ausschluesse).toContainEqual({ grund: "regel_id_offen", anzahl: 1 });
+  });
+
+  it("Faelle ohne regel_id zaehlen ganz normal (Feld ist optional)", () => {
+    const stories = [story({ id: "FX-1", ausgang: "durchgesetzt" })];
+    const quote = ausgangQuote(stories, "durchgesetzt");
+    expect(quote.nenner).toBe(1);
+    expect(quote.ausschluesse).toEqual([]);
+  });
 });
 
 describe("scheiterpunktQuote — nur doppelt_bestaetigt/mensch_bestaetigt zaehlen (§5)", () => {
@@ -112,18 +130,20 @@ describe("scheiterpunktQuote — nur doppelt_bestaetigt/mensch_bestaetigt zaehle
     );
   });
 
-  it("kombiniert alle drei Ausschlussgruende korrekt (je eigener Zaehlwert)", () => {
+  it("kombiniert alle vier Ausschlussgruende korrekt (je eigener Zaehlwert)", () => {
     const stories = [
       story({ id: "FX-1", kennzeichnung: "FIKTIV" }),
-      story({ id: "FX-2", rechtskraft_status: "unbekannt" }),
-      story({ id: "FX-3", kodierung_status: "vorschlag" }),
-      story({ id: "FX-4", kodierung_status: "doppelt_bestaetigt", scheiterpunkt: ["beweis_fehlte"] }),
+      story({ id: "FX-2", regel_id: "OFFEN:S-2026-08-08-B:MJ250041-L" }),
+      story({ id: "FX-3", rechtskraft_status: "unbekannt" }),
+      story({ id: "FX-4", kodierung_status: "vorschlag" }),
+      story({ id: "FX-5", kodierung_status: "doppelt_bestaetigt", scheiterpunkt: ["beweis_fehlte"] }),
     ];
     const quote = scheiterpunktQuote(stories, "frist_verpasst");
     expect(quote.nenner).toBe(1);
     expect(quote.zaehler).toBe(0);
     expect(quote.ausschluesse).toEqual([
       { grund: "kennzeichnung_fiktiv_oder_platzhalter", anzahl: 1 },
+      { grund: "regel_id_offen", anzahl: 1 },
       { grund: "nicht_rechtskraeftig", anzahl: 1 },
       { grund: "kodierung_nicht_bestaetigt", anzahl: 1 },
     ]);

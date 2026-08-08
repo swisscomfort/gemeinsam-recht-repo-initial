@@ -163,6 +163,35 @@ describe("NACHERZAEHLT_OEFFENTLICH — Verweigerung (jeder Grund einzeln)", () =
   });
 });
 
+describe('regel_id — Platzhalter "OFFEN:<stapel_id>:<aktenzeichen>" (AUFTRAG-FALLAUFNAHME §2.3)', () => {
+  it("akzeptiert regel_id im Format OFFEN:<stapel_id>:<aktenzeichen>, wenn sonst kein Registertreffer vorliegt", () => {
+    const meta = gueltigOhneFixture.replace(
+      "regel_id: R-CH-0001",
+      "regel_id: OFFEN:S-2026-08-08-B:MJ250041-L",
+    );
+    const ergebnis = pruefeStory("test", meta, fxGueltigStory, HEUTE);
+    expect(ergebnis.ok).toBe(true);
+    if (!ergebnis.ok) return;
+    expect(ergebnis.story.meta.regel_id).toBe("OFFEN:S-2026-08-08-B:MJ250041-L");
+  });
+
+  it('verweigert regel_id, wenn weder "R-XX-NNNN" noch der OFFEN-Platzhalter zutrifft', () => {
+    const meta = gueltigOhneFixture.replace("regel_id: R-CH-0001", "regel_id: irgendwas");
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(
+      gruende.some((g) => g.includes('"regel_id" hat nicht die Form "R-XX-NNNN" oder "OFFEN:')),
+    ).toBe(true);
+  });
+
+  it('verweigert einen OFFEN-Platzhalter ohne Aktenzeichen-Teil (nur "OFFEN:<stapel_id>")', () => {
+    const meta = gueltigOhneFixture.replace("regel_id: R-CH-0001", "regel_id: OFFEN:S-2026-08-08-B");
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(
+      gruende.some((g) => g.includes('"regel_id" hat nicht die Form "R-XX-NNNN" oder "OFFEN:')),
+    ).toBe(true);
+  });
+});
+
 describe("Doppelkodierung — kodierung_status/kodierung_quellen (MANIFEST v2.1 §3/§5)", () => {
   it("parseKodierungsLauf/kodiereKodierungsLauf sind zueinander invers", () => {
     const lauf = {

@@ -140,6 +140,15 @@ export const MANIFEST_PFLICHT_SCHLUESSEL = [
 ] as const;
 
 const REGEL_ID_MUSTER = /^R-[A-Z]{2}-\d{4}$/;
+/**
+ * AUFTRAG-FALLAUFNAHME §2.3: Fehlt beim Registerabgleich ein Treffer, bleibt
+ * regel_id auf diesem Platzhalter stehen ("OFFEN:<stapel_id>:<aktenzeichen>")
+ * statt dass der Agent selbst einen Registereintrag anlegt (§2.3 letzter
+ * Satz, §7 Verbote). Der Parser nimmt die Story trotzdem an — sie ist damit
+ * kein Feed-Ergebnis, sondern bleibt Redaktionsentwurf; Zaehllogik (siehe
+ * wissen/tools/kodierung-quoten.ts) schliesst OFFEN-Faelle eigens aus.
+ */
+const REGEL_ID_OFFEN_MUSTER = /^OFFEN:[^:\s]+:.+$/;
 const REGEL_VERSION_MUSTER = /^\d+\.\d+\.\d+$/;
 
 /** Fuer NACHERZAEHLT_OEFFENTLICH sind zusaetzlich die Quellfelder erlaubt. */
@@ -468,8 +477,14 @@ export function pruefeStory(
       gruende.push(`Unbekannte Rubrik: "${rubrikWert}" (MANIFEST v2.1 §3: Wegweiser | Warnweiser | Sackgasse)`);
     }
     const regelIdWert = werte.get("regel_id");
-    if (typeof regelIdWert === "string" && !REGEL_ID_MUSTER.test(regelIdWert)) {
-      gruende.push(`"regel_id" hat nicht die Form "R-XX-NNNN": "${regelIdWert}"`);
+    if (
+      typeof regelIdWert === "string" &&
+      !REGEL_ID_MUSTER.test(regelIdWert) &&
+      !REGEL_ID_OFFEN_MUSTER.test(regelIdWert)
+    ) {
+      gruende.push(
+        `"regel_id" hat nicht die Form "R-XX-NNNN" oder "OFFEN:<stapel_id>:<aktenzeichen>": "${regelIdWert}"`,
+      );
     }
     const regelVersionWert = werte.get("regel_version");
     if (typeof regelVersionWert === "string" && !REGEL_VERSION_MUSTER.test(regelVersionWert)) {

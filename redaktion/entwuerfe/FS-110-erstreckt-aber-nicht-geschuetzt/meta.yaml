@@ -1,0 +1,28 @@
+id: FS-110
+titel: Erstreckt, aber nicht geschützt
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_mietzinserhoehung
+schutzstufe: S2
+etappen: 3
+missions_status: [erhoehung_angefochten, klage_erhoben, klage_abgewiesen]
+prinzipien: [anpassung_waehrend_erstreckung_272c, vergleichsmiete_als_korrektiv, substantiierungslast_mieter]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "MGer Zürich MJ250041-L"
+gericht: Bezirksgericht Zürich (Mietgericht)
+entscheid_datum: 2026-01-07
+verfahren_abgeschlossen: true
+aktenzeichen: "MJ250041-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-B:MJ250041-L"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 272c Abs. 2 OR (SR 220)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [substantiierung_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Die Beklagten sind im Übrigen schon ihrer Substantiierungslast nicht genügend nachgekommen, denn aus den Tabellen geht nicht hervor, um welche Wohnung in welchem Geschoss der fraglichen Liegenschaften es sich handeln soll und wer sie von wem gemietet hat"]

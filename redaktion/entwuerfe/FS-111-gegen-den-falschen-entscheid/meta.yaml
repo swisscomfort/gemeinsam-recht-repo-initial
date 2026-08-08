@@ -1,0 +1,28 @@
+id: FS-111
+titel: Gegen den falschen Entscheid
+kennzeichnung: NACHERZAEHLT_OEFFENTLICH
+rechtsgebiet: mietrecht_kuendigung
+schutzstufe: S2
+etappen: 3
+missions_status: [verfahren_sistiert, verfahren_abgeschrieben, berufung_nicht_eingetreten]
+prinzipien: [begruendungspflicht_berufung_311_zpo, anfechtungsobjekt_muss_stimmen]
+emotions_ziel: ["Ueberforderung zu Klarheit", "Fehler vermeidbar machen"]
+autor: redaktion_entwurf
+erstellt: 2026-08-08
+quelle: "OGer ZH LU260001"
+gericht: Obergericht des Kantons Zürich
+entscheid_datum: 2026-03-18
+verfahren_abgeschlossen: true
+aktenzeichen: "LU260001"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Sackgasse
+regel_id: "OFFEN:S-2026-08-08-B:LU260001"
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 311 Abs. 1 ZPO (SR 272)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: weitergezogen
+kodierliste_version: "1.0.0"
+scheiterpunkt: [substantiierung_fehlte]
+kodierung_status: vorschlag
+kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Damit fehlt es – auch bei wohlwollender Leseart – an einer Auseinandersetzung mit dem angefochtenen Entscheid bzw. an einer Darlegung, an welchen Mängeln der angefochtene Entscheid leidet"]

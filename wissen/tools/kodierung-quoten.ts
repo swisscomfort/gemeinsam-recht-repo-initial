@@ -6,6 +6,11 @@
 //
 // Ausschlussregeln (§5):
 // - kennzeichnung FIKTIV oder PLATZHALTER zaehlt nie mit.
+// - regel_id mit dem Praefix "OFFEN:" (AUFTRAG-FALLAUFNAHME §2.3: kein
+//   Registertreffer beim Registerabgleich) zaehlt nie mit — analog zu
+//   kodierung_status: vorschlag zaehlt so ein Fall erst, wenn der
+//   Registereintrag im serialisierten Zusammenzug (§6) tatsaechlich
+//   angelegt und regel_id ersetzt wurde.
 // - rechtskraft_status ungleich "rechtskraeftig" zaehlt nie mit.
 // - fuer die Scheiterpunkt-Auswertung zusaetzlich: kodierung_status ist
 //   "vorschlag" oder "strittig" — gezaehlt wird ausschliesslich, was
@@ -30,6 +35,7 @@ export type KodierungStatus = "vorschlag" | "doppelt_bestaetigt" | "mensch_besta
 export interface KodierteStory {
   id: string;
   kennzeichnung: string;
+  regel_id?: string;
   rechtskraft_status?: string;
   kodierung_status?: KodierungStatus;
   ausgang?: string;
@@ -38,8 +44,12 @@ export interface KodierteStory {
 
 export type Ausschlussgrund =
   | "kennzeichnung_fiktiv_oder_platzhalter"
+  | "regel_id_offen"
   | "nicht_rechtskraeftig"
   | "kodierung_nicht_bestaetigt";
+
+/** AUFTRAG-FALLAUFNAHME §2.3: Platzhalter, solange kein Registertreffer vorliegt. */
+const REGEL_ID_OFFEN_PRAEFIX = "OFFEN:";
 
 export interface Ausschluss {
   grund: Ausschlussgrund;
@@ -69,15 +79,20 @@ interface Basis {
   ausschluesse: Ausschluss[];
 }
 
-/** Rechtskraeftige, nicht-fiktive Faelle; zaehlt beide Ausschlussgruende. */
+/** Rechtskraeftige, nicht-fiktive, registrierte Faelle; zaehlt jeden Ausschlussgrund einzeln. */
 function zaehlbareFaelle(stories: readonly KodierteStory[]): Basis {
   let fiktivOderPlatzhalter = 0;
+  let regelIdOffen = 0;
   let nichtRechtskraeftig = 0;
   const zaehlbar: KodierteStory[] = [];
 
   for (const story of stories) {
     if (KENNZEICHNUNGEN_AUSGESCHLOSSEN.has(story.kennzeichnung)) {
       fiktivOderPlatzhalter += 1;
+      continue;
+    }
+    if (story.regel_id !== undefined && story.regel_id.startsWith(REGEL_ID_OFFEN_PRAEFIX)) {
+      regelIdOffen += 1;
       continue;
     }
     if (story.rechtskraft_status !== "rechtskraeftig") {
@@ -90,6 +105,9 @@ function zaehlbareFaelle(stories: readonly KodierteStory[]): Basis {
   const ausschluesse: Ausschluss[] = [];
   if (fiktivOderPlatzhalter > 0) {
     ausschluesse.push({ grund: "kennzeichnung_fiktiv_oder_platzhalter", anzahl: fiktivOderPlatzhalter });
+  }
+  if (regelIdOffen > 0) {
+    ausschluesse.push({ grund: "regel_id_offen", anzahl: regelIdOffen });
   }
   if (nichtRechtskraeftig > 0) {
     ausschluesse.push({ grund: "nicht_rechtskraeftig", anzahl: nichtRechtskraeftig });
