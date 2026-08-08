@@ -19,17 +19,12 @@ const ordner = readdirSync(entwuerfeVerzeichnis, { withFileTypes: true })
   .sort();
 
 describe("Entwuerfe — Parser-Pruefung (pruefeStory, injiziertes Heute-Datum)", () => {
-  // FS-101..103 wurden am 2026-08-07 freigegeben und per git mv in den Feed
-  // uebernommen; der Folgeauftrag zu R1 liefert die Entwuerfe FS-104..109.
-  it("es liegen genau sechs Entwuerfe FS-104 bis FS-109 vor", () => {
-    expect(ordner.map((o) => o.slice(0, 6))).toEqual([
-      "FS-104",
-      "FS-105",
-      "FS-106",
-      "FS-107",
-      "FS-108",
-      "FS-109",
-    ]);
+  // FS-101..103 wurden am 2026-08-07 freigegeben; FS-104/105/107/109 wurden
+  // am 2026-08-08 freigegeben und per git mv in den Feed uebernommen.
+  // FS-106/108 bleiben ausdruecklich Entwurf (erstinstanzlich, parkiert bis
+  // die Rechtskraft-Verifikation abgeschlossen ist).
+  it("es liegen genau zwei Entwuerfe FS-106 und FS-108 vor", () => {
+    expect(ordner.map((o) => o.slice(0, 6))).toEqual(["FS-106", "FS-108"]);
   });
 
   for (const name of ordner) {

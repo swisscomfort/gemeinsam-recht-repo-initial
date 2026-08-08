@@ -249,3 +249,24 @@ git mv redaktion/entwuerfe/FS-109-beziffern-in-zweiter-instanz prototypen/storie
   "begruendung": "Jede Rechtsaussage stammt aus dem jeweils vollstaendig gelesenen Entscheid und traegt Quelle/Datum/Link; Unsicherheiten (insb. Rechtskraft der beiden erstinstanzlichen Urteile) sind als REDAKTION-pruefen markiert; Uebernahme in den Feed nur per git mv nach schriftlicher Freigabe."
 }
 ```
+
+## 8. Ergänzung vom 2026-08-08 — Freigabe und Übernahme FS-104/105/107/109
+
+Auf schriftliche Freigabe des Auftraggebers («FS-104 freigegeben, FS-105
+freigegeben, FS-107 freigegeben, FS-109 freigegeben») wurden diese vier
+Entwürfe wie in §7.5 vorgesehen per `git mv` von `redaktion/entwuerfe/` nach
+`prototypen/stories/` übernommen. FS-106/108 bleiben ausdrücklich Entwurf
+(erstinstanzlich, parkiert bis zur Rechtskraft-Verifikation, §7.3).
+
+- `redaktion/tests/entwuerfe.test.ts` prüft nur noch die verbleibenden
+  Entwürfe FS-106/FS-108 (vorher FS-104–109).
+- `prototypen/feed/tests/quelle.test.ts` erhielt einen zusätzlichen Test, der
+  den echten Glob-Lader `ladeAlle()` mit injiziertem Prüfdatum
+  (2026-08-07) gegen `prototypen/stories/` laufen lässt und bestätigt, dass
+  FS-104, FS-105, FS-107 und FS-109 dort angenommen werden — an
+  `prototypen/feed/src/` wurde nichts geändert.
+- Testergebnis 2026-08-08: redaktion **30/30 grün** · feed **96/96 grün**
+  (inkl. neuem Übernahme-Test) · core 136 · wissen 44 · webflow 9 —
+  unverändert an core/wissen/webflow.
+
+Kein Commit, kein Push ohne gesonderte Freigabe des Auftraggebers.

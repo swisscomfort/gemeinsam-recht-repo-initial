@@ -18,3 +18,20 @@ describe("ladeAlle", () => {
     }
   });
 });
+
+describe("ladeAlle — uebernommene Nacherzaehl-Geschichten (mit injiziertem Pruefdatum)", () => {
+  // FS-104/105/107/109 wurden am 2026-08-08 freigegeben und per git mv aus
+  // redaktion/entwuerfe/ nach prototypen/stories/ uebernommen (FS-106/108
+  // bleiben Entwurf). Ohne injiziertes Datum verweigert der Parser jede
+  // NACHERZAEHLT_OEFFENTLICH-Geschichte (keine Systemzeit in der Fachlogik) —
+  // deshalb ein eigener Test mit fest injiziertem Pruefdatum.
+  const PRUEF_DATUM = "2026-08-07";
+
+  it("akzeptiert FS-104, FS-105, FS-107 und FS-109 aus prototypen/stories/", () => {
+    const ergebnis = ladeAlle(PRUEF_DATUM);
+    const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
+    for (const id of ["FS-104", "FS-105", "FS-107", "FS-109"]) {
+      expect(ids).toContain(id);
+    }
+  });
+});
