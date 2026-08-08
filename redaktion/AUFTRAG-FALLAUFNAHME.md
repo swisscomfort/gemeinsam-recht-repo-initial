@@ -1,10 +1,16 @@
 # AUFTRAG-FALLAUFNAHME
 
-**Maschinenlesbare Arbeitsanweisung für Agenten. Fassung 2.**
+**Maschinenlesbare Arbeitsanweisung für Agenten. Fassung 3.**
 Grundlage: MANIFEST v2.1 (`ec285049…21ec02`). Bei Widerspruch gilt das Manifest.
 
 Diese Datei wird wörtlich befolgt. Wo eine Angabe fehlt, gilt §4 (Abbruch),
 nicht die eigene Einschätzung.
+
+**Änderungen gegenüber Fassung 2** (aus Stapel S-2026-08-08-C):
+Perspektive von `ausgang` auf die Mietpartei festgelegt (§2.5) · Umgang mit
+aufhebendem Folgeentscheid im selben Abruf geregelt (§2.5) · Abbruchgrund 4.9
+(Sachverhalt/Beweislast nicht zuordenbar) ergänzt · Abbruchgrund 4.10
+(Volltext bricht vor dem Dispositiv ab) ergänzt.
 
 **Änderungen gegenüber Fassung 1** (aus Probelauf S-2026-08-08-B):
 Trefferprüfung gegen `reference` (§2.1) · Zwischenspeicherung geregelt (§2.2) ·
@@ -109,6 +115,18 @@ Prüfe `wissen/register/*.json` auf einen Eintrag mit dieser Norm in
 - **sonst `unbekannt`** — der Regelfall, kein Mangel
 
 Nie schätzen, nie aus dem Datum ableiten.
+
+**Perspektive:** `ausgang` wird immer aus Sicht der **Mietpartei** kodiert,
+unabhängig davon, wer Klägerin oder Kläger ist. Obsiegt die Mietpartei (auch
+wenn sie Beklagte war und die Klage der Vermieterschaft abgewiesen wurde),
+gilt `durchgesetzt`. Bei gemischtem Ausgang mit mehreren Streitgegenständen:
+`teilweise`.
+
+**Aufhebung im selben Abruf:** Enthält der abgerufene Volltext neben dem
+gesuchten Entscheid auch einen ihn aufhebenden Folgeentscheid derselben
+Sache, ist das Dispositiv des **aufhebenden** Entscheids massgeblich für
+`ausgang` und `rechtskraft_status`. Die Story macht diese Quellenlage unter
+einem eigenen Hinweis kenntlich (z. B. „Hinweis zur Quellenlage").
 
 ### 2.6 Scheiterpunkt kodieren
 
@@ -217,6 +235,8 @@ Nicht raten, nicht behelfen, nicht nachfragen.
 | 4.6 | Gegenstand berührt Gewalt, Strafrecht oder akute Gefährdung — Manifest §9, Schutzstufe S5 |
 | 4.7 | Der Entscheid nennt Privatpersonen unanonymisiert |
 | 4.8 | **Verfahren nicht abgeschlossen** — Zwischenentscheid, Sistierung, Rückweisung, offene Hauptsache |
+| 4.9 | Sachverhalt oder Beweislast bei mehreren Teilansprüchen/wechselnden Parteirollen nicht mit vertretbarer Sicherheit einem eindeutigen `ausgang` zuordenbar |
+| 4.10 | Treffer mit passender `reference` vorhanden, aber abgerufener Volltext bricht vor dem Dispositiv ab (`ausgang` nicht feststellbar) |
 
 ---
 
