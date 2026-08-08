@@ -150,3 +150,46 @@ statt Verweigerung für sechs bzw. zwei Geschichten).
 Alle Änderungen (7 neue Register-Dateien, `core/src/register.gen.ts`
 regeneriert, `wissen/dist/` neu gebaut, 7 `meta.yaml`, 2 Testdateien) liegen
 im Arbeitsverzeichnis, noch nicht committet.
+
+## 6. Ergänzung vom 2026-08-08 — FS-107: Rubrik redaktionell entschieden
+
+`rubrik: Warnweiser` gesetzt (Entscheid des Projektinhabers, nicht von mir
+vorgeschlagen — die Enum-Lücke „TEILWEISE" war in §10.2 als offene
+Redaktionsaufgabe stehen geblieben, keine eigene Zuordnung geraten).
+
+**Begründung (Redaktionsentscheid):** Der Weg zur Herabsetzung existierte —
+das Kantonsgericht bestätigt, dass Nora bei einem klaren, nachrechenbaren
+Punkt (Referenzzinssatz) durchdrang. Gescheitert ist sie aber daran, dass
+sie der gesetzlichen 50–70-%-Vermutung von Art. 14 Abs. 1 Satz 2 VMWG nur
+pauschal entgegentrat, statt selbst konkret aufzuschlüsseln (§2 dieses
+Berichts: „Wer die Vermutung kippen will, muss selber konkret und mit
+Zahlen aufzeigen"). Das ist die typische Stelle, an der Mieter bei
+Sanierungs-Mietzinserhöhungen hängenbleiben: der Rechtsweg steht offen, die
+Substantiierungshürde wird nicht genommen. Das entspricht der Warnweiser-
+Rubrik („Recht gehabt auf Prüfung, nicht bekommen" — hier: teilweise nicht
+bekommen, weil am eigenen Vorbringen gescheitert) eher als einem
+uneingeschränkten Wegweiser.
+
+Damit tragen jetzt **alle neun** Geschichten alle sieben §3-Felder — sieben
+laden im Feed (`prototypen/stories/`, inkl. FS-107 neu), FS-106/108 bleiben
+Entwurf (unabhängig vom Parser, Rechtskraft-Verifikation offen).
+
+**Nachtrag (auf Weisung nachgezogen):** Die sichtbare Zeile in
+`prototypen/stories/FS-107-die-erhoehung-nach-der-sanierung/story.md` wurde
+zunächst unverändert gelassen (sie wird vom Parser nicht ausgewertet, nur
+das `meta.yaml`-Feld `rubrik` ist Pflichtfeld), widersprach damit aber
+sichtbar dem strukturierten Feld. Auf ausdrückliche Weisung angepasst:
+`*Rubrik: TEILWEISE — kleine Senkung statt grosser Korrektur.*` →
+`*Rubrik: Warnweiser — kleine Senkung statt grosser Korrektur.*` (Zeile 69).
+Text und Struktur sind jetzt deckungsgleich.
+
+### 6.1 Testergebnis
+
+Alle fünf Suiten grün (356 Tests — eine Zusammenfassung zweier Tests in
+`quelle.test.ts`, da FS-107 jetzt ebenfalls akzeptiert wird): core 136,
+feed 103, wissen 62, webflow 9, redaktion 46.
+
+### 6.2 Kein Commit
+
+Änderungen (1 `meta.yaml`, 1 Testdatei, dieser Bericht) liegen im
+Arbeitsverzeichnis.

@@ -66,4 +66,4 @@ Aufteilung der Arbeiten.
 https://entscheidsuche.ch/view/BL_KG_001_400-2024-279_2025-06-03
 Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (redaktionell geprüft am 8. August 2026).
 
-*Rubrik: TEILWEISE — kleine Senkung statt grosser Korrektur.*
+*Rubrik: Warnweiser — kleine Senkung statt grosser Korrektur.*

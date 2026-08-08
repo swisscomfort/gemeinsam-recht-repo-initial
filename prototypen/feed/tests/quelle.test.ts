@@ -29,26 +29,19 @@ describe("ladeAlle — uebernommene Nacherzaehl-Geschichten (mit injiziertem Pru
   //
   // Registeraufbau aus RUECKHOLUNG-NORMEN.md (berichte/): sieben neue
   // Eintraege R-CH-0011..0017 liefern regel_id/regel_version/norm_fundstelle
-  // fuer FS-102/103/105/106/107/108/109. FS-107s Rubrik-Zeile ("TEILWEISE")
-  // ist Altbestand aus der Zeit vor dem Dreier-Enum und bleibt bewusst offen
-  // (Redaktionsaufgabe, §10.2) — das ist der einzige noch fehlende Pflicht-
-  // schluessel unter den sieben §3-Feldern.
+  // fuer FS-102/103/105/106/107/108/109. FS-107s Rubrik war Altbestand
+  // ("TEILWEISE", vor dem Dreier-Enum) und wurde redaktionell auf
+  // "Warnweiser" umgemappt (§10.2/§6 im Bericht: der Weg existierte
+  // — Herabsetzung war moeglich —, scheiterte aber an fehlender
+  // Substantiierung; typische Stelle, an der Mieter haengenbleiben) — damit
+  // tragen jetzt alle neun Geschichten alle sieben §3-Felder.
   const PRUEF_DATUM = "2026-08-08";
 
-  it("akzeptiert FS-101, 102, 103, 104, 105 und 109 (alle sieben §3-Felder vorhanden)", () => {
+  it("akzeptiert alle sieben in prototypen/stories/ liegenden Nacherzaehl-Geschichten", () => {
     const ergebnis = ladeAlle(PRUEF_DATUM);
     const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
-    for (const id of ["FS-101", "FS-102", "FS-103", "FS-104", "FS-105", "FS-109"]) {
+    for (const id of ["FS-101", "FS-102", "FS-103", "FS-104", "FS-105", "FS-107", "FS-109"]) {
       expect(ids, `${id} sollte akzeptiert werden`).toContain(id);
     }
-  });
-
-  it("verweigert FS-107 einzig wegen der noch offenen Rubrik", () => {
-    const ergebnis = ladeAlle(PRUEF_DATUM);
-    const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
-    expect(ids).not.toContain("FS-107");
-    const fs107 = ergebnis.verweigert.find((v) => v.quelle.startsWith("FS-107-"));
-    expect(fs107, "FS-107 sollte verweigert werden").toBeDefined();
-    expect(fs107!.gruende).toEqual(['Pflichtschluessel fehlt: "rubrik"']);
   });
 });

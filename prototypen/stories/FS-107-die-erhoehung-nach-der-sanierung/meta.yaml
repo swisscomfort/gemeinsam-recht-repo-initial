@@ -16,6 +16,7 @@ verfahren_abgeschlossen: true
 aktenzeichen: "400 2024 279"
 instanz: zweite_instanz
 kanton: BL
+rubrik: Warnweiser
 regel_id: R-CH-0015
 regel_version: "0.1.0"
 norm_fundstelle: "Art. 14 Abs. 1 Satz 2 VMWG (SR 221.213.11)"
