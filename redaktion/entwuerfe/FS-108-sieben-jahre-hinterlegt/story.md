@@ -67,10 +67,7 @@ konkrete, belegbare Mängelliste.
 **Quelle & Stand:** Bezirksgericht Pfäffikon, Mietgericht · MJ250002 ·
 Urteil vom 21. Januar 2026 ·
 https://entscheidsuche.ch/view/ZH_BK_004_MJ250002_2026-01-21
-[REDAKTION: pruefen — erstinstanzliches Urteil mit Berufungsmöglichkeit ans
-Obergericht; ob eine Berufung erhoben wurde, ist aus der Quelle nicht
-ersichtlich. Die Auszahlung an die Vermieterin war laut Urteil erst nach
-unbenütztem Ablauf der Berufungsfrist vorgesehen.]
+[PARKIERT — 8. August 2026: erstinstanzliches Urteil. Die Publikation belegt nur den Ablauf der Rechtsmittelfrist, nicht die Rechtskraft; eine Berufung ans Obergericht ist nicht ausschliessbar. Freigabe erst, wenn ein Kandidaten-Lauf einen Zweitinstanz-Entscheid zur selben Sache zeigt oder das Gegenteil erhärtet.]
 
 *Rubrik: SACKGASSE — in dieser Führung des Falls von Anfang an aussichtslos;
 Hauptfigur ist der Irrtum, nicht der Mensch.*

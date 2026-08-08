@@ -61,9 +61,7 @@ Widerklage auf festem Boden.
 **Quelle & Stand:** Bezirksgericht Winterthur, Mietgericht · MJ250016 ·
 Urteil vom 21. April 2026 ·
 https://entscheidsuche.ch/view/ZH_BK_004_MJ250016_2026-04-21
-[REDAKTION: pruefen — erstinstanzliches Urteil mit Berufungsmöglichkeit ans
-Obergericht; ob eine Berufung erhoben wurde, ist aus der Quelle nicht
-ersichtlich.]
+[PARKIERT — 8. August 2026: erstinstanzliches Urteil. Die Publikation belegt nur den Ablauf der Rechtsmittelfrist, nicht die Rechtskraft; eine Berufung ans Obergericht ist nicht ausschliessbar. Freigabe erst, wenn ein Kandidaten-Lauf einen Zweitinstanz-Entscheid zur selben Sache zeigt oder das Gegenteil erhärtet.]
 
 *Rubrik: WEGWEISER — Recht gehabt & bekommen (bei der Höhe teilweise: 8 statt
 15 %).*

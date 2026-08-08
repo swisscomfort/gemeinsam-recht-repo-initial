@@ -53,9 +53,7 @@ verlorenen Anfechtung kamen Fr. 200.– Busse dazu.
 **Quelle & Stand:** Obergericht des Kantons Zürich, II. Zivilkammer ·
 RU250068 · Urteil vom 8. Oktober 2025 ·
 https://entscheidsuche.ch/view/ZH_OG_001_RU250068_2025-10-08
-[REDAKTION: pruefen — Endentscheid mit Beschwerdemöglichkeit ans
-Bundesgericht; ob ein Weiterzug erfolgte, ist aus der Quelle nicht
-ersichtlich.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (redaktionell geprüft am 8. August 2026).
 
 *Rubrik: WARNWEISER — die Anfechtung verloren, ohne dass sie je inhaltlich
 geprüft wurde.*

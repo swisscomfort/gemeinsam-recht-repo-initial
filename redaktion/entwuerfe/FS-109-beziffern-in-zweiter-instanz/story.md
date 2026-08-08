@@ -64,9 +64,7 @@ Betrag, obwohl der Betrag bekannt ist.
 **Quelle & Stand:** Obergericht des Kantons Zürich, II. Zivilkammer ·
 NG250008 · Urteil vom 16. März 2026 ·
 https://entscheidsuche.ch/view/ZH_OG_001_NG250008_2026-03-16
-[REDAKTION: pruefen — Endentscheid mit Beschwerdemöglichkeit ans
-Bundesgericht; ob ein Weiterzug erfolgte, ist aus der Quelle nicht
-ersichtlich.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (redaktionell geprüft am 8. August 2026).
 
 *Rubrik: SACKGASSE — so, wie geklagt wurde, von Anfang an aussichtslos;
 Hauptfigur ist der Irrtum, nicht der Mensch.*

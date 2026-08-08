@@ -55,9 +55,7 @@ ihn stattfand.
 **Quelle & Stand:** Obergericht des Kantons Zürich, II. Zivilkammer ·
 LU250008 · Urteil vom 26. November 2025 ·
 https://entscheidsuche.ch/view/ZH_OG_001_LU250008_2025-11-26
-[REDAKTION: pruefen — Endentscheid mit Beschwerdemöglichkeit ans
-Bundesgericht; ob ein Weiterzug erfolgte, ist aus der Quelle nicht
-ersichtlich.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (redaktionell geprüft am 8. August 2026).
 
 *Rubrik: WARNWEISER — den Anspruch auf Prüfung der Kündigung verloren, ohne
 dass je jemand inhaltlich über sie entschieden hätte.*

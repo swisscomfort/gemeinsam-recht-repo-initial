@@ -64,8 +64,6 @@ Aufteilung der Arbeiten.
 **Quelle & Stand:** Kantonsgericht Basel-Landschaft, Abteilung Zivilrecht ·
 400 2024 279 · Entscheid vom 3. Juni 2025 ·
 https://entscheidsuche.ch/view/BL_KG_001_400-2024-279_2025-06-03
-[REDAKTION: pruefen — Endentscheid mit Beschwerdemöglichkeit ans
-Bundesgericht; ob ein Weiterzug erfolgte, ist aus der Quelle nicht
-ersichtlich.]
+Ein Weiterzug ans Bundesgericht ist nicht ersichtlich (redaktionell geprüft am 8. August 2026).
 
 *Rubrik: TEILWEISE — kleine Senkung statt grosser Korrektur.*
