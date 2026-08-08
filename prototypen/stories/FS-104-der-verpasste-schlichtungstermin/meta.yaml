@@ -13,3 +13,16 @@ quelle: "OGer ZH LU250008"
 gericht: Obergericht des Kantons Zürich
 entscheid_datum: 2025-11-26
 verfahren_abgeschlossen: true
+aktenzeichen: "LU250008"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Warnweiser
+regel_id: R-CH-0004
+regel_version: "0.1.0"
+norm_fundstelle: "Zustellrecht (Zustellfiktion Einschreiben, 7-taegige Abholfrist)"
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [termin_versaeumt, beweis_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|termin_versaeumt,beweis_fehlte|Die Verhandlung fand ohne Dario statt, das Verfahren wurde abgeschrieben; die behauptete Krankheit blieb unbelegt"]

@@ -14,3 +14,31 @@ Aenderungsprotokoll:
 v1.0  2026-08-05  Initialer Freeze                                  32b3b899d472a180d93784e5ad9e853ee4c24fac4943274bacd9a78bba75a314
                   (archiviert: docs/archiv/DER_PLAN_v1.0_FROZEN.md)
 v1.1  2026-08-05  CR-001 angenommen inkl. F1-F3                     4e42ba6d80668dc684dc16eebe3a86c3433c375c5e0c93536aedb223f19aa906
+
+═══════════════════════════════════════════════════════════════
+MANIFEST v2.0 — eingefroren am 2026-08-08
+═══════════════════════════════════════════════════════════════
+Datei       : MANIFEST-v2.0.md
+SHA-256     : f10db698dbc3302f58b047c4bdb762d0b4d326e73babb57c65afef8b78373652
+Kurzanker   : f10db698…373652
+Kodierliste : wissen/scheiterpunkte.json 1.0.0 · a46124078aaf7827…
+Ersetzt     : Plan v1.1 (4e42ba6d…9aa906)
+Addenda     : F1 unveraendert · F2 ersetzt durch F2' · F3 unveraendert
+Ausserhalb  : §14 — vier ungepruefte Punkte, Erloesprognose
+Aenderung   : nur per Change Request nach §15
+Freigabe    : ____________________  (Datum, Unterschrift)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+MANIFEST v2.1 — eingefroren am 2026-08-08
+═══════════════════════════════════════════════════════════════
+Datei       : MANIFEST-v2.1.md
+SHA-256     : ec285049d79d3fd828cd06593e25d6dfcd4c10cbc14769bcc5d17992db21ec02
+Kurzanker   : ec285049…21ec02
+Kodierliste : wissen/scheiterpunkte.json 1.0.0 · a46124078aaf7827…
+Ersetzt     : MANIFEST v2.0 (f10db698…373652) · CR-01 angenommen
+Addenda     : F1 unveraendert · F2 ersetzt durch F2' · F3 unveraendert
+Ausserhalb  : §14 — vier ungepruefte Punkte, Erloesprognose
+Aenderung   : nur per Change Request nach §15
+Freigabe    : ____________________  (Datum, Unterschrift)
+═══════════════════════════════════════════════════════════════

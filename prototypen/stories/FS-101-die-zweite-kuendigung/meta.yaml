@@ -13,3 +13,16 @@ quelle: "OGer SO ZKBER.2025.43"
 gericht: Obergericht des Kantons Solothurn
 entscheid_datum: 2025-11-19
 verfahren_abgeschlossen: true
+aktenzeichen: "ZKBER.2025.43"
+instanz: zweite_instanz
+kanton: SO
+rubrik: Wegweiser
+regel_id: R-CH-0007
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 271a OR (SR 220)"
+ausgang: durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [gegenpartei_nicht_substantiiert]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|gegenpartei_nicht_substantiiert|ein bloss allgemeiner Wunsch ohne belegten, aktuellen Bedarf genügt als Kündigungsgrund aber nicht"]

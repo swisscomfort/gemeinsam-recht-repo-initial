@@ -13,3 +13,13 @@ quelle: "MGer ZH MJ250072-L (ZMP 2025 Nr. 22)"
 gericht: Mietgericht Zürich
 entscheid_datum: 2025-10-21
 verfahren_abgeschlossen: true
+aktenzeichen: "MJ250072-L"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Sackgasse
+ausgang: nicht_durchgesetzt
+rechtskraft_status: rechtskraeftig
+scheiterpunkt: [antrag_unbeziffert]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|antrag_unbeziffert|Weil seine Klage keine Zahl nannte, war sie in dieser Form von Anfang an chancenlos"]

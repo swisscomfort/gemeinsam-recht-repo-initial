@@ -13,3 +13,13 @@ quelle: "MGer Winterthur MJ250016"
 gericht: Bezirksgericht Winterthur (Mietgericht)
 entscheid_datum: 2026-04-21
 verfahren_abgeschlossen: true
+aktenzeichen: "MJ250016"
+instanz: erste_instanz
+kanton: ZH
+rubrik: Wegweiser
+ausgang: teilweise
+rechtskraft_status: unbekannt
+scheiterpunkt: [beweis_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|beweis_fehlte|dafuer trug sie die Beweislast, und der Beweis gelang ihr nicht"]

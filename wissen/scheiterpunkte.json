@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "gueltig_ab": "2026-08-08",
+  "werte": [
+    "frist_verpasst",
+    "beweis_fehlte",
+    "anhoerung_unterblieb",
+    "gegenpartei_nicht_substantiiert",
+    "kosten_zu_hoch",
+    "aufgegeben",
+    "verjaehrung",
+    "zustaendigkeit_verfehlt",
+    "regel_nicht_angewendet",
+    "folgenabwaegung_trug_entscheid",
+    "antrag_unbeziffert",
+    "termin_versaeumt",
+    "substantiierung_fehlte",
+    "falscher_verfahrensweg",
+    "nicht_bestimmbar"
+  ]
+}

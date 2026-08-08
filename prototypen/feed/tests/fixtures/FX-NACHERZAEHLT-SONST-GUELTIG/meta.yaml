@@ -13,4 +13,17 @@ quelle: "BGer 4A_999/2025"
 gericht: Bundesgericht
 entscheid_datum: 2025-03-14
 verfahren_abgeschlossen: true
+aktenzeichen: "4A_999/2025"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Wegweiser
+regel_id: R-CH-0001
+regel_version: "0.1.0"
+norm_fundstelle: "Art. 273 Abs. 1 OR (SR 220)"
+ausgang: durchgesetzt
+rechtskraft_status: rechtskraeftig
+scheiterpunkt: [gegenpartei_nicht_substantiiert]
+kodierliste_version: "1.0.0"
+kodierung_status: doppelt_bestaetigt
+kodierung_quellen: ["cli-1|2026-08-06|gegenpartei_nicht_substantiiert|FX-Testbeleg Lauf 1", "cli-2|2026-08-06|gegenpartei_nicht_substantiiert|FX-Testbeleg Lauf 2"]
 fixture: true

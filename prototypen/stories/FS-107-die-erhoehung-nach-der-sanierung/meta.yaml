@@ -13,3 +13,12 @@ quelle: "KGer BL 400 2024 279"
 gericht: Kantonsgericht Basel-Landschaft
 entscheid_datum: 2025-06-03
 verfahren_abgeschlossen: true
+aktenzeichen: "400 2024 279"
+instanz: zweite_instanz
+kanton: BL
+ausgang: teilweise
+rechtskraft_status: unbekannt
+scheiterpunkt: [substantiierung_fehlte]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|substantiierung_fehlte|Wer die Vermutung kippen will, muss selber konkret und mit Zahlen aufzeigen, der Hinweis genuegt nicht"]

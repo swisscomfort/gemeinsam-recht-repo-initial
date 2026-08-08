@@ -3,7 +3,7 @@
 // Pruefdatum ("heute") wird in jedem Test fest injiziert — keine Systemzeit.
 
 import { describe, expect, it } from "vitest";
-import { pruefeStory } from "../src/story";
+import { kodiereKodierungsLauf, parseKodierungsLauf, pruefeStory } from "../src/story";
 import { BADGE, BADGE_NACHERZAEHLT_PRAEFIX, badgeFuer, morgenausgabe } from "../src/ausgabe";
 
 import fxGueltigMeta from "./fixtures/FX-NACHERZAEHLT-SONST-GUELTIG/meta.yaml?raw";
@@ -160,5 +160,81 @@ describe("NACHERZAEHLT_OEFFENTLICH — Verweigerung (jeder Grund einzeln)", () =
     const meta = fxGueltigMeta.replace("entscheid_datum: 2025-03-14", "entscheid_datum: irgendwann");
     const gruende = gruendeVon(meta, fxGueltigStory);
     expect(gruende.some((g) => g.includes('"entscheid_datum" muss die Form JJJJ-MM-TT haben'))).toBe(true);
+  });
+});
+
+describe("Doppelkodierung — kodierung_status/kodierung_quellen (MANIFEST v2.1 §3/§5)", () => {
+  it("parseKodierungsLauf/kodiereKodierungsLauf sind zueinander invers", () => {
+    const lauf = {
+      lauf: "cli-2",
+      datum: "2026-08-09",
+      wert: ["frist_verpasst", "beweis_fehlte"],
+      textstelle: "ein Beleg, mit Komma, im Text",
+    };
+    expect(parseKodierungsLauf(kodiereKodierungsLauf(lauf))).toEqual(lauf);
+  });
+
+  it('kodierung_status fehlt: NACHERZAEHLT_OEFFENTLICH erhaelt den Default "vorschlag"', () => {
+    const ohneStatus = gueltigOhneFixture.replace("kodierung_status: doppelt_bestaetigt\n", "");
+    const ergebnis = pruefeStory("test", ohneStatus, fxGueltigStory, HEUTE);
+    expect(ergebnis.ok).toBe(true);
+    if (!ergebnis.ok) return;
+    expect(ergebnis.story.meta.kodierung_status).toBe("vorschlag");
+  });
+
+  it("uebernimmt kodierung_status und die geparsten kodierung_quellen (zwei Laeufe)", () => {
+    const ergebnis = pruefeStory("test", gueltigOhneFixture, fxGueltigStory, HEUTE);
+    expect(ergebnis.ok).toBe(true);
+    if (!ergebnis.ok) return;
+    expect(ergebnis.story.meta.kodierung_status).toBe("doppelt_bestaetigt");
+    expect(ergebnis.story.meta.kodierung_quellen).toEqual([
+      {
+        lauf: "cli-1",
+        datum: "2026-08-06",
+        wert: ["gegenpartei_nicht_substantiiert"],
+        textstelle: "FX-Testbeleg Lauf 1",
+      },
+      {
+        lauf: "cli-2",
+        datum: "2026-08-06",
+        wert: ["gegenpartei_nicht_substantiiert"],
+        textstelle: "FX-Testbeleg Lauf 2",
+      },
+    ]);
+  });
+
+  it("verweigert einen unbekannten kodierung_status", () => {
+    const meta = gueltigOhneFixture.replace("kodierung_status: doppelt_bestaetigt", "kodierung_status: geprueft");
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(gruende.some((g) => g.includes('Unbekannter kodierung_status: "geprueft"'))).toBe(true);
+  });
+
+  it("verweigert einen kodierung_quellen-Eintrag mit zu wenigen Feldern", () => {
+    const meta = gueltigOhneFixture.replace(
+      /kodierung_quellen: \[.*\]/,
+      'kodierung_quellen: ["cli-1|2026-08-06"]',
+    );
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(gruende.some((g) => g.includes('nicht als "lauf|datum|wert|textstelle" lesbar'))).toBe(true);
+  });
+
+  it("verweigert einen kodierung_quellen-Eintrag mit unbekanntem Scheiterpunkt-Wert", () => {
+    const meta = gueltigOhneFixture.replace(
+      /kodierung_quellen: \[.*\]/,
+      'kodierung_quellen: ["cli-1|2026-08-06|nicht_existierender_code|Beleg"]',
+    );
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(
+      gruende.some((g) => g.includes('unbekanntem Scheiterpunkt-Wert: "nicht_existierender_code"')),
+    ).toBe(true);
+  });
+
+  it("verweigert einen kodierung_quellen-Eintrag mit ungueltigem Datum", () => {
+    const meta = gueltigOhneFixture.replace(
+      /kodierung_quellen: \[.*\]/,
+      'kodierung_quellen: ["cli-1|gestern|gegenpartei_nicht_substantiiert|Beleg"]',
+    );
+    const gruende = gruendeVon(meta, fxGueltigStory);
+    expect(gruende.some((g) => g.includes("ungueltigem Datum"))).toBe(true);
   });
 });

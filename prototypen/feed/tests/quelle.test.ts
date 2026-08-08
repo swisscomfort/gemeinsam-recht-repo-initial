@@ -27,11 +27,35 @@ describe("ladeAlle — uebernommene Nacherzaehl-Geschichten (mit injiziertem Pru
   // deshalb ein eigener Test mit fest injiziertem Pruefdatum.
   const PRUEF_DATUM = "2026-08-07";
 
-  it("akzeptiert FS-104, FS-105, FS-107 und FS-109 aus prototypen/stories/", () => {
+  it("akzeptiert FS-101 und FS-104 aus prototypen/stories/ (alle sieben §3-Felder ableitbar)", () => {
     const ergebnis = ladeAlle(PRUEF_DATUM);
     const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
-    for (const id of ["FS-104", "FS-105", "FS-107", "FS-109"]) {
-      expect(ids).toContain(id);
+    expect(ids).toContain("FS-101");
+    expect(ids).toContain("FS-104");
+  });
+
+  // MANIFEST v2.1 §3: die sieben Pflichtfelder sind fuer FS-102/103/105/107/109
+  // nicht vollstaendig aus Storytext/Aktenzeichen ableitbar (kein passender
+  // wissen/register-Eintrag bzw. bei FS-107 eine Rubrik ausserhalb des
+  // Dreier-Enums) und bleiben deshalb unvollstaendig — das loest absichtlich
+  // einen Ladefehler aus (berichte/AUFTRAG-KODIERUNG-V2-ABSCHLUSS.md §9.3:
+  // "das ist beabsichtigt, nicht zu umgehen"), bis ein Mensch regel_id/
+  // norm_fundstelle (bzw. bei FS-107 die Rubrik) ergaenzt.
+  it("verweigert FS-102, 103, 105, 107, 109 wegen fehlender §3-Felder (beabsichtigt)", () => {
+    const ergebnis = ladeAlle(PRUEF_DATUM);
+    const ids = ergebnis.akzeptiert.map((s) => s.meta.id);
+    for (const id of ["FS-102", "FS-103", "FS-105", "FS-107", "FS-109"]) {
+      expect(ids).not.toContain(id);
     }
+    const verweigerungFuer = (id: string) =>
+      ergebnis.verweigert.find((v) => v.quelle === id || v.quelle.startsWith(`${id}-`));
+    for (const id of ["FS-102", "FS-103", "FS-105", "FS-109"]) {
+      const verweigerung = verweigerungFuer(id);
+      expect(verweigerung, `${id} sollte verweigert werden`).toBeDefined();
+      expect(verweigerung!.gruende.some((g) => g.includes('Pflichtschluessel fehlt: "regel_id"'))).toBe(true);
+    }
+    const fs107 = verweigerungFuer("FS-107");
+    expect(fs107, "FS-107 sollte verweigert werden").toBeDefined();
+    expect(fs107!.gruende.some((g) => g.includes('Pflichtschluessel fehlt: "rubrik"'))).toBe(true);
   });
 });

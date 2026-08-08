@@ -12,6 +12,8 @@
 // NACHERZAEHLT_OEFFENTLICH ("entscheid_datum in der Vergangenheit") wird
 // injiziert; ohne injiziertes Datum wird die Kategorie verweigert.
 
+import scheiterpunkteKodierliste from "../../../wissen/scheiterpunkte.json" with { type: "json" };
+
 export const PFLICHT_SCHLUESSEL = [
   "id",
   "titel",
@@ -37,21 +39,123 @@ export const NACHERZAEHLT_PFLICHT_SCHLUESSEL = [
   "verfahren_abgeschlossen",
 ] as const;
 
+/**
+ * Kodierte Felder (Konzept v2 §5.3): Ausgang, Rechtskraft-Status und
+ * Scheiterpunkte (bei Erfolg als Erfolgsfaktoren gefuehrt — derselbe
+ * Schluessel "scheiterpunkt", die Kodierliste steht in
+ * wissen/scheiterpunkte.json und ist hier die einzige Quelle der
+ * zulaessigen Werte, keine Zweitpflege). Fuer NACHERZAEHLT_OEFFENTLICH sind
+ * ausgang, rechtskraft_status, scheiterpunkt und kodierliste_version
+ * Pflicht (Zeile ~§3); FIKTIV/PLATZHALTER bleiben von dieser Pflicht
+ * unberuehrt, duerfen die Felder aber optional ebenfalls tragen.
+ */
+export const AUSGAENGE = ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar"] as const;
+export type Ausgang = (typeof AUSGAENGE)[number];
+
+export const RECHTSKRAFT_STATUS_WERTE = ["rechtskraeftig", "weitergezogen", "unbekannt"] as const;
+export type RechtskraftStatus = (typeof RECHTSKRAFT_STATUS_WERTE)[number];
+
+export const KODIERLISTE_VERSION_AKTUELL: string = scheiterpunkteKodierliste.version;
+export const SCHEITERPUNKTE_WERTE: ReadonlySet<string> = new Set(scheiterpunkteKodierliste.werte);
+
+export const KODIERUNG_PFLICHT_SCHLUESSEL = [
+  "ausgang",
+  "rechtskraft_status",
+  "scheiterpunkt",
+  "kodierliste_version",
+] as const;
+
+/**
+ * Doppelkodierung (MANIFEST v2.1 §3/§5): kodierung_status ersetzt das
+ * fruehere binaere kodierung_geprueft. kodierung_quellen haelt je Kodierlauf
+ * einen Eintrag "lauf|datum|wert1,wert2|textstelle" (einzeiliges Format,
+ * kompatibel mit der bestehenden Listen-Syntax — kein Zeilenumbruch, keine
+ * verschachtelten Objekte, siehe Kommentar oben "bewusst KEIN YAML-Parser").
+ */
+export const KODIERUNG_STATUS_WERTE = [
+  "vorschlag",
+  "doppelt_bestaetigt",
+  "mensch_bestaetigt",
+  "strittig",
+] as const;
+export type KodierungStatus = (typeof KODIERUNG_STATUS_WERTE)[number];
+export const KODIERUNG_STATUS_DEFAULT: KodierungStatus = "vorschlag";
+
+export interface KodierungsLauf {
+  lauf: string;
+  datum: string;
+  wert: string[];
+  textstelle: string;
+}
+
+/** Zerlegt einen kodierung_quellen-Listeneintrag; null bei Formfehler. */
+export function parseKodierungsLauf(eintrag: string): KodierungsLauf | null {
+  const teile = eintrag.split("|");
+  if (teile.length < 4) return null;
+  const [lauf, datum, wertRoh, ...rest] = teile as [string, string, string, ...string[]];
+  const wert = wertRoh
+    .split(",")
+    .map((w) => w.trim())
+    .filter((w) => w.length > 0);
+  return { lauf: lauf.trim(), datum: datum.trim(), wert, textstelle: rest.join("|").trim() };
+}
+
+/** Kehrt parseKodierungsLauf um (fuer Export-/Import-Werkzeuge in redaktion/). */
+export function kodiereKodierungsLauf(eintrag: KodierungsLauf): string {
+  return `${eintrag.lauf}|${eintrag.datum}|${eintrag.wert.join(",")}|${eintrag.textstelle}`;
+}
+
+export const KODIERUNG_SCHLUESSEL = [
+  ...KODIERUNG_PFLICHT_SCHLUESSEL,
+  "kodierung_status",
+  "kodierung_quellen",
+] as const;
+
 // "fixture" ist als Markierung synthetischer Test-Stories zulaessig
 // (Invariante 2, Analogie zur Fixture-Regel in CLAUDE.md), fuehrt aber
 // immer zur Verweigerung fuer den Feed.
 export const ERLAUBTE_SCHLUESSEL: ReadonlySet<string> = new Set([
   ...PFLICHT_SCHLUESSEL,
+  ...KODIERUNG_SCHLUESSEL,
   "fixture",
 ]);
+
+/**
+ * §3-Pflichtfelder (MANIFEST v2.1): Aktenzeichen, Instanz, Kanton, Rubrik,
+ * Registerverweis und Norm-Fundstelle. Anders als die kodierten Felder oben
+ * sind diese NICHT einmal optional fuer FIKTIV/Platzhalter erlaubt — §3:
+ * "FIKTIV und Platzhalter sind von §3 ausgenommen" (nicht bloss unbeteiligt).
+ */
+export const RUBRIKEN = ["Wegweiser", "Warnweiser", "Sackgasse"] as const;
+export type Rubrik = (typeof RUBRIKEN)[number];
+
+export const MANIFEST_PFLICHT_SCHLUESSEL = [
+  "aktenzeichen",
+  "instanz",
+  "kanton",
+  "rubrik",
+  "regel_id",
+  "regel_version",
+  "norm_fundstelle",
+] as const;
+
+const REGEL_ID_MUSTER = /^R-[A-Z]{2}-\d{4}$/;
+const REGEL_VERSION_MUSTER = /^\d+\.\d+\.\d+$/;
 
 /** Fuer NACHERZAEHLT_OEFFENTLICH sind zusaetzlich die Quellfelder erlaubt. */
 export const ERLAUBTE_SCHLUESSEL_NACHERZAEHLT: ReadonlySet<string> = new Set([
   ...ERLAUBTE_SCHLUESSEL,
   ...NACHERZAEHLT_PFLICHT_SCHLUESSEL,
+  ...MANIFEST_PFLICHT_SCHLUESSEL,
 ]);
 
-export const LISTEN_SCHLUESSEL = ["missions_status", "prinzipien", "emotions_ziel"] as const;
+export const LISTEN_SCHLUESSEL = [
+  "missions_status",
+  "prinzipien",
+  "emotions_ziel",
+  "scheiterpunkt",
+  "kodierung_quellen",
+] as const;
 
 export type MetaWert = string | string[];
 
@@ -71,6 +175,22 @@ export interface StoryMeta {
   quelle?: string;
   gericht?: string;
   entscheid_datum?: string;
+  /** Kodierte Felder (Konzept v2 §5.3), optional ausser bei NACHERZAEHLT_OEFFENTLICH. */
+  ausgang?: Ausgang;
+  rechtskraft_status?: RechtskraftStatus;
+  scheiterpunkt?: string[];
+  kodierliste_version?: string;
+  /** Doppelkodierung (MANIFEST v2.1 §5); fehlt der Schluessel: "vorschlag". */
+  kodierung_status?: KodierungStatus;
+  kodierung_quellen?: KodierungsLauf[];
+  /** §3-Pflichtfelder (MANIFEST v2.1), nur bei NACHERZAEHLT_OEFFENTLICH gesetzt. */
+  aktenzeichen?: string;
+  instanz?: string;
+  kanton?: string;
+  rubrik?: Rubrik;
+  regel_id?: string;
+  regel_version?: string;
+  norm_fundstelle?: string;
 }
 
 export interface Etappe {
@@ -323,6 +443,128 @@ export function pruefeStory(
         '"verfahren_abgeschlossen" ist nicht exakt true — nur abgeschlossene Verfahren werden nacherzaehlt (R0 §1; keine Live-Faelle, Plan §3)',
       );
     }
+    for (const schluessel of KODIERUNG_PFLICHT_SCHLUESSEL) {
+      if (!werte.has(schluessel)) {
+        gruende.push(`Pflichtschluessel fehlt: "${schluessel}"`);
+      }
+    }
+    for (const schluessel of MANIFEST_PFLICHT_SCHLUESSEL) {
+      if (!werte.has(schluessel)) {
+        gruende.push(`Pflichtschluessel fehlt: "${schluessel}"`);
+        continue;
+      }
+      if (Array.isArray(werte.get(schluessel))) {
+        gruende.push(`"${schluessel}" muss ein Skalar sein`);
+      }
+    }
+    for (const schluessel of ["aktenzeichen", "instanz", "kanton", "norm_fundstelle"] as const) {
+      const wert = werte.get(schluessel);
+      if (typeof wert === "string" && wert.trim() === "") {
+        gruende.push(`"${schluessel}" ist leer (MANIFEST v2.1 §3)`);
+      }
+    }
+    const rubrikWert = werte.get("rubrik");
+    if (typeof rubrikWert === "string" && !(RUBRIKEN as readonly string[]).includes(rubrikWert)) {
+      gruende.push(`Unbekannte Rubrik: "${rubrikWert}" (MANIFEST v2.1 §3: Wegweiser | Warnweiser | Sackgasse)`);
+    }
+    const regelIdWert = werte.get("regel_id");
+    if (typeof regelIdWert === "string" && !REGEL_ID_MUSTER.test(regelIdWert)) {
+      gruende.push(`"regel_id" hat nicht die Form "R-XX-NNNN": "${regelIdWert}"`);
+    }
+    const regelVersionWert = werte.get("regel_version");
+    if (typeof regelVersionWert === "string" && !REGEL_VERSION_MUSTER.test(regelVersionWert)) {
+      gruende.push(`"regel_version" hat nicht die Form "N.N.N": "${regelVersionWert}"`);
+    }
+  }
+  // FIKTIV/Platzhalter: die sieben §3-Felder sind nicht in ERLAUBTE_SCHLUESSEL
+  // (nur in ERLAUBTE_SCHLUESSEL_NACHERZAEHLT) — ein Vorkommen dort faellt
+  // bereits unter "Unbekannter oder falsch geschriebener Schluessel" oben,
+  // keine zweite Pruefung noetig (MANIFEST v2.1 §3: "ausgenommen").
+
+  /*
+   * Werte-Pruefung der kodierten Felder (Konzept v2 §5.3): unabhaengig von
+   * der Kennzeichnung — ist ein Feld vorhanden (auch optional bei
+   * FIKTIV/PLATZHALTER), muss der Wert bekannt und richtig geformt sein.
+   */
+  const ausgangWert = werte.get("ausgang");
+  if (werte.has("ausgang")) {
+    if (Array.isArray(ausgangWert)) {
+      gruende.push('"ausgang" muss ein Skalar sein');
+    } else if (!(AUSGAENGE as readonly string[]).includes(ausgangWert as string)) {
+      gruende.push(`Unbekannter Ausgang: "${ausgangWert}"`);
+    }
+  }
+
+  const rechtskraftWert = werte.get("rechtskraft_status");
+  if (werte.has("rechtskraft_status")) {
+    if (Array.isArray(rechtskraftWert)) {
+      gruende.push('"rechtskraft_status" muss ein Skalar sein');
+    } else if (!(RECHTSKRAFT_STATUS_WERTE as readonly string[]).includes(rechtskraftWert as string)) {
+      gruende.push(`Unbekannter Rechtskraft-Status: "${rechtskraftWert}"`);
+    }
+  }
+
+  const kodierlisteVersionWert = werte.get("kodierliste_version");
+  if (werte.has("kodierliste_version")) {
+    if (Array.isArray(kodierlisteVersionWert)) {
+      gruende.push('"kodierliste_version" muss ein Skalar sein');
+    } else if (kodierlisteVersionWert !== KODIERLISTE_VERSION_AKTUELL) {
+      gruende.push(
+        `Unbekannte "kodierliste_version": "${kodierlisteVersionWert}" (erwartet "${KODIERLISTE_VERSION_AKTUELL}")`,
+      );
+    }
+  }
+
+  const scheiterpunktWert = werte.get("scheiterpunkt");
+  if (Array.isArray(scheiterpunktWert)) {
+    for (const wert of scheiterpunktWert) {
+      if (!SCHEITERPUNKTE_WERTE.has(wert)) {
+        gruende.push(`Unbekannter Scheiterpunkt-Wert: "${wert}"`);
+      }
+    }
+  }
+
+  const kodierungStatusWert = werte.get("kodierung_status");
+  if (werte.has("kodierung_status")) {
+    if (Array.isArray(kodierungStatusWert)) {
+      gruende.push('"kodierung_status" muss ein Skalar sein');
+    } else if (!(KODIERUNG_STATUS_WERTE as readonly string[]).includes(kodierungStatusWert as string)) {
+      gruende.push(`Unbekannter kodierung_status: "${kodierungStatusWert}"`);
+    }
+  }
+
+  const kodierungQuellenWert = werte.get("kodierung_quellen");
+  let kodierungQuellenGeparst: KodierungsLauf[] | null = null;
+  if (Array.isArray(kodierungQuellenWert)) {
+    const geparst: KodierungsLauf[] = [];
+    for (const eintrag of kodierungQuellenWert) {
+      const lauf = parseKodierungsLauf(eintrag);
+      if (lauf === null) {
+        gruende.push(
+          `"kodierung_quellen"-Eintrag nicht als "lauf|datum|wert|textstelle" lesbar: "${eintrag}"`,
+        );
+        continue;
+      }
+      if (lauf.lauf.length === 0) {
+        gruende.push(`"kodierung_quellen"-Eintrag ohne Lauf-Bezeichnung: "${eintrag}"`);
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(lauf.datum)) {
+        gruende.push(`"kodierung_quellen"-Eintrag mit ungueltigem Datum: "${eintrag}"`);
+      }
+      if (lauf.wert.length === 0) {
+        gruende.push(`"kodierung_quellen"-Eintrag ohne Wert: "${eintrag}"`);
+      }
+      for (const code of lauf.wert) {
+        if (!SCHEITERPUNKTE_WERTE.has(code)) {
+          gruende.push(`"kodierung_quellen"-Eintrag mit unbekanntem Scheiterpunkt-Wert: "${code}"`);
+        }
+      }
+      if (lauf.textstelle.length === 0) {
+        gruende.push(`"kodierung_quellen"-Eintrag ohne Textstelle: "${eintrag}"`);
+      }
+      geparst.push(lauf);
+    }
+    kodierungQuellenGeparst = geparst;
   }
 
   let etappenSoll: number | null = null;
@@ -406,6 +648,23 @@ export function pruefeStory(
     meta.quelle = nacherzaehltQuelle as string;
     meta.gericht = werte.get("gericht") as string;
     meta.entscheid_datum = werte.get("entscheid_datum") as string;
+    meta.aktenzeichen = werte.get("aktenzeichen") as string;
+    meta.instanz = werte.get("instanz") as string;
+    meta.kanton = werte.get("kanton") as string;
+    meta.rubrik = werte.get("rubrik") as Rubrik;
+    meta.regel_id = werte.get("regel_id") as string;
+    meta.regel_version = werte.get("regel_version") as string;
+    meta.norm_fundstelle = werte.get("norm_fundstelle") as string;
   }
+  if (werte.has("ausgang")) meta.ausgang = ausgangWert as Ausgang;
+  if (werte.has("rechtskraft_status")) meta.rechtskraft_status = rechtskraftWert as RechtskraftStatus;
+  if (werte.has("scheiterpunkt")) meta.scheiterpunkt = scheiterpunktWert as string[];
+  if (werte.has("kodierliste_version")) meta.kodierliste_version = kodierlisteVersionWert as string;
+  if (werte.has("kodierung_status")) {
+    meta.kodierung_status = kodierungStatusWert as KodierungStatus;
+  } else if (istNacherzaehlt) {
+    meta.kodierung_status = KODIERUNG_STATUS_DEFAULT;
+  }
+  if (kodierungQuellenGeparst !== null) meta.kodierung_quellen = kodierungQuellenGeparst;
   return { ok: true, story: { meta, etappen: text.etappen } };
 }

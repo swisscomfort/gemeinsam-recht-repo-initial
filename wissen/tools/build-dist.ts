@@ -4,7 +4,9 @@
 // anzahl, signatur: null als Platzhalter) + nach pruefstand gefilterte Sichten
 // (alle.json, verifiziert.json) + versionen.json (Ergaenzung E2: regel_id ->
 // aktuelle regelversion, damit Clients lokal pruefen koennen, ob eine
-// verwendete Regel inzwischen korrigiert wurde).
+// verwendete Regel inzwischen korrigiert wurde; seit Konzept v2 §5.3 zusaetzlich
+// je Kodierliste, z. B. "KL-SCHEITERPUNKTE" -> Version aus scheiterpunkte.json,
+// analog zu den Regeln, additiv ueber den optionalen zweiten Parameter).
 //
 // Kein Deploy, kein Upload — Veroeffentlichung ist ein separater menschlicher
 // Entscheid. Deterministisch: zeitstand ist der juengste Eintrags-Zeitstand
@@ -13,7 +15,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { RegisterEintrag } from "./migrate.ts";
-import { istDirektAufruf, leseRegister, wissenPfad } from "./umgebung.ts";
+import { istDirektAufruf, leseJson, leseRegister, wissenPfad } from "./umgebung.ts";
 import { pruefeErkenntnis } from "./validierung.ts";
 
 /** Formatversion der dist-Sicht (nicht die Regelversion der Eintraege). */
@@ -33,8 +35,16 @@ export interface Dist {
   versionen: Record<string, string>;
 }
 
-/** Baut die dist-Sichten aus Register-Eintraegen (rein, deterministisch). */
-export function baueDist(eintraege: readonly RegisterEintrag[]): Dist {
+/**
+ * Baut die dist-Sichten aus Register-Eintraegen (rein, deterministisch).
+ * `kodierlisten` (optional, Default leer — bestehende Aufrufe unveraendert)
+ * registriert zusaetzliche Eintraege in versionen.json, id -> Version,
+ * analog zu den Regeln (Konzept v2 §5.3, z. B. "KL-SCHEITERPUNKTE").
+ */
+export function baueDist(
+  eintraege: readonly RegisterEintrag[],
+  kodierlisten: Readonly<Record<string, string>> = {},
+): Dist {
   for (const eintrag of eintraege) {
     const schema = pruefeErkenntnis(eintrag);
     if (!schema.ok) {
@@ -48,7 +58,7 @@ export function baueDist(eintraege: readonly RegisterEintrag[]): Dist {
     (juengster, e) => (e.zeitstand > juengster ? e.zeitstand : juengster),
     "0000-00-00",
   );
-  const versionen: Record<string, string> = {};
+  const versionen: Record<string, string> = { ...kodierlisten };
   for (const eintrag of alle) versionen[eintrag.id] = eintrag.regelversion;
   return {
     index: { version: DIST_VERSION, zeitstand, anzahl: alle.length, signatur: null },
@@ -61,7 +71,10 @@ export function baueDist(eintraege: readonly RegisterEintrag[]): Dist {
 /* ---------- CLI ---------- */
 
 if (istDirektAufruf(import.meta.url)) {
-  const dist = baueDist(leseRegister() as RegisterEintrag[]);
+  const scheiterpunkte = leseJson(wissenPfad("scheiterpunkte.json")) as { version: string };
+  const dist = baueDist(leseRegister() as RegisterEintrag[], {
+    "KL-SCHEITERPUNKTE": scheiterpunkte.version,
+  });
   const verzeichnis = wissenPfad("dist");
   mkdirSync(verzeichnis, { recursive: true });
   const schreibe = (name: string, wert: unknown): void => {

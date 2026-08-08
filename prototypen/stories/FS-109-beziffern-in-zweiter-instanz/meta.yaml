@@ -13,3 +13,13 @@ quelle: "OGer ZH NG250008"
 gericht: Obergericht des Kantons Zürich
 entscheid_datum: 2026-03-16
 verfahren_abgeschlossen: true
+aktenzeichen: "NG250008"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Sackgasse
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [antrag_unbeziffert]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|antrag_unbeziffert|Selim klagt deshalb unbeziffert: Der Mietzins sei auf ein noch zu bezifferndes Mass..."]

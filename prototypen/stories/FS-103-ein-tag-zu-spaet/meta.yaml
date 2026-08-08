@@ -13,3 +13,13 @@ quelle: "OGer ZH NG250015"
 gericht: Obergericht des Kantons Zürich
 entscheid_datum: 2025-10-27
 verfahren_abgeschlossen: true
+aktenzeichen: "NG250015"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Warnweiser
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [frist_verpasst]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|frist_verpasst|Rolfs Beschwerde traegt den Poststempel vom 16. September, einen Tag zu spaet"]

@@ -13,3 +13,13 @@ quelle: "OGer ZH RU250068"
 gericht: Obergericht des Kantons Zürich
 entscheid_datum: 2025-10-08
 verfahren_abgeschlossen: true
+aktenzeichen: "RU250068"
+instanz: zweite_instanz
+kanton: ZH
+rubrik: Warnweiser
+ausgang: nicht_durchgesetzt
+rechtskraft_status: unbekannt
+scheiterpunkt: [termin_versaeumt]
+kodierliste_version: "1.0.0"
+kodierung_status: vorschlag
+kodierung_quellen: ["cli-1|2026-08-08|termin_versaeumt|Milan erschien nicht; die Behoerde schrieb das Verfahren als gegenstandslos ab"]

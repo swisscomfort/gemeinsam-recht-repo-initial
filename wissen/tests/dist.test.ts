@@ -8,6 +8,8 @@ import type { RegisterEintrag } from "../tools/migrate.ts";
 import { leseJson, leseRegister, wissenPfad } from "../tools/umgebung.ts";
 
 const eintraege = leseRegister() as RegisterEintrag[];
+const scheiterpunkteVersion = leseJson(wissenPfad("scheiterpunkte.json")) as { version: string };
+const kodierlisten = { "KL-SCHEITERPUNKTE": scheiterpunkteVersion.version };
 
 describe("baueDist — deterministisch", () => {
   it("zwei Laeufe ueber dieselben Eintraege liefern byte-identische Sichten", () => {
@@ -50,10 +52,18 @@ describe("baueDist — deterministisch", () => {
 
 describe("wissen/dist/ (lokal gebauter Stand)", () => {
   it("die abgelegten Dateien entsprechen exakt dem aktuellen Register (kein veralteter Build)", () => {
-    const dist = baueDist(eintraege);
+    const dist = baueDist(eintraege, kodierlisten);
     expect(leseJson(wissenPfad("dist", "index.json"))).toEqual(dist.index);
     expect(leseJson(wissenPfad("dist", "alle.json"))).toEqual(JSON.parse(JSON.stringify(dist.alle)));
     expect(leseJson(wissenPfad("dist", "verifiziert.json"))).toEqual(dist.verifiziert);
     expect(leseJson(wissenPfad("dist", "versionen.json"))).toEqual(dist.versionen);
+  });
+
+  it("versionen.json registriert die Kodierliste scheiterpunkte.json analog zu den Regeln (Konzept v2 §5.3)", () => {
+    const dist = baueDist(eintraege, kodierlisten);
+    expect(dist.versionen["KL-SCHEITERPUNKTE"]).toBe(scheiterpunkteVersion.version);
+    expect(leseJson(wissenPfad("dist", "versionen.json"))).toMatchObject({
+      "KL-SCHEITERPUNKTE": scheiterpunkteVersion.version,
+    });
   });
 });
