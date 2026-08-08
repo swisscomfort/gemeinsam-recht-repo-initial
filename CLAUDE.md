@@ -16,7 +16,7 @@
 - Jeder Rechtsparameter trägt Quelle, Zeitstand, Regelversion und Prüfstand. Bist du dir bei einem Rechtsparameter unsicher: **fragen, nicht raten** — Parameter als `pruefstand: "fachlich_zu_verifizieren"` anlegen und den Nutzer explizit darauf hinweisen.
 - Synthetische Testfälle nur unter `core/tests/fixtures/` mit `meta.fixture=true` und Präfix `FX-`. Niemals als reale Fälle darstellen (Plan §2, Invariante 2).
 - Keine neuen Laufzeit-Abhängigkeiten ohne ausdrückliche Freigabe. Dev-Abhängigkeiten nur die im Auftrag genannten.
-- Kein Netzwerkzugriff aus Code oder Tests. Keine `Date.now()`-Aufrufe in der Fachlogik — Zeit wird injiziert.
+- Kein Netzwerkzugriff aus Tests oder CI, und keiner aus `core/` (Fachbibliothek). Ausdrücklich erlaubt: Redaktionswerkzeuge (`redaktion/`) dürfen bei der im jeweiligen Auftrag benannten Quelle beschaffen — aktuell ausschliesslich `entscheidsuche.ch`, gedrosselt (mind. 1 s zwischen Abrufen), nur Metadaten im Repo, Volltext nie im Repo gespeichert (AUFTRAG-R0/AUFTRAG-FALLAUFNAHME §2.2). Jede weitere Quelle braucht eine eigene Nennung im Auftrag, nicht diese Zeile als Blankovollmacht. Keine `Date.now()`-Aufrufe in der Fachlogik — Zeit wird injiziert.
 - Git: kleine, thematische Commits mit klaren Botschaften. Kein Push ohne ausdrückliche Freigabe des Nutzers. Vor Abschluss `git status --short` zeigen.
 - Nach jeder Arbeitseinheit: Tests ausführen und Ergebnis zeigen (`cd core && npm test`).
 
