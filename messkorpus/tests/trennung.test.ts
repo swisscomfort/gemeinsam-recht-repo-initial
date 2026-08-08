@@ -9,9 +9,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { definitionsHash, pruefeDefinitionInhalt, type Messdefinition } from "../tools/definition.ts";
-import { definitionsHash as hashAusRedaktion, kanonisch as kanonischAusRedaktion } from "../../redaktion/src/messlauf.ts";
-import { kanonisch } from "../tools/definition.ts";
+import { pruefeDefinitionInhalt, type Messdefinition } from "../tools/definition.ts";
 import { leseDefinitionen, messkorpusPfad, repoPfad } from "../tools/umgebung.ts";
 import { pruefeMessdefinition } from "../tools/validierung.ts";
 
@@ -106,33 +104,40 @@ describe("Trennung vom Redaktionstrichter", () => {
   });
 
   it("kein Werkzeug des Messkorpus liest die Uhr", () => {
+    // Verboten ist die SYSTEMZEIT: Date.now() und das argumentlose new Date().
+    // Kalenderrechnung auf einem uebergebenen Datum (Date.UTC, new Date(ms))
+    // ist rein und deterministisch — sie liest keine Uhr.
     for (const { name, inhalt } of quellen) {
-      expect(inhalt, `${name} liest die Systemzeit`).not.toContain("Date.now(");
-      expect(inhalt, `${name} liest die Systemzeit`).not.toContain("new Date(");
+      expect(inhalt, `${name} liest die Systemzeit`).not.toMatch(/Date\.now\s*\(/);
+      expect(inhalt, `${name} liest die Systemzeit`).not.toMatch(/new\s+Date\s*\(\s*\)/);
     }
   });
 });
 
-describe("Konsistenz der duplizierten Hash-Funktion", () => {
-  // redaktion/src/messlauf.ts fuehrt kanonisch()/definitionsHash() absichtlich
-  // ein zweites Mal (rootDir-Grenze des CLI-Pakets, wie bei kodierung.ts).
-  // Weichen die beiden je voneinander ab, passt kein erhobener Lauf mehr zu
-  // seiner Definition — deshalb dieser Test.
-  const proben: unknown[] = [
-    { b: 1, a: [3, 2, 1], c: { z: null, y: "x" } },
-    [],
-    { leer: {} },
-    "text",
-    42,
-  ];
+// Der Konsistenztest der duplizierten Hash-Implementierungen steht in
+// messkorpus/tests/konsistenz.test.ts — genau unter dem Namen, den die
+// Kommentare in redaktion/src/messlauf.ts nennen.
 
-  it.each(proben.map((p, i) => [i, p] as const))("Probe %i ergibt dieselbe kanonische Form", (_i, probe) => {
-    expect(kanonischAusRedaktion(probe)).toBe(kanonisch(probe));
+describe("Sprachneutralitaet der realen Messdefinitionen", () => {
+  it("keine Definition sortiert Faelle nach Sprache aus", () => {
+    for (const { datei, inhalt } of leseDefinitionen()) {
+      const definition = inhalt as Messdefinition;
+      const texte = [...definition.einschluss, ...definition.ausschluss]
+        .map((k) => `${k.code} ${k.beschreibung}`)
+        .join(" ");
+      expect(texte, `${datei} schliesst nach Sprache aus`).not.toMatch(
+        /deutschsprachig|franzoesisch|französisch|italienisch|sprache/i,
+      );
+    }
   });
 
-  it("beide Fassungen hashen jede Messdefinition gleich", () => {
-    for (const { inhalt } of leseDefinitionen()) {
-      expect(hashAusRedaktion(inhalt)).toBe(definitionsHash(inhalt));
+  it("die Abfrage erfasst alle drei Amtssprachen", () => {
+    for (const { datei, inhalt } of leseDefinitionen()) {
+      const anfrage = (inhalt as Messdefinition).abfrage.suchanfrage.toLowerCase();
+      // Franzoesische und italienische Begriffe muessen vorkommen, sonst
+      // bildet der Nenner nur die Deutschschweiz ab und nennt sich schweizerisch.
+      expect(anfrage, `${datei} ohne franzoesische Begriffe`).toMatch(/congé|bail|locataire|abusif/);
+      expect(anfrage, `${datei} ohne italienische Begriffe`).toMatch(/disdetta|locazione|conduttore/);
     }
   });
 });

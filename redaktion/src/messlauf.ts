@@ -95,7 +95,59 @@ export interface MesslaufTreffer {
   datum?: string;
   gericht?: string;
   link?: string;
+  metadaten_fingerprint: string;
   status: "ungeklaert";
+}
+
+/**
+ * Protokoll eines einzelnen Fensterabrufs. Es ist der eigentliche Nachweis,
+ * dass nichts verloren ging — "roh_treffer = Laenge der Liste" waere
+ * zirkulaer, weil beide Zahlen am selben Ende entstehen.
+ */
+export interface AbrufProtokoll {
+  von: string;
+  bis: string;
+  gemeldet_total: number;
+  gemeldet_relation: "eq" | "gte" | "unbekannt";
+  empfangen: number;
+  ohne_id: number;
+  vor_gerichtsfilter: number;
+  nach_gerichtsfilter: number;
+}
+
+/**
+ * SHA-256 ueber die kanonische Form der uebernommenen Quellmetadaten.
+ * Gleiche Definition wie messkorpus/tools/lauf.ts (Duplikat aus demselben
+ * Grund wie kanonisch(); durch messkorpus/tests/konsistenz.test.ts gebunden).
+ */
+export function metadatenFingerprint(metadaten: {
+  quelle_id: string;
+  aktenzeichen?: string;
+  datum?: string;
+  gericht?: string;
+  link?: string;
+}): string {
+  return createHash("sha256")
+    .update(
+      kanonisch({
+        quelle_id: metadaten.quelle_id,
+        aktenzeichen: metadaten.aktenzeichen,
+        datum: metadaten.datum,
+        gericht: metadaten.gericht,
+        link: metadaten.link,
+      }),
+      "utf8",
+    )
+    .digest("hex");
+}
+
+/** Liest die Trefferzahl-Relation der Quelle; alles Unbekannte ist "unbekannt". */
+export function relationAus(total: unknown): "eq" | "gte" | "unbekannt" {
+  if (typeof total !== "object" || total === null) return "unbekannt";
+  const wert = (total as { relation?: unknown }).relation;
+  if (wert === "eq") return "eq";
+  if (wert === "gte") return "gte";
+  return "unbekannt";
 }
 
 interface RohTreffer {
@@ -130,7 +182,12 @@ export function gehoertZuGericht(roh: unknown, gerichtsfilter: readonly string[]
   );
 }
 
-/** Bildet einen Rohtreffer der Quelle auf einen Messlauf-Treffer ab. */
+/**
+ * Bildet einen Rohtreffer der Quelle auf einen Messlauf-Treffer ab.
+ * `null` heisst: kein verwertbarer Bezeichner. Solche Treffer duerfen NICHT
+ * still weggefiltert werden — der Aufrufer zaehlt sie als `ohne_id`, und der
+ * Lauf gilt dadurch als nachweislich unvollstaendig.
+ */
 export function alsMesslaufTreffer(roh: unknown, viewBasis: string): MesslaufTreffer | null {
   const treffer = roh as RohTreffer;
   if (typeof treffer._id !== "string" || treffer._id === "") return null;
@@ -140,14 +197,15 @@ export function alsMesslaufTreffer(roh: unknown, viewBasis: string): MesslaufTre
     ? (treffer._source?.hierarchy as unknown[]).filter((x): x is string => typeof x === "string")
     : [];
 
-  return {
+  const metadaten = {
     quelle_id: treffer._id,
     aktenzeichen: aktenzeichenAus(titel, datum),
     datum,
     gericht: hierarchie[hierarchie.length - 1],
     link: `${viewBasis}${treffer._id}`,
-    status: "ungeklaert",
   };
+
+  return { ...metadaten, metadaten_fingerprint: metadatenFingerprint(metadaten), status: "ungeklaert" };
 }
 
 /**
@@ -163,17 +221,31 @@ export function aktenzeichenAus(titel: string | null, isoDatum: string | undefin
   return rest === "" ? undefined : rest;
 }
 
+export interface Vereinigung {
+  treffer: MesslaufTreffer[];
+  /** Wie viele Eintraege beim Zusammenfuehren als Doppel entfielen. */
+  duplikate: number;
+}
+
 /**
  * Fuegt Treffer zusammen: nach Quell-ID eindeutig, nach ID sortiert.
  * Die Sortierung macht den Lauf reproduzierbar — die Reihenfolge der
- * Abrufe darf die Datei nicht beeinflussen.
+ * Abrufe darf die Datei nicht beeinflussen. Die Zahl der entfernten Doppel
+ * wird mitgegeben, damit die Bilanz spaeter aufgeht.
  */
-export function vereinige(teile: readonly MesslaufTreffer[][]): MesslaufTreffer[] {
+export function vereinige(teile: readonly MesslaufTreffer[][]): Vereinigung {
   const nachId = new Map<string, MesslaufTreffer>();
+  let duplikate = 0;
   for (const teil of teile) {
     for (const treffer of teil) {
-      if (!nachId.has(treffer.quelle_id)) nachId.set(treffer.quelle_id, treffer);
+      if (nachId.has(treffer.quelle_id)) duplikate += 1;
+      else nachId.set(treffer.quelle_id, treffer);
     }
   }
-  return [...nachId.values()].sort((a, b) => (a.quelle_id < b.quelle_id ? -1 : a.quelle_id > b.quelle_id ? 1 : 0));
+  return {
+    treffer: [...nachId.values()].sort((a, b) =>
+      a.quelle_id < b.quelle_id ? -1 : a.quelle_id > b.quelle_id ? 1 : 0,
+    ),
+    duplikate,
+  };
 }

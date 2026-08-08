@@ -115,14 +115,33 @@ function zaehlbareFaelle(stories: readonly KodierteStory[]): Basis {
   return { zaehlbar, ausschluesse };
 }
 
-/** Allgemeine Zaehlung: Anteil der zaehlbaren Faelle mit einem bestimmten Ausgang. */
-export function ausgangQuote(stories: readonly KodierteStory[], ausgang: string): Quote {
+/**
+ * Allgemeine Zaehlung mit frei bestimmtem Zaehler-Praedikat. Die
+ * Ausschlussregeln (§5) bleiben in jedem Fall dieselben — nur die Frage,
+ * WAS als positiv gilt, kommt von aussen.
+ *
+ * Gebraucht wird das vom Messkorpus: dort zaehlt nicht der allgemeine
+ * Verfahrensausgang der Geschichte, sondern der Ausgang bezueglich der
+ * gemessenen Norm. Beides ist nicht dasselbe — eine Mietpartei kann
+ * teilweise obsiegen, waehrend die gemessene Norm gerade nicht durchgesetzt
+ * wurde. Deshalb wird hier parametrisiert statt eine zweite Zaehlung neben
+ * dieser aufzubauen.
+ */
+export function quoteNachPraedikat(
+  stories: readonly KodierteStory[],
+  positiv: (story: KodierteStory) => boolean,
+): Quote {
   const { zaehlbar, ausschluesse } = zaehlbareFaelle(stories);
   return {
-    zaehler: zaehlbar.filter((s) => s.ausgang === ausgang).length,
+    zaehler: zaehlbar.filter((story) => positiv(story)).length,
     nenner: zaehlbar.length,
     ausschluesse,
   };
+}
+
+/** Allgemeine Zaehlung: Anteil der zaehlbaren Faelle mit einem bestimmten Ausgang. */
+export function ausgangQuote(stories: readonly KodierteStory[], ausgang: string): Quote {
+  return quoteNachPraedikat(stories, (story) => story.ausgang === ausgang);
 }
 
 const BESTAETIGT: ReadonlySet<KodierungStatus> = new Set(["doppelt_bestaetigt", "mensch_bestaetigt"]);

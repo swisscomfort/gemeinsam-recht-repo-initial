@@ -28,8 +28,10 @@ import {
   definitionsHash,
   gehoertZuGericht,
   jahresfenster,
+  relationAus,
   teile,
   vereinige,
+  type AbrufProtokoll,
   type Fenster,
   type MesslaufTreffer,
 } from "./messlauf.js";
@@ -67,13 +69,14 @@ function pause(ms: number): Promise<void> {
   return new Promise((aufloesen) => setTimeout(aufloesen, ms));
 }
 
-/** Holt ein Fenster vollstaendig; meldet die von der Quelle genannte Gesamtzahl mit. */
+/** Holt ein Fenster vollstaendig; meldet Gesamtzahl UND deren Relation mit. */
 async function holeFenster(
   suchanfrage: string,
   fenster: Fenster,
-): Promise<{ roh: unknown[]; gesamt: number }> {
+): Promise<{ roh: unknown[]; gesamt: number; relation: "eq" | "gte" | "unbekannt" }> {
   const roh: unknown[] = [];
   let gesamt = 0;
+  let relation: "eq" | "gte" | "unbekannt" = "unbekannt";
   for (let from = 0; from < FENSTER_GRENZE; from += SEITEN_GROESSE) {
     if (from > 0) await pause(PAUSE_MS);
     const antwort = await fetch(SUCH_ENDPUNKT, {
@@ -86,13 +89,17 @@ async function holeFenster(
         `entscheidsuche.ch antwortet mit HTTP ${antwort.status} — Erhebung sauber abgebrochen, nichts geschrieben.`,
       );
     }
-    const daten = (await antwort.json()) as { hits?: { hits?: unknown; total?: { value?: unknown } } };
+    const daten = (await antwort.json()) as { hits?: { hits?: unknown; total?: unknown } };
     const seite = Array.isArray(daten.hits?.hits) ? (daten.hits?.hits as unknown[]) : [];
-    if (typeof daten.hits?.total?.value === "number") gesamt = daten.hits.total.value;
+    const total = daten.hits?.total;
+    if (typeof (total as { value?: unknown })?.value === "number") {
+      gesamt = (total as { value: number }).value;
+    }
+    relation = relationAus(total);
     roh.push(...seite);
     if (seite.length < SEITEN_GROESSE) break;
   }
-  return { roh, gesamt };
+  return { roh, gesamt, relation };
 }
 
 /**
@@ -105,31 +112,61 @@ async function erhebeFenster(
   gerichtsfilter: readonly string[],
   fenster: Fenster,
   melde: (text: string) => void,
-): Promise<MesslaufTreffer[]> {
-  const { roh, gesamt } = await holeFenster(suchanfrage, fenster);
-  if (gesamt > FENSTER_GRENZE) {
+): Promise<{ treffer: MesslaufTreffer[]; abrufe: AbrufProtokoll[] }> {
+  const { roh, gesamt, relation } = await holeFenster(suchanfrage, fenster);
+
+  // Fail-closed: eine Untergrenze statt einer exakten Zahl heisst, dass die
+  // Quelle selbst nicht sagt, wie viele Treffer es gibt. Dann laesst sich
+  // Vollstaendigkeit nicht behaupten — also teilen, bis sie es sagt.
+  const unklar = relation !== "eq";
+  if (gesamt > FENSTER_GRENZE || unklar) {
     const haelften = teile(fenster);
     if (!haelften) {
       throw new Error(
-        `Fenster ${fenster.von} meldet ${gesamt} Treffer und laesst sich nicht weiter teilen — ` +
-          `die Quelle kann diesen Tag nicht vollstaendig ausliefern. Abfrage praezisieren.`,
+        unklar
+          ? `Fenster ${fenster.von}: die Quelle meldet die Trefferzahl als "${relation}" statt exakt und der Tag laesst sich nicht weiter teilen — ` +
+            `Vollstaendigkeit nicht belegbar, Erhebung abgebrochen.`
+          : `Fenster ${fenster.von} meldet ${gesamt} Treffer und laesst sich nicht weiter teilen — ` +
+            `die Quelle kann diesen Tag nicht vollstaendig ausliefern. Abfrage praezisieren.`,
       );
     }
-    melde(`  ${fenster.von}…${fenster.bis}: ${gesamt} Treffer gemeldet — Fenster wird geteilt.`);
+    melde(
+      `  ${fenster.von}…${fenster.bis}: ${gesamt} Treffer gemeldet (relation ${relation}) — Fenster wird geteilt.`,
+    );
     const links = await erhebeFenster(suchanfrage, gerichtsfilter, haelften[0], melde);
     await pause(PAUSE_MS);
     const rechts = await erhebeFenster(suchanfrage, gerichtsfilter, haelften[1], melde);
-    return vereinige([links, rechts]);
+    return {
+      treffer: [...links.treffer, ...rechts.treffer],
+      abrufe: [...links.abrufe, ...rechts.abrufe],
+    };
   }
 
-  const passend = roh.filter((eintrag) => gehoertZuGericht(eintrag, gerichtsfilter));
-  const treffer = passend
-    .map((eintrag) => alsMesslaufTreffer(eintrag, VIEW_BASIS))
-    .filter((t): t is MesslaufTreffer => t !== null);
+  // Erst abbilden, dann filtern — Treffer ohne Bezeichner werden gezaehlt,
+  // nicht stillschweigend uebergangen.
+  const abgebildet = roh.map((eintrag) => ({
+    roh: eintrag,
+    treffer: alsMesslaufTreffer(eintrag, VIEW_BASIS),
+  }));
+  const ohneId = abgebildet.filter((e) => e.treffer === null).length;
+  const mitId = abgebildet.filter((e): e is { roh: unknown; treffer: MesslaufTreffer } => e.treffer !== null);
+  const passend = mitId.filter((e) => gehoertZuGericht(e.roh, gerichtsfilter));
+
+  const protokoll: AbrufProtokoll = {
+    von: fenster.von,
+    bis: fenster.bis,
+    gemeldet_total: gesamt,
+    gemeldet_relation: relation,
+    empfangen: roh.length,
+    ohne_id: ohneId,
+    vor_gerichtsfilter: mitId.length,
+    nach_gerichtsfilter: passend.length,
+  };
   melde(
-    `  ${fenster.von}…${fenster.bis}: ${roh.length} geholt, ${treffer.length} nach Gerichtsfilter (gemeldet ${gesamt}).`,
+    `  ${fenster.von}…${fenster.bis}: gemeldet ${gesamt} (${relation}), empfangen ${roh.length}, ` +
+      `ohne ID ${ohneId}, nach Gerichtsfilter ${passend.length}.`,
   );
-  return treffer;
+  return { treffer: passend.map((e) => e.treffer), abrufe: [protokoll] };
 }
 
 async function haupt(): Promise<void> {
@@ -162,22 +199,28 @@ async function haupt(): Promise<void> {
   console.log("Das Werkzeug urteilt nicht: jeder Treffer wird als 'ungeklaert' abgelegt.\n");
 
   const teileErgebnis: MesslaufTreffer[][] = [];
+  const abrufe: AbrufProtokoll[] = [];
   for (const fenster of jahresfenster(definition.zeitraum)) {
-    teileErgebnis.push(
-      await erhebeFenster(definition.abfrage.suchanfrage, definition.abfrage.gerichtsfilter, fenster, (t) =>
-        console.log(t),
-      ),
+    const ergebnis = await erhebeFenster(
+      definition.abfrage.suchanfrage,
+      definition.abfrage.gerichtsfilter,
+      fenster,
+      (t) => console.log(t),
     );
+    teileErgebnis.push(ergebnis.treffer);
+    abrufe.push(...ergebnis.abrufe);
     await pause(PAUSE_MS);
   }
 
-  const treffer = vereinige(teileErgebnis);
+  const { treffer, duplikate } = vereinige(teileErgebnis);
   const heute = heuteISO();
   const lauf = {
     id: laufId,
     messdefinition: { id: definition.id, version: definition.version, sha256: hash },
     durchgefuehrt_am: heute,
     datenstand: heute,
+    abrufe: abrufe.sort((a, b) => (a.von < b.von ? -1 : a.von > b.von ? 1 : 0)),
+    duplikate,
     roh_treffer: treffer.length,
     gekappt: false,
     treffer,

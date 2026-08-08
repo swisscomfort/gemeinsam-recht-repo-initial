@@ -141,31 +141,137 @@ Ein einzelner Agent kann das nicht allein erbringen; für neue Fälle braucht es
 denselben Aufbau wie bei Kodierlauf 2 (`kodierung-export`/`-import` mit einem
 anderen Modell oder einem Menschen).
 
-## 6. Testergebnis
+## 6. Nachtrag — Taktgeber-Prüfung von PR #7
+
+Die Prüfung hat die Rechtskraftfrage entschieden und vier Messfehler
+aufgedeckt, die vor jeder Datenerhebung zu beheben waren. Alle neun Punkte
+sind umgesetzt.
+
+### 6.1 Rechtskraft entschieden, aber eng gefasst
+
+Entscheide des Bundesgerichts erwachsen am Tag ihrer Ausfällung in Rechtskraft
+(**Art. 61 BGG**); die Revision nach Art. 121 ff. BGG ändert daran nichts —
+sie ist gerade der ausserordentliche Weg, auf einen bereits rechtskräftigen
+Entscheid zurückzukommen.
+
+Die Regel heisst deshalb `bundesgericht_art61_bgg` mit `rechtsquelle:
+"Art. 61 BGG (SR 173.110)"`, **nicht** generisch „letztinstanzlich". Der Wert
+`letztinstanzlich` existiert im Schema nicht mehr. Ein kantonaler
+letztinstanzlicher Entscheid ist etwas anderes: gegen ihn steht die Beschwerde
+ans Bundesgericht offen. `rechtskraftAusInstanz()` gibt für `ZH_OG`, `LU_KG`
+und `ZH_MG` `false` zurück — durch Test gesichert.
+
+`rechtskraft_regel.pruefstand` steht damit auf `fachlich_bestaetigt`.
+
+### 6.2 Rechtskraft ≠ Fallabschluss
+
+Ein rechtskräftiger Bundesgerichtsentscheid kann die Sache zurückweisen; dann
+ist die gemessene Rechtsfrage offen. Neu trägt jeder Treffer einen eigenen
+`abschluss_status` (`abgeschlossen` · `rueckweisung_offen` ·
+`zwischenentscheid` · `ungeklaert`), und die Definition eine
+`abschluss_regel`. Alles ausser `abgeschlossen` sperrt die Quote. Ein späterer
+Endentscheid derselben Streitigkeit schliesst eine frühere Rückweisung ab.
+
+### 6.3 MD-001 misst nur noch eine Normwirkung
+
+Die Messfrage vermischte „Kündigung aufgehoben" und „Mietverhältnis
+erstreckt". MD-001 misst jetzt ausschliesslich die Durchsetzung des
+Kündigungsschutzes nach Art. 271/271a OR; eine Erstreckung nach Art. 272 OR
+zählt ausdrücklich **nicht** als Erfolg und hat einen eigenen Ausschlussgrund
+(`nur_erstreckung`). Eine spätere Messung der Erstreckung gehört in eine
+eigene Definition — keine wurde jetzt nebenbei gebaut.
+
+### 6.4 Der schwerwiegendste Befund: die Quote mass gar nicht normbezogen
+
+`messquote.ts` rief `ausgangQuote(faelle, ausgang)` auf und zählte damit das
+allgemeine Story-Feld `ausgang`. Eine Mietpartei kann teilweise obsiegen,
+während Art. 271/271a gerade **nicht** durchgesetzt wurde — die Quote hätte
+etwas anderes gemessen, als sie behauptet.
+
+Neu trägt jeder eingeschlossene Treffer einen `messausgang`, gebunden an
+`messdefinition_id` + `version`, mit Wert (`durchgesetzt` · `teilweise` ·
+`nicht_durchgesetzt` · `nicht_anwendbar`) und Beleg. Ein Normausgang einer
+anderen Definition wird abgelehnt; ein fehlender sperrt die Quote.
+
+Statt einer zweiten Quotenarchitektur wurde `wissen/tools/kodierung-quoten.ts`
+sauber parametrisiert: neu `quoteNachPraedikat(stories, positiv)`, und
+`ausgangQuote` ist der Sonderfall davon. Die Ausschlussregeln bleiben
+unverändert an einer Stelle.
+
+### 6.5 Zähleinheit
+
+Ein Suchtreffer ist kein Fall. Mehrere Entscheide derselben Streitigkeit
+(Rückweisung, Folgeentscheid, Revision) bilden **eine** Zähleinheit und zählen
+einmal; alle Treffer bleiben im Rohkorpus. Derselbe Fall an zwei Einheiten,
+widersprechende Normausgänge innerhalb einer Einheit oder eine fehlende
+Zuordnung sperren die Quote.
+
+### 6.6 Roh-Treffer-Audit repariert
+
+`roh_treffer == treffer.length` war tautologisch: beide Zahlen entstehen am
+selben Ende. Der Nachweis steht jetzt in `abrufe[]` — je Fenster
+`gemeldet_total`, `gemeldet_relation`, `empfangen`, `ohne_id`,
+`vor_gerichtsfilter`, `nach_gerichtsfilter`, dazu `duplikate` auf Laufebene.
+Geprüft wird:
+
+- `gemeldet_relation` muss `eq` sein; `gte` oder unbekannt heisst
+  fail-closed (die Erhebung teilt das Fenster weiter, sonst Abbruch).
+- `empfangen` muss `gemeldet_total` entsprechen.
+- `ohne_id > 0` macht den Lauf nachweislich unvollständig — kein Treffer
+  verschwindet mehr still in einem `.filter(t !== null)`.
+- Summe `nach_gerichtsfilter` minus `duplikate` muss die gespeicherte
+  Population ergeben.
+- Die Fenster müssen den Zeitraum der Definition lückenlos und
+  überschneidungsfrei abdecken.
+
+### 6.7 Metadaten-Fingerprint
+
+Jeder Treffer trägt `metadaten_fingerprint`: SHA-256 über die kanonische Form
+der gespeicherten Quellmetadaten. Ändert die Quelle später etwas, fällt der
+Vergleich auf.
+
+### 6.8 Sprachselektion behoben
+
+Der Ausschlussgrund `kein_deutschsprachiger_text` ist ersatzlos gestrichen.
+Die Abfrage erfasst Deutsch, Französisch und Italienisch (`congé abusif`,
+`annulation du congé`, `disdetta abusiva`, `bail à loyer`, `locatario` …).
+`SPRACH_WOERTER` lehnt jedes Kriterium ab, das nach Sprache sortiert. Zwei
+Tests prüfen, dass keine reale Definition sprachselektiv ist und dass die
+Abfrage FR- und IT-Begriffe enthält.
+
+### 6.9 Hash-Konsistenz jetzt wirklich getestet
+
+`messkorpus/tests/konsistenz.test.ts` existiert — unter genau dem Namen, den
+die Kommentare nennen. Er hasht dieselben Werte durch beide Implementierungen
+(`kanonisch`, `definitionsHash`, `metadatenFingerprint`) und beweist
+Gleichheit, auch für jede reale Messdefinition.
+
+## 7. Testergebnis
 
 | Suite | Tests |
 | --- | --- |
 | core | 136 |
 | prototypen/feed | 120 |
 | webflow | 9 |
-| wissen | 64 |
-| redaktion | 70 (56 + 14 neu) |
-| messkorpus | 100 (neu) |
-| **gesamt** | **499** |
+| wissen | 67 (64 + 3) |
+| redaktion | 77 (56 + 21) |
+| messkorpus | 167 |
+| **gesamt** | **576** |
 
-## 7. Genau diese Entscheidungen fehlen
+## 8. Genau diese Entscheidungen fehlen
 
-1. **Rechtskraft-Regel bestätigen** — genügt „letztinstanzlich" als
-   Rechtskraftnachweis im Sinne des Manifests?
-   (`MD-001.rechtskraft_regel.pruefstand` → `fachlich_bestaetigt`)
-2. **MD-001 einfrieren** — Norm, Messfrage und Kriterien fachlich bestätigen
-   und `status` → `eingefroren`.
-3. **CR-02 entscheiden** — Entscheidungszeile ausfüllen; danach beide
-   Kodierläufe für die betroffenen Fälle vollständig neu, ohne automatische
-   Übersetzung.
-4. **`entscheidsuche.ch` in der Egress-Liste freigeben**, wenn die Erhebung in
+1. ~~Rechtskraft-Regel bestätigen~~ — **erledigt**, Art. 61 BGG, eng auf das
+   Bundesgericht gefasst.
+2. **Norm und Kriterien von MD-001 bestätigen** (`norm.pruefstand` →
+   `fachlich_bestaetigt`).
+3. **Abschlussregel bestätigen** (`abschluss_regel.pruefstand`) — ist der
+   Umgang mit Rückweisungen so richtig?
+4. **MD-001 einfrieren** (`status` → `eingefroren`).
+5. **CR-02 entscheiden** — danach beide Kodierläufe für die betroffenen Fälle
+   vollständig neu, ohne automatische Übersetzung.
+6. **`entscheidsuche.ch` in der Egress-Liste freigeben**, wenn die Erhebung in
    einer Web-Session laufen soll (auf dem eigenen Rechner nicht nötig).
 
-Solange 1 und 2 offen sind, ist der Meilenstein blockiert — technisch, nicht
-nur konventionell: die Sperre steht in `darfQuoteMaterialisieren()` und ist
-durch Tests gesichert.
+Solange 2–4 offen sind, ist der Meilenstein blockiert — technisch, nicht nur
+konventionell: die Sperre steht in `darfQuoteMaterialisieren()` und ist durch
+Tests gesichert.

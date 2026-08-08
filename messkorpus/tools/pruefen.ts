@@ -46,7 +46,11 @@ export function berichte(): Bericht {
       `  ${definition.id} v${definition.version} [${definition.status}] ${marke} · sha256 ${definitionsHash(definition).slice(0, 12)}…`,
     );
     zeilen.push(`    Norm: ${definition.norm.norm_fundstelle} (${definition.norm.pruefstand})`);
-    zeilen.push(`    Rechtskraft-Regel: ${definition.rechtskraft_regel.art} (${definition.rechtskraft_regel.pruefstand})`);
+    zeilen.push(
+      `    Rechtskraft-Regel: ${definition.rechtskraft_regel.art} · ${definition.rechtskraft_regel.rechtsquelle} (${definition.rechtskraft_regel.pruefstand})`,
+    );
+    zeilen.push(`    Abschlussregel: ${definition.abschluss_regel.art} (${definition.abschluss_regel.pruefstand})`);
+    zeilen.push(`    Zaehleinheit: ${definition.zaehleinheit.art}`);
     for (const f of inhaltlich.fehler) {
       fehler += 1;
       zeilen.push(`    - ${f}`);

@@ -1,9 +1,9 @@
 {
   "id": "MD-001",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "status": "entwurf",
   "stand": "2026-08-08",
-  "messfrage": "In wie vielen der letztinstanzlich beurteilten Verfahren, in denen sich eine Mietpartei gegen eine Kuendigung auf den Kuendigungsschutz nach Art. 271/271a OR berief, wurde die Kuendigung aufgehoben oder das Mietverhaeltnis erstreckt?",
+  "messfrage": "In wie vielen der vom Bundesgericht endgueltig entschiedenen Streitigkeiten, in denen sich eine Mietpartei gegen eine Kuendigung auf den Kuendigungsschutz nach Art. 271/271a OR berief, wurde dieser Kuendigungsschutz durchgesetzt — also die Kuendigung als missbraeuchlich aufgehoben? Eine Erstreckung des Mietverhaeltnisses nach Art. 272 OR zaehlt hier NICHT als Erfolg; sie ist eine andere Rechtsfolge und gehoert in eine eigene Messdefinition.",
   "norm": {
     "norm_fundstelle": "Art. 271 und Art. 271a OR (SR 220)",
     "pruefstand": "fachlich_zu_verifizieren"
@@ -14,8 +14,8 @@
     "abrufart": "metadaten"
   },
   "abfrage": {
-    "suchanfrage": "(\"271a\" OR \"Art. 271\" OR \"missbräuchliche Kündigung\") AND (Mietverhältnis OR Mietvertrag OR Mietzins)",
-    "gerichtsfilter": ["CH_BGer"]
+    "suchanfrage": "(\"271a\" OR \"Art. 271\" OR \"art. 271\" OR \"missbräuchliche Kündigung\" OR \"congé abusif\" OR \"annulation du congé\" OR \"disdetta abusiva\" OR \"annullamento della disdetta\") AND (Mietverhältnis OR Mietvertrag OR Mietzins OR \"bail à loyer\" OR locataire OR \"contratto di locazione\" OR conduttore)",
+    "gerichtsfilter": ["CH_BGer", "CH_BGE"]
   },
   "zeitraum": {
     "von": "2015-01-01",
@@ -40,6 +40,11 @@
       "bezug": "verfahrensgegenstand"
     },
     {
+      "code": "nur_erstreckung",
+      "beschreibung": "Streitig ist allein die Erstreckung des Mietverhaeltnisses nach Art. 272 OR, nicht die Zulaessigkeit der Kuendigung selbst.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
       "code": "kein_mietverhaeltnis",
       "beschreibung": "Dem Verfahren liegt kein Mietverhaeltnis nach Art. 253 ff. OR zugrunde (etwa Pacht oder Gebrauchsleihe).",
       "bezug": "verfahrensgegenstand"
@@ -50,20 +55,25 @@
       "bezug": "formal"
     },
     {
-      "code": "kein_deutschsprachiger_text",
-      "beschreibung": "Der Entscheidtext liegt nicht in deutscher Sprache vor und ist im Rahmen dieser Messdefinition nicht auswertbar.",
-      "bezug": "datenlage"
-    },
-    {
       "code": "text_nicht_zugaenglich",
       "beschreibung": "Der bei der Quelle verzeichnete Entscheidtext ist nicht abrufbar; die Zuordnung ist datenseitig unmoeglich.",
       "bezug": "datenlage"
     }
   ],
   "rechtskraft_regel": {
-    "art": "letztinstanzlich",
-    "begruendung": "Die Erhebung beschraenkt sich auf Entscheide des Bundesgerichts. Gegen diese steht innerstaatlich kein ordentliches Rechtsmittel mehr offen, weshalb die Rechtskraft aus der Instanz selbst folgt und nicht fallweise nachrecherchiert werden muss. VON DIR ZU BESTAETIGEN: ob diese Ableitung fuer die Zwecke des Manifests als Rechtskraftnachweis genuegt (Revision nach Art. 121 ff. BGG und Verfahren vor dem EGMR bleiben ausser Betracht).",
+    "art": "bundesgericht_art61_bgg",
+    "rechtsquelle": "Art. 61 BGG (SR 173.110)",
+    "begruendung": "Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag ihrer Ausfaellung in Rechtskraft (Art. 61 BGG); ein ordentliches Rechtsmittel dagegen besteht nicht. Die Revision nach Art. 121 ff. BGG aendert daran nichts — sie ist gerade der aussergewoehnliche Weg, auf einen bereits rechtskraeftigen eigenen Entscheid zurueckzukommen. WICHTIG: Diese Ableitung gilt ausschliesslich fuer Entscheide des Schweizerischen Bundesgerichts. Sie ist KEINE generische Regel fuer kantonale letztinstanzliche Entscheide — gegen diese steht die Beschwerde ans Bundesgericht offen, ihre Rechtskraft folgt nicht aus der Instanz.",
+    "pruefstand": "fachlich_bestaetigt"
+  },
+  "abschluss_regel": {
+    "art": "endentscheid_zur_messfrage",
+    "begruendung": "Rechtskraft und Fallabschluss sind zwei verschiedene Dinge. Ein Bundesgerichtsentscheid ist ab Ausfaellung rechtskraeftig und kann die Sache trotzdem zur neuen materiellen Beurteilung zurueckweisen; dann ist offen, ob der Kuendigungsschutz am Ende durchdrang. Zaehlfaehig ist eine Streitigkeit erst, wenn die gemessene Rechtsfrage endgueltig entschieden ist: entweder entscheidet das Bundesgericht sie selbst, oder ein verknuepfter abschliessender Folgeentscheid liegt vor. Reine Zwischen- und Nebenentscheide zaehlen nie.",
     "pruefstand": "fachlich_zu_verifizieren"
   },
-  "selektionsneutralitaet": "Alle Kriterien stuetzen sich auf den Streitgegenstand, eine formale Eigenschaft oder die Datenlage. Keines nennt oder kennt den Verfahrensausgang, und keines uebernimmt ein Merkmal des Redaktionstrichters (redaktion/sieb.json), der Nichteintretensentscheide, Kostenentscheide und Fristwiederherstellungen abwertet und den Nenner damit nach oben verzerren wuerde. Der Zeitraum ist vor dem ersten Abruf festgelegt; die Abfrage steht wortgleich in dieser Datei und wird durch den Definitions-Hash gebunden."
+  "zaehleinheit": {
+    "art": "streitigkeit",
+    "beschreibung": "Eine zugrunde liegende Kuendigungsstreitigkeit zwischen denselben Parteien um dieselbe Kuendigung ist EINE Zaehleinheit. Rueckweisung, Folgeentscheid und Revision derselben Streitigkeit werden verknuepft und zaehlen zusammen einmal; alle Treffer bleiben im Rohkorpus erhalten."
+  },
+  "selektionsneutralitaet": "Alle Kriterien stuetzen sich auf den Streitgegenstand, eine formale Eigenschaft oder die Datenlage. Keines nennt oder kennt den Verfahrensausgang, keines uebernimmt ein Merkmal des Redaktionstrichters (redaktion/sieb.json, der Nichteintretensentscheide und Kostenentscheide abwertet und den Nenner damit nach oben verzerren wuerde), und keines sortiert nach Sprache: die Abfrage erfasst Deutsch, Franzoesisch und Italienisch, damit der Nenner nicht ein Sprachgebiet abbildet und sich schweizerisch nennt. Falschpositive Treffer sind zulaessig — sie fallen ueber die inhaltlichen Kriterien wieder heraus; falschnegative fehlen im Nenner und faellt niemandem auf. Zeitraum und Abfrage stehen wortgleich in dieser Datei und sind durch den Definitions-Hash gebunden."
 }

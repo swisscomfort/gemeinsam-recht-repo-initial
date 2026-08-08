@@ -11,6 +11,7 @@ import {
   FALLZAHL_REICHT_NICHT_HINWEIS,
   MINDESTFALLZAHL,
   mitMindestfallzahl,
+  quoteNachPraedikat,
   scheiterpunktQuote,
   type KodierteStory,
   type Quote,
@@ -27,6 +28,36 @@ function story(teile: Partial<KodierteStory> & Pick<KodierteStory, "id">): Kodie
     ...teile,
   };
 }
+
+describe("quoteNachPraedikat — dieselben Ausschluesse, freier Zaehler", () => {
+  // Gebraucht vom Messkorpus: dort zaehlt nicht der allgemeine
+  // Verfahrensausgang, sondern der Ausgang bezueglich der gemessenen Norm.
+  const stories = [
+    story({ id: "FS-1", ausgang: "durchgesetzt" }),
+    story({ id: "FS-2", ausgang: "nicht_durchgesetzt" }),
+    story({ id: "FS-3", kennzeichnung: "FIKTIV" }),
+    story({ id: "FS-4", rechtskraft_status: "weitergezogen" }),
+  ];
+
+  it("wendet die Ausschlussregeln unveraendert an", () => {
+    const quote = quoteNachPraedikat(stories, () => true);
+    expect(quote.nenner).toBe(2);
+    expect(quote.ausschluesse).toContainEqual({ grund: "kennzeichnung_fiktiv_oder_platzhalter", anzahl: 1 });
+    expect(quote.ausschluesse).toContainEqual({ grund: "nicht_rechtskraeftig", anzahl: 1 });
+  });
+
+  it("zaehlt genau das, was das Praedikat sagt — auch entgegen dem Story-Ausgang", () => {
+    const nurFS2 = quoteNachPraedikat(stories, (s) => s.id === "FS-2");
+    expect(nurFS2.zaehler).toBe(1);
+    expect(nurFS2.nenner).toBe(2);
+  });
+
+  it("ausgangQuote ist der Sonderfall mit dem Ausgang als Praedikat", () => {
+    expect(ausgangQuote(stories, "durchgesetzt")).toEqual(
+      quoteNachPraedikat(stories, (s) => s.ausgang === "durchgesetzt"),
+    );
+  });
+});
 
 describe("ausgangQuote — Ausschluesse", () => {
   it("FIKTIV zaehlt nie (weder im Zaehler noch im Nenner)", () => {

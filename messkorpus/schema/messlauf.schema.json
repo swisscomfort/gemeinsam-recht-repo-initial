@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "gemeinsam-recht/messkorpus/messlauf.schema.json",
   "title": "Messlauf — vollstaendige Trefferliste einer Messdefinition",
-  "description": "Ein Lauf haelt jeden einzelnen Treffer der Abfrage dauerhaft fest. Jeder Treffer traegt genau einen Status; ein Ausschluss traegt zwingend einen in der Messdefinition vorher deklarierten Grund. Es gibt keinen stillen Verlust: roh_treffer muss der Laenge der Trefferliste entsprechen, und ein gekappter Abruf ist kein gueltiger Messlauf.",
+  "description": "Ein Lauf haelt jeden einzelnen Treffer der Abfrage dauerhaft fest. Jeder Treffer traegt genau einen Status; ein Ausschluss traegt zwingend einen in der Messdefinition vorher deklarierten Grund. Der Nachweis, dass nichts verloren ging, steht nicht in roh_treffer (das waere zirkulaer), sondern in 'abrufe': je Zeitfenster die von der Quelle gemeldete Trefferzahl samt Relation, die tatsaechlich empfangenen Treffer, die ohne Quelle-ID und die Zahl nach Gerichtsfilter.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,6 +10,8 @@
     "messdefinition",
     "durchgefuehrt_am",
     "datenstand",
+    "abrufe",
+    "duplikate",
     "roh_treffer",
     "gekappt",
     "treffer"
@@ -28,6 +30,43 @@
     },
     "durchgefuehrt_am": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
     "datenstand": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "abrufe": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ein Eintrag je tatsaechlich abgefragtem Zeitfenster. Die Fenster muessen den Zeitraum der Messdefinition lueckenlos und ueberschneidungsfrei abdecken.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "von",
+          "bis",
+          "gemeldet_total",
+          "gemeldet_relation",
+          "empfangen",
+          "ohne_id",
+          "vor_gerichtsfilter",
+          "nach_gerichtsfilter"
+        ],
+        "properties": {
+          "von": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+          "bis": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+          "gemeldet_total": { "type": "integer", "minimum": 0 },
+          "gemeldet_relation": {
+            "enum": ["eq", "gte", "unbekannt"],
+            "description": "Meldet die Quelle die Trefferzahl als exakt (eq) oder nur als Untergrenze (gte)? Alles ausser eq gilt als unvollstaendige Population."
+          },
+          "empfangen": { "type": "integer", "minimum": 0 },
+          "ohne_id": { "type": "integer", "minimum": 0 },
+          "vor_gerichtsfilter": { "type": "integer", "minimum": 0 },
+          "nach_gerichtsfilter": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "duplikate": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Treffer, die in mehreren Fenstern erschienen und beim Zusammenfuehren entfernt wurden."
+    },
     "roh_treffer": { "type": "integer", "minimum": 0 },
     "gekappt": { "type": "boolean" },
     "treffer": {
@@ -35,17 +74,44 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["quelle_id", "status"],
+        "required": ["quelle_id", "status", "metadaten_fingerprint"],
         "properties": {
           "quelle_id": { "type": "string", "minLength": 1 },
           "aktenzeichen": { "type": "string" },
           "datum": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
           "gericht": { "type": "string" },
           "link": { "type": "string" },
+          "metadaten_fingerprint": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "SHA-256 ueber die kanonische Form der hier gespeicherten Quellmetadaten. Aendert die Quelle spaeter ihre Metadaten, wird das sichtbar."
+          },
           "status": { "enum": ["eingeschlossen", "ausgeschlossen", "ungeklaert"] },
           "ausschlussgrund": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
           "notiz": { "type": "string" },
-          "story_id": { "type": "string", "pattern": "^FS-[0-9]{3}$" }
+          "story_id": { "type": "string", "pattern": "^FS-[0-9]{3}$" },
+          "zaehleinheit": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Bezeichner des zugrunde liegenden Rechtsstreits. Mehrere Entscheide desselben Streits teilen ihn und zaehlen zusammen einmal."
+          },
+          "abschluss_status": {
+            "enum": ["abgeschlossen", "rueckweisung_offen", "zwischenentscheid", "ungeklaert"],
+            "description": "Ist die gemessene Rechtsfrage endgueltig entschieden? Unabhaengig von der Rechtskraft des Entscheids selbst."
+          },
+          "messausgang": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["messdefinition_id", "messdefinition_version", "wert", "beleg"],
+            "description": "Ausgang bezueglich der gemessenen Norm — nicht der allgemeine Verfahrensausgang der Geschichte.",
+            "properties": {
+              "messdefinition_id": { "type": "string", "pattern": "^MD-[0-9]{3}$" },
+              "messdefinition_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+              "wert": { "enum": ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar"] },
+              "beleg": { "type": "string", "minLength": 10 },
+              "quelle": { "type": "string" }
+            }
+          }
         }
       }
     }

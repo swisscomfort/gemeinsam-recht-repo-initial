@@ -46,19 +46,39 @@ nie aus der Redaktion entstehen.
 | Quelle, Abfrage, Zeitraum, Messfrage stehen vor dem Lauf fest | `schema/messdefinition.schema.json` |
 | Kein Kriterium kennt den Verfahrensausgang | `tools/definition.ts` (Vokabularprüfung, `AUSGANG_WOERTER`) |
 | Kein Kriterium übernimmt ein Merkmal des Redaktionstrichters | dieselbe Prüfung (`REDAKTIONS_WOERTER`) |
+| Kein Kriterium sortiert nach Sprache | dieselbe Prüfung (`SPRACH_WOERTER`) |
+| Rechtskraft nur eng abgeleitet, nie generisch „letztinstanzlich" | `rechtskraft_regel.art = bundesgericht_art61_bgg` |
+| Rechtskraft ≠ Fallabschluss | `abschluss_regel`, `abschluss_status` je Treffer |
+| Gezählt werden Streitigkeiten, nicht Suchtreffer | `zaehleinheiten()` |
+| Der Zähler ist der **Normausgang**, nicht der Story-Ausgang | `messausgang` + `quoteNachPraedikat` |
 | Jeder Treffer trägt genau einen Status | `tools/lauf.ts` |
 | Ausschlussgründe sind vorher deklariert | `tools/lauf.ts` gegen die Definition |
-| Kein stiller Verlust: `roh_treffer` = Länge der Liste | `tools/lauf.ts` |
+| Kein stiller Verlust — belegt durch das Abrufprotokoll | `abrufe[]`, nicht `roh_treffer` |
+| Untergrenze statt exakter Trefferzahl = keine Population | `gemeldet_relation !== "eq"` |
 | Ein gekappter Abruf ist kein gültiger Messkorpus | `tools/lauf.ts` |
+| Nachträglich geänderte Quellmetadaten fallen auf | `metadaten_fingerprint` |
 | Änderung der Definition macht alte Läufe erkennbar | SHA-256 über die kanonische Form |
 | Gleiche Definition + gleicher Datenstand = gleiche Population | `population()`, `gleichePopulation()` |
 | Quote erst bei vollständigem Nenner | `tools/messquote.ts` (`sperren`) |
 
-Die **wichtigste und am leichtesten zu übersehende** Sperre ist die letzte:
-ein eingeschlossener Treffer ohne dokumentierten Fall blockiert die Quote.
-Sonst schrumpft der Nenner still auf die Fälle zusammen, die jemand
-aufgeschrieben hat — und die Selektionsverzerrung wäre durch die Hintertür
-zurück.
+Drei Punkte, die leicht übersehen werden und deshalb hart gesperrt sind:
+
+1. **Ein eingeschlossener Treffer ohne dokumentierten Fall blockiert die
+   Quote.** Sonst schrumpft der Nenner still auf die Fälle zusammen, die
+   jemand aufgeschrieben hat — die Verzerrung wäre durch die Hintertür zurück.
+2. **Rechtskräftig ist nicht abgeschlossen.** Ein Bundesgerichtsentscheid ist
+   ab Ausfällung rechtskräftig (Art. 61 BGG) und kann die Sache trotzdem
+   zurückweisen; dann ist die gemessene Rechtsfrage offen.
+3. **Der allgemeine Verfahrensausgang ist nicht der Normausgang.** Eine
+   Mietpartei kann teilweise obsiegen, während die gemessene Norm gerade
+   nicht durchgesetzt wurde. Die Quote zählt ausschliesslich `messausgang`.
+
+`roh_treffer = treffer.length` allein beweist übrigens gar nichts — beide
+Zahlen entstehen am selben Ende der Verarbeitung. Der Nachweis steht in
+`abrufe[]`: je Fenster die von der Quelle gemeldete Zahl **samt Relation**,
+die empfangenen Treffer, die ohne Quelle-ID und die Zahl nach Gerichtsfilter.
+Daraus wird die gespeicherte Population nachgerechnet, und die Fenster müssen
+den Zeitraum lückenlos abdecken.
 
 ## Ablauf
 
@@ -90,13 +110,19 @@ vielen Treffern bricht ab, statt still zu verlieren.
 
 ## Stand
 
-`MD-001` (Kündigungsschutz Art. 271/271a OR, Bundesgericht) liegt als
-**Entwurf** vor. Zwei Punkte sind menschlich zu entscheiden, bevor daraus je
-eine Quote werden kann — beide sind im `pruefstand`-Feld markiert und beide
-sperren die Materialisierung technisch:
+`MD-001` (Kündigungsschutz Art. 271/271a OR, Bundesgericht) liegt in Fassung
+**2.0.0** als **Entwurf** vor.
 
-1. **Norm und Kriterien** fachlich bestätigen.
-2. **Rechtskraft-Regel**: Die Beschränkung auf Bundesgerichtsentscheide soll
-   die Rechtskraft aus der Instanz ableiten, statt sie für jeden Fall
-   nachzurecherchieren. Ob das als Nachweis im Sinne des Manifests genügt, ist
-   eine fachliche Entscheidung, keine technische.
+- **Rechtskraft-Regel: entschieden** (`fachlich_bestaetigt`). Entscheide des
+  Bundesgerichts erwachsen am Tag ihrer Ausfällung in Rechtskraft (Art. 61
+  BGG); die Revision nach Art. 121 ff. BGG ändert daran nichts. Die Regel
+  heisst ausdrücklich `bundesgericht_art61_bgg` und **nicht** generisch
+  „letztinstanzlich" — ein kantonaler letztinstanzlicher Entscheid kann ans
+  Bundesgericht weitergezogen werden, seine Rechtskraft folgt nicht aus der
+  Instanz. Ein Test hält das fest.
+- **Offen: Norm und Kriterien** fachlich bestätigen (`norm.pruefstand`).
+- **Offen: Abschlussregel** fachlich bestätigen (`abschluss_regel.pruefstand`)
+  — der Umgang mit Rückweisungen.
+
+Solange eines davon offen ist oder `status` auf `entwurf` steht, sperrt
+`darfQuoteMaterialisieren()` jede Quote.

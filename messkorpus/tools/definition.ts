@@ -25,6 +25,15 @@ export interface Kriterium {
   bezug: Bezug;
 }
 
+/**
+ * Ableitung der Rechtskraft. "bundesgericht_art61_bgg" gilt ausschliesslich
+ * fuer Entscheide des Schweizerischen Bundesgerichts (Art. 61 BGG: Rechtskraft
+ * am Tag der Ausfaellung). Eine allgemeine Regel "letztinstanzlich" gibt es
+ * bewusst NICHT — ein letztinstanzlicher kantonaler Entscheid ist etwas
+ * anderes und kann ans Bundesgericht weitergezogen werden.
+ */
+export type RechtskraftArt = "bundesgericht_art61_bgg" | "quellenangabe";
+
 export interface Messdefinition {
   id: string;
   version: string;
@@ -37,8 +46,25 @@ export interface Messdefinition {
   zeitraum: { von: string; bis: string };
   einschluss: Kriterium[];
   ausschluss: Kriterium[];
-  rechtskraft_regel: { art: "letztinstanzlich" | "quellenangabe"; begruendung: string; pruefstand: Pruefstand };
+  rechtskraft_regel: { art: RechtskraftArt; rechtsquelle: string; begruendung: string; pruefstand: Pruefstand };
+  /** Fallabschluss ist nicht Rechtskraft — siehe Schema. */
+  abschluss_regel: { art: "endentscheid_zur_messfrage"; begruendung: string; pruefstand: Pruefstand };
+  zaehleinheit: { art: "streitigkeit"; beschreibung: string };
   selektionsneutralitaet: string;
+}
+
+/** Gerichtssignaturen, fuer die Art. 61 BGG die Rechtskraft traegt. */
+export const BUNDESGERICHT_SIGNATUREN = ["CH_BGer", "CH_BGE"] as const;
+
+/**
+ * Traegt die Instanz die Rechtskraft nach der Regel der Definition? Nur
+ * Bundesgerichtsentscheide; eine kantonale Signatur ergibt false, auch wenn
+ * das kantonale Gericht dort letzte Instanz war.
+ */
+export function rechtskraftAusInstanz(definition: Messdefinition, gericht: string | undefined): boolean {
+  if (definition.rechtskraft_regel.art !== "bundesgericht_art61_bgg") return false;
+  if (gericht === undefined) return false;
+  return (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
 }
 
 /* ---------- Vokabulare ---------- */
@@ -99,6 +125,26 @@ export const REDAKTIONS_WOERTER = [
   "top",
 ] as const;
 
+/**
+ * Woerter der Sprachselektion. Die Schweiz spricht drei Amtssprachen; wer
+ * nach Sprache aussortiert, misst die Rechtswirklichkeit eines Sprachgebiets
+ * und nennt sie schweizerisch. Falschpositive Treffer sind harmlos — sie
+ * fallen ueber die inhaltlichen Kriterien wieder heraus. Falschnegative
+ * fehlen im Nenner und fallen niemandem auf.
+ */
+export const SPRACH_WOERTER = [
+  "deutschsprachig",
+  "deutsch",
+  "franzoesisch",
+  "franzoesischsprachig",
+  "italienisch",
+  "italienischsprachig",
+  "romanisch",
+  "sprache",
+  "amtssprache",
+  "landessprache",
+] as const;
+
 /** Normalisiert wie das Redaktions-Sieb: klein, ae/oe/ue, ohne Akzente. */
 export function normalisiere(text: string): string {
   return text
@@ -143,6 +189,14 @@ export function pruefeKriterium(kriterium: Kriterium, feld: string): string[] {
       fehler.push(
         `${feld}/${kriterium.code}: Kriterium nennt ein Merkmal des Redaktionstrichters ("${wort}"). ` +
           `Storywert darf die Zugehoerigkeit zum Messkorpus nicht beeinflussen.`,
+      );
+    }
+  }
+  for (const wort of SPRACH_WOERTER) {
+    if (enthaeltWort(text, normalisiere(wort))) {
+      fehler.push(
+        `${feld}/${kriterium.code}: Kriterium sortiert nach Sprache ("${wort}"). ` +
+          `Die Schweiz hat drei Amtssprachen — eine Sprachauswahl erzeugt einen Nenner, der nur ein Sprachgebiet abbildet.`,
       );
     }
   }
@@ -196,21 +250,23 @@ export function definitionsHash(definition: unknown): string {
 
 /**
  * Darf aus dieser Definition eine Quote materialisiert werden?
- * Drei Bedingungen, alle menschlich verantwortet:
- * eingefroren + Norm fachlich bestaetigt + Rechtskraft-Regel fachlich bestaetigt.
+ * Vier Bedingungen, alle menschlich verantwortet: eingefroren, und die drei
+ * Pruefstaende (Norm, Rechtskraft-Regel, Abschlussregel) bestaetigt.
  */
 export function darfQuoteMaterialisieren(definition: Messdefinition): Befund {
   const fehler: string[] = [];
   if (definition.status !== "eingefroren") {
     fehler.push(`Messdefinition ${definition.id} ist "${definition.status}" — nur eingefrorene Definitionen tragen eine Quote.`);
   }
-  if (definition.norm.pruefstand !== "fachlich_bestaetigt") {
-    fehler.push(`Messdefinition ${definition.id}: norm.pruefstand ist "${definition.norm.pruefstand}" — fachliche Bestaetigung fehlt.`);
-  }
-  if (definition.rechtskraft_regel.pruefstand !== "fachlich_bestaetigt") {
-    fehler.push(
-      `Messdefinition ${definition.id}: rechtskraft_regel.pruefstand ist "${definition.rechtskraft_regel.pruefstand}" — fachliche Bestaetigung fehlt.`,
-    );
+  const pruefstaende: [string, Pruefstand][] = [
+    ["norm.pruefstand", definition.norm.pruefstand],
+    ["rechtskraft_regel.pruefstand", definition.rechtskraft_regel.pruefstand],
+    ["abschluss_regel.pruefstand", definition.abschluss_regel.pruefstand],
+  ];
+  for (const [feld, stand] of pruefstaende) {
+    if (stand !== "fachlich_bestaetigt") {
+      fehler.push(`Messdefinition ${definition.id}: ${feld} ist "${stand}" — fachliche Bestaetigung fehlt.`);
+    }
   }
   return { ok: fehler.length === 0, fehler };
 }

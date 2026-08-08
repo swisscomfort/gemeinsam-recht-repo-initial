@@ -18,6 +18,8 @@
     "einschluss",
     "ausschluss",
     "rechtskraft_regel",
+    "abschluss_regel",
+    "zaehleinheit",
     "selektionsneutralitaet"
   ],
   "properties": {
@@ -80,14 +82,39 @@
     "rechtskraft_regel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["art", "begruendung", "pruefstand"],
+      "required": ["art", "rechtsquelle", "begruendung", "pruefstand"],
       "properties": {
         "art": {
-          "enum": ["letztinstanzlich", "quellenangabe"],
-          "description": "letztinstanzlich: die Instanz selbst traegt die Rechtskraft. quellenangabe: die Publikation sagt es ausdruecklich."
+          "enum": ["bundesgericht_art61_bgg", "quellenangabe"],
+          "description": "bundesgericht_art61_bgg: Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag der Ausfaellung in Rechtskraft (Art. 61 BGG); gilt NUR fuer das Bundesgericht, nicht fuer kantonale letztinstanzliche Entscheide. quellenangabe: die Publikation sagt es ausdruecklich."
+        },
+        "rechtsquelle": { "type": "string", "minLength": 5 },
+        "begruendung": { "type": "string", "minLength": 20 },
+        "pruefstand": { "enum": ["fachlich_zu_verifizieren", "fachlich_bestaetigt"] }
+      }
+    },
+    "abschluss_regel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art", "begruendung", "pruefstand"],
+      "description": "Rechtskraft und Fallabschluss sind zwei verschiedene Dinge. Ein Bundesgerichtsentscheid ist rechtskraeftig und kann die Sache trotzdem zurueckweisen — dann ist die gemessene Rechtsfrage noch nicht endgueltig entschieden. MANIFEST verlangt abgeschlossene Faelle.",
+      "properties": {
+        "art": {
+          "enum": ["endentscheid_zur_messfrage"],
+          "description": "Zaehlfaehig ist nur, wo die gemessene Rechtsfrage endgueltig entschieden ist."
         },
         "begruendung": { "type": "string", "minLength": 20 },
         "pruefstand": { "enum": ["fachlich_zu_verifizieren", "fachlich_bestaetigt"] }
+      }
+    },
+    "zaehleinheit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art", "beschreibung"],
+      "description": "Ein Suchtreffer ist nicht automatisch ein eigenstaendiger Fall: mehrere Entscheide koennen zum selben Rechtsstreit gehoeren. Die Quote zaehlt Zaehleinheiten, nicht Treffer.",
+      "properties": {
+        "art": { "enum": ["streitigkeit"] },
+        "beschreibung": { "type": "string", "minLength": 20 }
       }
     },
     "selektionsneutralitaet": {

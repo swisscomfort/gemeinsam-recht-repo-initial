@@ -7,6 +7,8 @@ import {
   alsMesslaufTreffer,
   gehoertZuGericht,
   jahresfenster,
+  metadatenFingerprint,
+  relationAus,
   tage,
   teile,
   vereinige,
@@ -91,7 +93,7 @@ describe("Gerichtsfilter", () => {
 });
 
 describe("Trefferabbildung", () => {
-  it("uebernimmt ID, Datum, Gericht und Link und setzt den Status ungeklaert", () => {
+  it("uebernimmt ID, Datum, Gericht und Link, setzt Status und Fingerprint", () => {
     const treffer = alsMesslaufTreffer(
       roh("CH_BGer_001_4A-123-2024_2024-05-01", "2024-05-01", ["CH", "CH_BGer"], "Bundesgericht 01.05.2024 4A_123/2024"),
       VIEW,
@@ -102,8 +104,33 @@ describe("Trefferabbildung", () => {
       datum: "2024-05-01",
       gericht: "CH_BGer",
       link: `${VIEW}CH_BGer_001_4A-123-2024_2024-05-01`,
+      metadaten_fingerprint: metadatenFingerprint({
+        quelle_id: "CH_BGer_001_4A-123-2024_2024-05-01",
+        aktenzeichen: "4A_123/2024",
+        datum: "2024-05-01",
+        gericht: "CH_BGer",
+        link: `${VIEW}CH_BGer_001_4A-123-2024_2024-05-01`,
+      }),
       status: "ungeklaert",
     });
+  });
+
+  it("bildet einen franzoesischsprachigen Entscheid genauso ab wie einen deutschen", () => {
+    // Der Nenner darf kein Sprachgebiet bevorzugen: die Abbildung liest
+    // de/fr/it und faellt bei fr nicht auf einen Rueckfallwert zurueck.
+    const treffer = alsMesslaufTreffer(
+      {
+        _id: "CH_BGer_001_4A-77-2021_2021-03-02",
+        _source: {
+          date: "2021-03-02",
+          hierarchy: ["CH", "CH_BGer"],
+          title: { fr: "Tribunal fédéral 02.03.2021 4A_77/2021" },
+        },
+      },
+      VIEW,
+    );
+    expect(treffer?.aktenzeichen).toBe("4A_77/2021");
+    expect(treffer?.gericht).toBe("CH_BGer");
   });
 
   it("erfindet kein Aktenzeichen, wenn der Titel das Datum nicht traegt", () => {
@@ -117,15 +144,53 @@ describe("Trefferabbildung", () => {
 });
 
 describe("vereinige", () => {
-  const a: MesslaufTreffer = { quelle_id: "b", status: "ungeklaert" };
-  const b: MesslaufTreffer = { quelle_id: "a", status: "ungeklaert" };
+  const a: MesslaufTreffer = { quelle_id: "b", status: "ungeklaert", metadaten_fingerprint: metadatenFingerprint({ quelle_id: "b" }) };
+  const b: MesslaufTreffer = { quelle_id: "a", status: "ungeklaert", metadaten_fingerprint: metadatenFingerprint({ quelle_id: "a" }) };
 
   it("sortiert nach Quell-ID — die Abrufreihenfolge darf nichts aendern", () => {
-    expect(vereinige([[a, b]]).map((t) => t.quelle_id)).toEqual(["a", "b"]);
-    expect(vereinige([[b], [a]]).map((t) => t.quelle_id)).toEqual(["a", "b"]);
+    expect(vereinige([[a, b]]).treffer.map((t) => t.quelle_id)).toEqual(["a", "b"]);
+    expect(vereinige([[b], [a]]).treffer.map((t) => t.quelle_id)).toEqual(["a", "b"]);
   });
 
-  it("entfernt Doppel aus ueberlappenden Fenstern", () => {
-    expect(vereinige([[a], [{ ...a }], [b]])).toHaveLength(2);
+  it("entfernt Doppel aus ueberlappenden Fenstern und zaehlt sie mit", () => {
+    const ergebnis = vereinige([[a], [{ ...a }], [b]]);
+    expect(ergebnis.treffer).toHaveLength(2);
+    // Ohne diese Zahl geht die Bilanz des Laufs spaeter nicht auf.
+    expect(ergebnis.duplikate).toBe(1);
+  });
+
+  it("zaehlt kein Duplikat, wo keines ist", () => {
+    expect(vereinige([[a], [b]]).duplikate).toBe(0);
+  });
+});
+
+describe("relationAus", () => {
+  it("erkennt die exakte Angabe", () => {
+    expect(relationAus({ value: 12, relation: "eq" })).toBe("eq");
+  });
+
+  it("erkennt eine Untergrenze — die reicht fuer eine Population nicht", () => {
+    expect(relationAus({ value: 10000, relation: "gte" })).toBe("gte");
+  });
+
+  it("behandelt eine fehlende oder unbekannte Angabe als unbekannt, nie als exakt", () => {
+    expect(relationAus({ value: 12 })).toBe("unbekannt");
+    expect(relationAus(12)).toBe("unbekannt");
+    expect(relationAus(null)).toBe("unbekannt");
+    expect(relationAus({ value: 12, relation: "irgendwas" })).toBe("unbekannt");
+  });
+});
+
+describe("Fingerprint der Quellmetadaten", () => {
+  const metadaten = { quelle_id: "x", aktenzeichen: "4A_1/2020", datum: "2020-01-01", gericht: "CH_BGer" };
+
+  it("aendert sich, sobald die Quelle ein Feld aendert", () => {
+    expect(metadatenFingerprint({ ...metadaten, datum: "2020-01-02" })).not.toBe(metadatenFingerprint(metadaten));
+  });
+
+  it("ist unabhaengig von der Schluesselreihenfolge", () => {
+    expect(metadatenFingerprint({ gericht: "CH_BGer", quelle_id: "x", aktenzeichen: "4A_1/2020", datum: "2020-01-01" })).toBe(
+      metadatenFingerprint(metadaten),
+    );
   });
 });
