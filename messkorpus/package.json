@@ -1,0 +1,19 @@
+{
+  "name": "@gemeinsam-recht/messkorpus",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Selektionsneutraler Messkorpus: definiert die Population, aus der Durchsetzungsquoten gebildet werden. Streng getrennt vom Redaktionstrichter (redaktion/sieb.json) — der waehlt nach Storywert aus und darf nie Nenner einer Quote sein. Offline: kein Netz, keine Systemzeit, keine Laufzeit-Abhaengigkeiten. Die Erhebung selbst laeuft im dafuer zugelassenen Redaktionswerkzeug (redaktion/src/messlauf-erheben.ts).",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "pruefen": "node tools/pruefen.ts",
+    "inventar": "node tools/inventar.ts",
+    "quote": "node tools/messquote.ts"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}

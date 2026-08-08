@@ -1,0 +1,69 @@
+{
+  "id": "MD-001",
+  "version": "1.0.0",
+  "status": "entwurf",
+  "stand": "2026-08-08",
+  "messfrage": "In wie vielen der letztinstanzlich beurteilten Verfahren, in denen sich eine Mietpartei gegen eine Kuendigung auf den Kuendigungsschutz nach Art. 271/271a OR berief, wurde die Kuendigung aufgehoben oder das Mietverhaeltnis erstreckt?",
+  "norm": {
+    "norm_fundstelle": "Art. 271 und Art. 271a OR (SR 220)",
+    "pruefstand": "fachlich_zu_verifizieren"
+  },
+  "quelle": {
+    "name": "entscheidsuche.ch",
+    "endpunkt": "https://entscheidsuche.ch/_search.php",
+    "abrufart": "metadaten"
+  },
+  "abfrage": {
+    "suchanfrage": "(\"271a\" OR \"Art. 271\" OR \"missbräuchliche Kündigung\") AND (Mietverhältnis OR Mietvertrag OR Mietzins)",
+    "gerichtsfilter": ["CH_BGer"]
+  },
+  "zeitraum": {
+    "von": "2015-01-01",
+    "bis": "2025-12-31"
+  },
+  "einschluss": [
+    {
+      "code": "kuendigungsschutz_streitig",
+      "beschreibung": "Der Entscheid beurteilt materiell, ob eine Kuendigung des Mietverhaeltnisses dem Kuendigungsschutz nach Art. 271/271a OR standhaelt.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "mietpartei_beruft_sich",
+      "beschreibung": "Die Mietpartei hat sich im Verfahren auf diesen Kuendigungsschutz berufen.",
+      "bezug": "verfahrensgegenstand"
+    }
+  ],
+  "ausschluss": [
+    {
+      "code": "andere_rechtsfrage",
+      "beschreibung": "Der Entscheid betrifft eine andere Bestimmung; der Kuendigungsschutz ist nicht Streitgegenstand.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "kein_mietverhaeltnis",
+      "beschreibung": "Dem Verfahren liegt kein Mietverhaeltnis nach Art. 253 ff. OR zugrunde (etwa Pacht oder Gebrauchsleihe).",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "nur_prozessuale_nebenfrage",
+      "beschreibung": "Der Entscheid behandelt allein eine Nebenfrage neben der Hauptsache, etwa Kosten oder aufschiebende Wirkung.",
+      "bezug": "formal"
+    },
+    {
+      "code": "kein_deutschsprachiger_text",
+      "beschreibung": "Der Entscheidtext liegt nicht in deutscher Sprache vor und ist im Rahmen dieser Messdefinition nicht auswertbar.",
+      "bezug": "datenlage"
+    },
+    {
+      "code": "text_nicht_zugaenglich",
+      "beschreibung": "Der bei der Quelle verzeichnete Entscheidtext ist nicht abrufbar; die Zuordnung ist datenseitig unmoeglich.",
+      "bezug": "datenlage"
+    }
+  ],
+  "rechtskraft_regel": {
+    "art": "letztinstanzlich",
+    "begruendung": "Die Erhebung beschraenkt sich auf Entscheide des Bundesgerichts. Gegen diese steht innerstaatlich kein ordentliches Rechtsmittel mehr offen, weshalb die Rechtskraft aus der Instanz selbst folgt und nicht fallweise nachrecherchiert werden muss. VON DIR ZU BESTAETIGEN: ob diese Ableitung fuer die Zwecke des Manifests als Rechtskraftnachweis genuegt (Revision nach Art. 121 ff. BGG und Verfahren vor dem EGMR bleiben ausser Betracht).",
+    "pruefstand": "fachlich_zu_verifizieren"
+  },
+  "selektionsneutralitaet": "Alle Kriterien stuetzen sich auf den Streitgegenstand, eine formale Eigenschaft oder die Datenlage. Keines nennt oder kennt den Verfahrensausgang, und keines uebernimmt ein Merkmal des Redaktionstrichters (redaktion/sieb.json), der Nichteintretensentscheide, Kostenentscheide und Fristwiederherstellungen abwertet und den Nenner damit nach oben verzerren wuerde. Der Zeitraum ist vor dem ersten Abruf festgelegt; die Abfrage steht wortgleich in dieser Datei und wird durch den Definitions-Hash gebunden."
+}
