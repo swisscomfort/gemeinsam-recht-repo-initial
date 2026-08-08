@@ -42,3 +42,17 @@ Ausserhalb  : §14 — vier ungepruefte Punkte, Erloesprognose
 Aenderung   : nur per Change Request nach §15
 Freigabe    : ____________________  (Datum, Unterschrift)
 ═══════════════════════════════════════════════════════════════
+
+───────────────────────────────────────────────────────────────
+ERRATUM 01 zu MANIFEST v2.1 — 2026-08-08
+───────────────────────────────────────────────────────────────
+Betrifft : letzte Zeile von MANIFEST-v2.1.md
+Fehler   : dort steht "Ende Manifest v2.0" statt "v2.1"
+Ursache  : Uebernahmefehler aus der Vorlage v2.0
+Wirkung  : keine — die Zeile ist nicht normativ, kein Paragraph
+           ist betroffen, keine Regel aendert sich.
+Behandlung: Die Datei bleibt unveraendert, damit der Anker
+           ec285049d79d3fd828cd06593e25d6dfcd4c10cbc14769bcc5d17992db21ec02
+           gueltig bleibt. Korrektur erfolgt bei der naechsten
+           inhaltlichen Fassung, nicht als eigene Version.
+───────────────────────────────────────────────────────────────
