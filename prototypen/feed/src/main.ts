@@ -884,7 +884,7 @@ function zeigeWerkbank(): void {
     el(
       "p",
       "zaehler",
-      `Vollständige Journey-Durchläufe: ${sammlung.journeysGesamt} · Ziel vor Launch-Gate: 100 (Plan §4) · ` +
+      `Vollständige Journey-Durchläufe: ${sammlung.journeysGesamt} · interner Richtwert: 100 (kein Launch-Gate mehr — MANIFEST v2.1 §2/F2′: Start mit abgeschlossenen Fällen, Nachrüstung durch Leserzahl) · ` +
         `abgeschlossene Durchläufe gesamt: ${sammlung.durchlaeufeGesamt} · aufgezeichnet werden nur Station, Emotion, Notiz und Abbruchstelle — keine Zeiten, keine Klickraten.`,
     ),
   );

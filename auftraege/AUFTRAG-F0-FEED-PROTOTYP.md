@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # AUFTRAG-F0 — Feed-Prototyp „Morgenausgabe" (privat, offline)
 
 **Status: FREIGEGEBEN durch den Projektinhaber am 2026-08-05 — mit Präzisierung: Der Mini-Parser behandelt unbekannte oder falsch geschriebene Schlüssel in `meta.yaml` als Verweigerungsgrund (streng, nie stillschweigend ignorieren). Beide Auslegungen (eigener Mini-Parser statt YAML-Paket · Fixture-Ort `prototypen/feed/tests/fixtures/`) angenommen.**

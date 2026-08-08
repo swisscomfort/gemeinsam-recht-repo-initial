@@ -1,8 +1,10 @@
+**Verbindlich ist MANIFEST-v2.1.md. Bei Widerspruch gilt das Manifest.**
+
 # CLAUDE.md — Arbeitsregeln für Claude Code in diesem Repository
 
 ## Leseordnung bei Sessionstart (Pflicht, vor jeder Aufgabe)
 1. `SESSION_KOPF.txt` — Bindungsklausel, gilt vollumfänglich auch für dich.
-2. `DER_PLAN_v1.1_FROZEN.md` — allein massgeblicher Plan. `sha256sum` bilden und mit `FREEZE.txt` abgleichen; bei Abweichung: stoppen und melden.
+2. `MANIFEST-v2.1.md` — bindende Fassung, allein massgeblich. `sha256sum` bilden und mit dem MANIFEST-v2.1-Eintrag in `FREEZE.txt` abgleichen; bei Abweichung: stoppen und melden. `DER_PLAN_v1.1_FROZEN.md` ist historisch. Verbindlich ist MANIFEST-v2.1.md.
 3. `docs/LEGAL_AI_OPERATING_RULES.md` — bindend.
 4. `STATUS.md` — aktueller Stand.
 5. Den beauftragten Auftrag unter `auftraege/` — nur dieser definiert deinen Arbeitsumfang.

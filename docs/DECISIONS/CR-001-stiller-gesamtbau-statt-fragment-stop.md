@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # CR-001 — Stiller Gesamtbau statt Fragment-Stop
 
 **Status:** ANGENOMMEN inkl. F1–F3 (siehe Entscheidungszeile)

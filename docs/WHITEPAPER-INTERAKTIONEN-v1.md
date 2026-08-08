@@ -1,3 +1,5 @@
+**ÜBERHOLT — ersetzt durch MANIFEST v2.1. Historisch, nicht geltend.**
+
 # WHITEPAPER — Interaktionen v1 (Bestandsaufnahme & Durchlauf-Matrix)
 
 **Zweck:** Jede beschlossene Interaktion von Lesenden, Betroffenen,
