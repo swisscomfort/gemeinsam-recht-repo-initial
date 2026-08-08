@@ -24,5 +24,5 @@ ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [substantiierung_fehlte]
 kodierliste_version: "1.0.0"
-kodierung_status: vorschlag
-kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Die Beklagten sind im Übrigen schon ihrer Substantiierungslast nicht genügend nachgekommen, denn aus den Tabellen geht nicht hervor, um welche Wohnung in welchem Geschoss der fraglichen Liegenschaften es sich handeln soll und wer sie von wem gemietet hat"]
+kodierung_status: strittig
+kodierung_quellen: ["agent-S-2026-08-08-B|2026-08-08|substantiierung_fehlte|Die Beklagten sind im Übrigen schon ihrer Substantiierungslast nicht genügend nachgekommen, denn aus den Tabellen geht nicht hervor, um welche Wohnung in welchem Geschoss der fraglichen Liegenschaften es sich handeln soll und wer sie von wem gemietet hat", "claude-opus-5|2026-08-08|substantiierung_fehlte,beweis_fehlte|Die Substantiierungslast liegt bei den Mietenden. … Ihre eigenen Vergleichsobjekte reichte das Gericht nicht"]

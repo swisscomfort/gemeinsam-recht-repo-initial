@@ -24,5 +24,5 @@ ausgang: nicht_durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [substantiierung_fehlte]
 kodierliste_version: "1.0.0"
-kodierung_status: vorschlag
-kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die Berufungsklägerin setzt sich mit der vorinstanzlichen Würdigung nicht auseinander. Sie nimmt in ihren Ausführungen nicht darauf Bezug, sondern lässt es dabei bewenden, ihre bereits im erstinstanzlichen Verfahren vorgebrachten Tatsachenbehauptungen zu wiederholen"]
+kodierung_status: doppelt_bestaetigt
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die Berufungsklägerin setzt sich mit der vorinstanzlichen Würdigung nicht auseinander. Sie nimmt in ihren Ausführungen nicht darauf Bezug, sondern lässt es dabei bewenden, ihre bereits im erstinstanzlichen Verfahren vorgebrachten Tatsachenbehauptungen zu wiederholen", "claude-opus-5|2026-08-08|substantiierung_fehlte|Bloss zu wiederholen, was schon vor erster Instanz gesagt wurde, erfüllt die Begründungsobliegenheit nicht — das Gericht tritt dann gar nicht auf die Sache ein."]

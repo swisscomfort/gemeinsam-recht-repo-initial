@@ -24,5 +24,5 @@ ausgang: durchgesetzt
 rechtskraft_status: unbekannt
 scheiterpunkt: [substantiierung_fehlte]
 kodierliste_version: "1.0.0"
-kodierung_status: vorschlag
-kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die klagende Partei darf es nicht mit einer offenen Formulierung dem Gericht überlassen, die Gegenpartei genau zu bezeichnen"]
+kodierung_status: strittig
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|substantiierung_fehlte|Die klagende Partei darf es nicht mit einer offenen Formulierung dem Gericht überlassen, die Gegenpartei genau zu bezeichnen", "claude-opus-5|2026-08-08|gegenpartei_nicht_substantiiert|das muss aus der Klage selbst klar hervorgehen, inklusive einer gültigen Klagebewilligung für jede einzelne Gegenpartei. Diesen Anforderungen genügte die Klage nicht."]

@@ -24,5 +24,5 @@ ausgang: durchgesetzt
 rechtskraft_status: weitergezogen
 scheiterpunkt: [beweis_fehlte]
 kodierliste_version: "1.0.0"
-kodierung_status: vorschlag
-kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|beweis_fehlte|Die Berufungsbeklagten behaupten und belegen gerade für das letzte Jahr vor den Kündigungen keine konkreten Ereignisse, deretwegen sie die Kündigungen ausgesprochen haben"]
+kodierung_status: strittig
+kodierung_quellen: ["agent-S-2026-08-08-C|2026-08-08|beweis_fehlte|Die Berufungsbeklagten behaupten und belegen gerade für das letzte Jahr vor den Kündigungen keine konkreten Ereignisse, deretwegen sie die Kündigungen ausgesprochen haben", "claude-opus-5|2026-08-08|gegenpartei_nicht_substantiiert|Für das ganze letzte Jahr vor der Kündigung konnten sie weder eine einzige neue Beschwerde noch einen Polizeieinsatz belegen."]
