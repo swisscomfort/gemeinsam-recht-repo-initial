@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "gemeinsam-recht/messkorpus/messdefinition.schema.json",
+  "title": "Messdefinition — Population vor Sichtung der Ergebnisse",
+  "description": "Legt Quelle, Abfrage, Zeitraum, Messfrage und die Ein-/Ausschlusskriterien fest, BEVOR Treffer gesichtet werden. Nur eine eingefrorene Definition darf Grundlage einer materialisierten Quote sein. Ein Kriterium darf sich nie auf den Verfahrensausgang beziehen — deshalb kennt 'bezug' den Wert 'verfahrensausgang' nicht.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "status",
+    "stand",
+    "messfrage",
+    "norm",
+    "quelle",
+    "abfrage",
+    "zeitraum",
+    "einschluss",
+    "ausschluss",
+    "rechtskraft_regel",
+    "abschluss_regel",
+    "zaehleinheit",
+    "selektionsneutralitaet"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^MD-[0-9]{3}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "status": { "enum": ["entwurf", "eingefroren"] },
+    "stand": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "messfrage": { "type": "string", "minLength": 20 },
+    "norm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["norm_fundstelle", "pruefstand"],
+      "properties": {
+        "regel_id": { "type": "string", "pattern": "^R-[A-Z]{2}-[0-9]{4}$" },
+        "norm_fundstelle": { "type": "string", "minLength": 3 },
+        "pruefstand": { "enum": ["fachlich_zu_verifizieren", "fachlich_bestaetigt"] }
+      }
+    },
+    "quelle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "endpunkt", "abrufart"],
+      "properties": {
+        "name": { "type": "string", "minLength": 3 },
+        "endpunkt": { "type": "string", "minLength": 8 },
+        "abrufart": { "enum": ["metadaten"] }
+      }
+    },
+    "abfrage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["suchanfrage", "gerichtsfilter"],
+      "properties": {
+        "suchanfrage": { "type": "string", "minLength": 3 },
+        "gerichtsfilter": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 },
+          "description": "Praefixe auf dem Feld 'hierarchy' der Quelle, z. B. CH_BGer. Leer = keine Einschraenkung."
+        }
+      }
+    },
+    "zeitraum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["von", "bis"],
+      "properties": {
+        "von": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "bis": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+      }
+    },
+    "einschluss": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/kriterium" }
+    },
+    "ausschluss": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/kriterium" }
+    },
+    "rechtskraft_regel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art", "rechtsquelle", "begruendung", "pruefstand"],
+      "properties": {
+        "art": {
+          "enum": ["bundesgericht_art61_bgg", "quellenangabe"],
+          "description": "bundesgericht_art61_bgg: Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag der Ausfaellung in Rechtskraft (Art. 61 BGG); gilt NUR fuer das Bundesgericht, nicht fuer kantonale letztinstanzliche Entscheide. quellenangabe: die Publikation sagt es ausdruecklich."
+        },
+        "rechtsquelle": { "type": "string", "minLength": 5 },
+        "begruendung": { "type": "string", "minLength": 20 },
+        "pruefstand": { "enum": ["fachlich_zu_verifizieren", "fachlich_bestaetigt"] }
+      }
+    },
+    "abschluss_regel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art", "begruendung", "pruefstand"],
+      "description": "Rechtskraft und Fallabschluss sind zwei verschiedene Dinge. Ein Bundesgerichtsentscheid ist rechtskraeftig und kann die Sache trotzdem zurueckweisen — dann ist die gemessene Rechtsfrage noch nicht endgueltig entschieden. MANIFEST verlangt abgeschlossene Faelle.",
+      "properties": {
+        "art": {
+          "enum": ["endentscheid_zur_messfrage"],
+          "description": "Zaehlfaehig ist nur, wo die gemessene Rechtsfrage endgueltig entschieden ist."
+        },
+        "begruendung": { "type": "string", "minLength": 20 },
+        "pruefstand": { "enum": ["fachlich_zu_verifizieren", "fachlich_bestaetigt"] }
+      }
+    },
+    "zaehleinheit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art", "beschreibung"],
+      "description": "Ein Suchtreffer ist nicht automatisch ein eigenstaendiger Fall: mehrere Entscheide koennen zum selben Rechtsstreit gehoeren. Die Quote zaehlt Zaehleinheiten, nicht Treffer.",
+      "properties": {
+        "art": { "enum": ["streitigkeit"] },
+        "beschreibung": { "type": "string", "minLength": 20 }
+      }
+    },
+    "selektionsneutralitaet": {
+      "type": "string",
+      "minLength": 40,
+      "description": "Begruendung, warum kein Kriterium mit dem Verfahrensausgang korreliert."
+    }
+  },
+  "definitions": {
+    "kriterium": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "beschreibung", "bezug"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "beschreibung": { "type": "string", "minLength": 10 },
+        "bezug": {
+          "enum": ["verfahrensgegenstand", "formal", "datenlage"],
+          "description": "Worauf sich das Kriterium stuetzt. 'verfahrensausgang' existiert bewusst nicht — ein Kriterium, das den Ausgang kennt, verzerrt den Nenner."
+        }
+      }
+    }
+  }
+}
