@@ -30,7 +30,13 @@ import {
   type QuoteDarstellung,
   type Uebereinstimmungsquote,
 } from "../../wissen/tools/kodierung-quoten.ts";
-import { darfQuoteMaterialisieren, type Messdefinition } from "./definition.ts";
+import {
+  auflösungsFehler,
+  darfQuoteMaterialisieren,
+  findeFassung,
+  sammleFassungen,
+  type Messdefinition,
+} from "./definition.ts";
 import { leseFaelle } from "./faelle.ts";
 import { bilanz, pruefeLauf, zaehleinheiten, type Bilanz, type MessausgangWert, type Messlauf } from "./lauf.ts";
 import { istDirektAufruf, leseDefinitionen, leseLaeufe } from "./umgebung.ts";
@@ -268,14 +274,20 @@ if (istDirektAufruf(import.meta.url)) {
       process.exitCode = 1;
     } else {
       const lauf = eintrag.inhalt as Messlauf;
-      const definition = leseDefinitionen()
-        .map((d) => d.inhalt as Messdefinition)
-        .find((d) => d.id === lauf.messdefinition.id);
-      if (!definition) {
-        console.error(`Messdefinition ${lauf.messdefinition.id} nicht gefunden.`);
+      // Dieselbe Auflösung wie in pruefen.ts: id UND version, ueber den
+      // gemeinsamen Resolver. Frueher suchte dieses CLI nur nach id und
+      // nahm die erste passende Datei, waehrend pruefen.ts die letzte nahm —
+      // bei zwei Fassungen derselben id konnten beide Werkzeuge verschiedene
+      // Fassungen erwischen.
+      const register = sammleFassungen(
+        leseDefinitionen().map((d) => ({ datei: d.datei, inhalt: d.inhalt as Messdefinition })),
+      );
+      const auflösung = findeFassung(register, lauf.messdefinition);
+      if (auflösung.art !== "gefunden") {
+        console.error(auflösungsFehler(lauf.messdefinition, auflösung));
         process.exitCode = 1;
       } else {
-        const bericht = quoteBericht(lauf, definition, leseFaelle(), { wert, zeitstand });
+        const bericht = quoteBericht(lauf, auflösung.definition, leseFaelle(), { wert, zeitstand });
         for (const zeile of bericht.zeilen) console.log(zeile);
         if (!bericht.ok) process.exitCode = 1;
       }
