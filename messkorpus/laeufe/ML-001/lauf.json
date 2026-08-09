@@ -543,7 +543,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-133-2020_2020-07-22",
       "metadaten_fingerprint": "431cd2b8c68ecbb7af4ccd136e55281f4b0ddfb803ba4d421a8d608239279c29",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mietpartei verlangte die Aufhebung der Kuendigungen und hielt sie nach Art. 271a Abs. 1 lit. a OR fuer anfechtbar. Das Bundesgericht beurteilte den Kuendigungsgrund materiell als mit Art. 271/271a OR vereinbar und wies die Beschwerde ab.",
+      "zaehleinheit": "4A_133/2020",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Qu'il a conclu principalement a l'annulation des conges ... Que la Cour juge ce motif compatible avec les art. 271 et 271a CO relatifs a la protection du locataire contre les conges abusifs ... Le recours est rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-133-2020_2020-07-22"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-134-2023_2024-03-06",
@@ -680,7 +690,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-153-2020_2020-05-19",
       "metadaten_fingerprint": "e236a346d4b45af38ce3d794522e871b0efc3308d3c034a6cbf2b7d7c8f36137",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mieter fochten die Kuendigung als missbraeuchlich an. Art. 271a OR wurde materiell geprueft: die Sperrfrist nach Abs. 1 lit. d greift, wird aber durch die Ausnahme in Abs. 3 lit. e durchbrochen. Die Kuendigung bleibt bestehen.",
+      "zaehleinheit": "4A_153/2020",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Die Vorinstanz erwog, der Beschwerdegegner habe die Kuendigung waehrend eines mit dem Mietverhaeltnis zusammenhaengenden Schlichtungsverfahrens ausgesprochen. Die Kuendigung sei daher gemaess Art. 271a Abs. 1 lit. d OR grundsaetzlich anfechtbar. Diese Sperrfrist sei aber nach Art. 271a Abs. 3 lit. e OR nicht anwendbar bei Kuendigungen aus wichtigen Gruenden im Sinne von Art. 266g OR ... Die Beschwerde wird abgewiesen, soweit darauf einzutreten ist.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-153-2020_2020-05-19"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-157-2019_2020-04-21",
