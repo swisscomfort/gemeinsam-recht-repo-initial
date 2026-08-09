@@ -8,6 +8,7 @@ import {
   gehoertZuGericht,
   jahresfenster,
   metadatenFingerprint,
+  monatsfenster,
   relationAus,
   tage,
   teile,
@@ -63,6 +64,29 @@ describe("Zeitfenster", () => {
       { von: "2015-06-15", bis: "2015-12-31" },
       { von: "2016-01-01", bis: "2016-12-31" },
       { von: "2017-01-01", bis: "2017-02-28" },
+    ]);
+  });
+
+  it("zerlegt den Zeitraum in Monatsfenster mit exakten Raendern", () => {
+    expect(monatsfenster({ von: "2026-01-01", bis: "2026-07-31" })).toEqual([
+      { von: "2026-01-01", bis: "2026-01-31" },
+      { von: "2026-02-01", bis: "2026-02-28" },
+      { von: "2026-03-01", bis: "2026-03-31" },
+      { von: "2026-04-01", bis: "2026-04-30" },
+      { von: "2026-05-01", bis: "2026-05-31" },
+      { von: "2026-06-01", bis: "2026-06-30" },
+      { von: "2026-07-01", bis: "2026-07-31" },
+    ]);
+    // Angefangene Randmonate bleiben am Zeitraum, nichts waechst darueber hinaus.
+    expect(monatsfenster({ von: "2025-11-15", bis: "2026-02-10" })).toEqual([
+      { von: "2025-11-15", bis: "2025-11-30" },
+      { von: "2025-12-01", bis: "2025-12-31" },
+      { von: "2026-01-01", bis: "2026-01-31" },
+      { von: "2026-02-01", bis: "2026-02-10" },
+    ]);
+    // Schaltjahr-Februar endet am 29.
+    expect(monatsfenster({ von: "2028-02-01", bis: "2028-02-29" })).toEqual([
+      { von: "2028-02-01", bis: "2028-02-29" },
     ]);
   });
 });
