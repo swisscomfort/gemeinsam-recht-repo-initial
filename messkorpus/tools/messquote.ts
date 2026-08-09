@@ -38,7 +38,15 @@ import {
   type Messdefinition,
 } from "./definition.ts";
 import { leseFaelle } from "./faelle.ts";
-import { bilanz, pruefeLauf, zaehleinheiten, type Bilanz, type MessausgangWert, type Messlauf } from "./lauf.ts";
+import {
+  bilanz,
+  istZaehlbar,
+  pruefeLauf,
+  zaehleinheiten,
+  type Bilanz,
+  type MessausgangWert,
+  type Messlauf,
+} from "./lauf.ts";
 import { istDirektAufruf, leseDefinitionen, leseLaeufe } from "./umgebung.ts";
 
 export { MINDESTFALLZAHL };
@@ -110,6 +118,12 @@ export function sperren(
   gruende.push(...einheiten.fehler);
 
   for (const einheit of einheiten.einheiten) {
+    if (einheit.offen) {
+      gruende.push(
+        `Zaehleinheit ${einheit.id}: Messausgang "offen" — die endgueltige Rechtswirkung auf den gemessenen Sachverhalt steht noch aus. ` +
+          `Eine offene Einheit zaehlt weder als Erfolg noch als Misserfolg; sie waere ein Nenner ohne Zaehler.`,
+      );
+    }
     if (einheit.abschluss_status !== "abgeschlossen") {
       gruende.push(
         `Zaehleinheit ${einheit.id}: Abschlussstatus "${einheit.abschluss_status}". ` +
@@ -161,6 +175,19 @@ export function korpusFaelle(
   return { faelle, normausgang };
 }
 
+/**
+ * Ist der gemessene Wert ueberhaupt zaehlbar? "offen" bezeichnet das Fehlen
+ * eines Ausgangs — eine "Quote der offenen Faelle" waere keine
+ * Durchsetzungsquote, sondern eine Aussage ueber den Erhebungsstand, die als
+ * Quote gelesen wuerde.
+ */
+export function nichtZaehlbarerWert(wert: MessausgangWert): string | null {
+  return istZaehlbar(wert)
+    ? null
+    : `Gemessener Wert "${wert}": kein zaehlbarer Messausgang. ` +
+        `"offen" heisst, dass die endgueltige Rechtswirkung aussteht — daraus entsteht keine Quote.`;
+}
+
 export interface QuoteAuftrag {
   /** Gemessener Normausgang, z. B. "durchgesetzt". */
   wert: MessausgangWert;
@@ -178,6 +205,9 @@ export function berechneMessquote(
   stories: ReadonlyMap<string, KodierteStory>,
   auftrag: QuoteAuftrag,
 ): Messquote {
+  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert);
+  if (unzaehlbar) throw new Error(`Quote gesperrt:\n- ${unzaehlbar}`);
+
   const sperre = sperren(lauf, definition, stories);
   if (!sperre.ok) {
     throw new Error(`Quote gesperrt:\n- ${sperre.gruende.join("\n- ")}`);
@@ -221,14 +251,16 @@ export function quoteBericht(
   stories: ReadonlyMap<string, KodierteStory>,
   auftrag: QuoteAuftrag,
 ): { zeilen: string[]; ok: boolean } {
+  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert);
   const sperre = sperren(lauf, definition, stories);
-  if (!sperre.ok) {
+  const gruende = unzaehlbar ? [unzaehlbar, ...sperre.gruende] : sperre.gruende;
+  if (gruende.length > 0) {
     return {
       ok: false,
       zeilen: [
         `Keine Quote fuer ${lauf.id} (${definition.id} v${definition.version}, gemessen: ${auftrag.wert}).`,
         "Gesperrt durch:",
-        ...sperre.gruende.map((grund) => `  · ${grund}`),
+        ...gruende.map((grund) => `  · ${grund}`),
       ],
     };
   }

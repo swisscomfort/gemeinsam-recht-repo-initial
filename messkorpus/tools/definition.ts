@@ -34,12 +34,37 @@ export interface Kriterium {
  */
 export type RechtskraftArt = "bundesgericht_art61_bgg" | "quellenangabe";
 
+/**
+ * Nach welchem Modell wird der Messausgang bestimmt?
+ *
+ * - `materielle_pruefung`: gezaehlt wird, was das Gericht zur gemessenen Norm
+ *   materiell entschieden hat. Eine prozessuale Erledigung liefert dann keinen
+ *   Messausgang.
+ * - `endwirkung`: gezaehlt wird die endgueltige Rechtswirkung auf den
+ *   gemessenen Sachverhalt, unabhaengig davon, ob sie materiell oder
+ *   prozessual zustande kam (CR-03, angenommen am 9. August 2026).
+ *
+ * Das Modell steht AUSDRUECKLICH in der Definition. Es wird nie aus der id,
+ * der Versionsnummer oder dem Dateinamen erschlossen — eine Messdefinition
+ * sagt selbst, wie sie ausgewertet wird, sonst haengt die Bedeutung alter
+ * Daten daran, wie spaetere Fassungen numeriert werden.
+ */
+export type Auswertungsmodell = "materielle_pruefung" | "endwirkung";
+
+/**
+ * Modell einer Definition, die das Feld nicht fuehrt. Alle vor CR-03
+ * erhobenen Definitionen sind so zu lesen — sie verhalten sich unveraendert.
+ */
+export const LEGACY_AUSWERTUNGSMODELL: Auswertungsmodell = "materielle_pruefung";
+
 export interface Messdefinition {
   id: string;
   version: string;
   status: "entwurf" | "eingefroren";
   stand: string;
   messfrage: string;
+  /** Fehlt das Feld, gilt {@link LEGACY_AUSWERTUNGSMODELL}. */
+  auswertungsmodell?: Auswertungsmodell;
   norm: { regel_id?: string; norm_fundstelle: string; pruefstand: Pruefstand };
   quelle: { name: string; endpunkt: string; abrufart: "metadaten" };
   abfrage: { suchanfrage: string; gerichtsfilter: string[] };
@@ -65,6 +90,21 @@ export function rechtskraftAusInstanz(definition: Messdefinition, gericht: strin
   if (definition.rechtskraft_regel.art !== "bundesgericht_art61_bgg") return false;
   if (gericht === undefined) return false;
   return (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
+}
+
+/**
+ * Das Auswertungsmodell einer Definition — ausschliesslich aus ihrem eigenen
+ * Feld, mit dem Legacy-Wert als Vorgabe. Eine Fallunterscheidung nach `id`
+ * oder Versionsnummer gibt es bewusst nirgends: sonst entschiede die
+ * Numerierung ueber die Bedeutung der Daten.
+ */
+export function auswertungsmodell(definition: Messdefinition): Auswertungsmodell {
+  return definition.auswertungsmodell ?? LEGACY_AUSWERTUNGSMODELL;
+}
+
+/** Wird nach endgueltiger Rechtswirkung ausgewertet (CR-03)? */
+export function istEndwirkungsmodell(definition: Messdefinition): boolean {
+  return auswertungsmodell(definition) === "endwirkung";
 }
 
 /* ---------- Vokabulare ---------- */

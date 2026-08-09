@@ -99,6 +99,40 @@
             "enum": ["abgeschlossen", "rueckweisung_offen", "zwischenentscheid", "ungeklaert"],
             "description": "Ist die gemessene Rechtsfrage endgueltig entschieden? Unabhaengig von der Rechtskraft des Entscheids selbst."
           },
+          "erledigungsweg": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["modus", "prozessgrund", "beleg"],
+            "description": "Auf welchem Weg die Streitigkeit endete — zweiachsig: 'modus' nennt die Form der Erledigung, 'prozessgrund' nur bei prozessualer Erledigung deren Ursache. Strikt getrennt vom 'messausgang': derselbe prozessuale Weg kann zu unterschiedlichen endgueltigen Rechtswirkungen fuehren, deshalb wird gezaehlt wird der Messausgang, nicht der Weg.",
+            "properties": {
+              "modus": {
+                "enum": ["materiell_entschieden", "prozessual_erledigt", "rueckweisung_offen"],
+                "description": "rueckweisung_offen: die gemessene Rechtsfrage ist gerade nicht entschieden — dann ist der Messausgang 'offen'."
+              },
+              "prozessgrund": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "rechtsmittelbegruendung_unzureichend",
+                      "aktivlegitimation_fehlte",
+                      "klagebewilligung_fehlte_oder_ungueltig",
+                      "anfechtungsfrist_verwirkt",
+                      "instanzverwirkung",
+                      "nichteintreten_sonstiger_grund",
+                      "sonstiger_prozessgrund"
+                    ]
+                  },
+                  { "type": "null" }
+                ],
+                "description": "Nur bei modus='prozessual_erledigt' belegt, sonst ausdruecklich null. Der Schluessel steht immer da, damit ein Fehlen nicht als 'noch nicht kodiert' durchgeht."
+              },
+              "beleg": { "type": "string", "minLength": 10 },
+              "quelle": {
+                "type": "string",
+                "description": "Herkunft des Belegs, wenn er nicht aus dem Treffer selbst stammt, sondern aus einem ausdruecklich verknuepften Entscheid derselben Verfahrenskette (CR-03 Auflage E2)."
+              }
+            }
+          },
           "messausgang": {
             "type": "object",
             "additionalProperties": false,
@@ -107,7 +141,10 @@
             "properties": {
               "messdefinition_id": { "type": "string", "pattern": "^MD-[0-9]{3}$" },
               "messdefinition_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
-              "wert": { "enum": ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar"] },
+              "wert": {
+                "enum": ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar", "offen"],
+                "description": "'offen' ist kein Ergebnis, sondern dessen ausdrueckliches Fehlen: die endgueltige Rechtswirkung steht noch aus. Der Wert zaehlt nie als Erfolg oder Misserfolg und sperrt jede Quote; er ist nur unter auswertungsmodell='endwirkung' definiert."
+              },
               "beleg": { "type": "string", "minLength": 10 },
               "quelle": { "type": "string" }
             }

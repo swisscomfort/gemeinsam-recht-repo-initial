@@ -16,18 +16,66 @@
 // Rein und deterministisch: keine Systemzeit, kein Netz.
 
 import { createHash } from "node:crypto";
-import { kanonisch, type Messdefinition } from "./definition.ts";
+import { auswertungsmodell, istEndwirkungsmodell, kanonisch, type Messdefinition } from "./definition.ts";
 import { definitionsHash } from "./definition.ts";
 
 export type TrefferStatus = "eingeschlossen" | "ausgeschlossen" | "ungeklaert";
 export type AbschlussStatus = "abgeschlossen" | "rueckweisung_offen" | "zwischenentscheid" | "ungeklaert";
-export type MessausgangWert = "durchgesetzt" | "teilweise" | "nicht_durchgesetzt" | "nicht_anwendbar";
+
+/**
+ * Ausgang bezueglich der gemessenen Norm.
+ *
+ * "offen" ist kein Ergebnis, sondern dessen ausdrueckliches Fehlen: die
+ * endgueltige Rechtswirkung auf den gemessenen Sachverhalt steht noch aus
+ * (typischerweise nach einer Rueckweisung). Der Wert wird nie als Erfolg oder
+ * Misserfolg gezaehlt und sperrt jede Quote — er existiert, damit dieser
+ * Zustand benannt werden kann, statt als "nicht durchgesetzt" zu erscheinen.
+ */
+export type MessausgangWert = "durchgesetzt" | "teilweise" | "nicht_durchgesetzt" | "nicht_anwendbar" | "offen";
+
+/** Die zaehlbaren Ausgaenge — alles ausser "offen". */
+export const ZAEHLBARE_MESSAUSGAENGE = [
+  "durchgesetzt",
+  "teilweise",
+  "nicht_durchgesetzt",
+  "nicht_anwendbar",
+] as const satisfies readonly MessausgangWert[];
+
+export function istZaehlbar(wert: MessausgangWert): boolean {
+  return (ZAEHLBARE_MESSAUSGAENGE as readonly MessausgangWert[]).includes(wert);
+}
 
 export interface Messausgang {
   messdefinition_id: string;
   messdefinition_version: string;
   wert: MessausgangWert;
   beleg: string;
+  quelle?: string;
+}
+
+/**
+ * Wie die Streitigkeit erledigt wurde — zweiachsig (CR-03 Auflage E1):
+ * `modus` nennt die Form der Erledigung, `prozessgrund` nur bei prozessualer
+ * Erledigung deren Ursache. Ein flaches Enum wuerde beides vermischen.
+ */
+export type Erledigungsmodus = "materiell_entschieden" | "prozessual_erledigt" | "rueckweisung_offen";
+
+export type Prozessgrund =
+  | "rechtsmittelbegruendung_unzureichend"
+  | "aktivlegitimation_fehlte"
+  | "klagebewilligung_fehlte_oder_ungueltig"
+  | "anfechtungsfrist_verwirkt"
+  | "instanzverwirkung"
+  | "nichteintreten_sonstiger_grund"
+  | "sonstiger_prozessgrund";
+
+export interface Erledigungsweg {
+  modus: Erledigungsmodus;
+  /** Nur bei `prozessual_erledigt` belegt, sonst ausdruecklich `null`. */
+  prozessgrund: Prozessgrund | null;
+  /** Konkrete Textstelle oder praeziser Fundstellenhinweis aus der Primaerquelle. */
+  beleg: string;
+  /** Herkunft des Belegs, wenn er nicht aus dem Treffer selbst stammt (E2 Ziff. 3). */
   quelle?: string;
 }
 
@@ -44,6 +92,8 @@ export interface Treffer {
   story_id?: string;
   zaehleinheit?: string;
   abschluss_status?: AbschlussStatus;
+  /** Getrennt vom Messausgang: derselbe Weg kann verschieden ausgehen. */
+  erledigungsweg?: Erledigungsweg;
   messausgang?: Messausgang;
 }
 
@@ -115,6 +165,97 @@ export function metadatenFingerprint(metadaten: Quellmetadaten): string {
       "utf8",
     )
     .digest("hex");
+}
+
+/* ---------- Erledigungsweg und Endwirkung ---------- */
+
+/**
+ * Innere Stimmigkeit des Erledigungswegs. Gilt ueberall, wo er gefuehrt wird,
+ * unabhaengig vom Auswertungsmodell: `prozessgrund` ist genau dann belegt,
+ * wenn prozessual erledigt wurde. Sonst entstuende ein Grund ohne Erledigung
+ * oder eine prozessuale Erledigung ohne Ursache — beides waere nicht
+ * auswertbar.
+ */
+export function pruefeErledigungsweg(weg: Erledigungsweg, wo: string): string[] {
+  const fehler: string[] = [];
+
+  if (weg.modus === "prozessual_erledigt") {
+    if (weg.prozessgrund === null) {
+      fehler.push(
+        `${wo}: Erledigungsweg "prozessual_erledigt" ohne prozessgrund. ` +
+          `Welcher prozessuale Grund die Sache erledigt hat, ist die eigentliche Aussage — ohne ihn ist der Modus leer.`,
+      );
+    }
+  } else if (weg.prozessgrund !== null) {
+    fehler.push(
+      `${wo}: Erledigungsweg "${weg.modus}" traegt den prozessgrund "${weg.prozessgrund}". ` +
+        `Ein Prozessgrund gehoert ausschliesslich zu "prozessual_erledigt"; sonst ist er auf null zu setzen.`,
+    );
+  }
+
+  if (weg.beleg.trim() === "") {
+    fehler.push(`${wo}: Erledigungsweg ohne Beleg. Der Modus ist eine Behauptung ueber den Primaertext und braucht dessen Stelle.`);
+  }
+
+  return fehler;
+}
+
+/**
+ * Die Pflichten des Endwirkungsmodells fuer einen EINGESCHLOSSENEN Treffer
+ * (CR-03). Ein `ungeklaert` gebliebener Treffer faellt nicht hierunter — dort
+ * wird ausdruecklich nichts erfunden (Auflage E2 Ziff. 6).
+ */
+function pruefeEndwirkung(laufId: string, treffer: Treffer): string[] {
+  const fehler: string[] = [];
+  const wo = `Lauf ${laufId}: Treffer ${treffer.quelle_id}`;
+
+  if (treffer.status !== "eingeschlossen") return fehler;
+
+  if (!treffer.erledigungsweg) {
+    fehler.push(
+      `${wo} ist eingeschlossen, nennt aber keinen Erledigungsweg. ` +
+        `Im Endwirkungsmodell gehoert zu jedem gezaehlten Fall, auf welchem Weg er endete.`,
+    );
+  }
+  if (treffer.zaehleinheit === undefined || treffer.zaehleinheit === "") {
+    fehler.push(`${wo} ist eingeschlossen, nennt aber keine Zaehleinheit.`);
+  }
+  if (treffer.abschluss_status === undefined) {
+    fehler.push(`${wo} ist eingeschlossen, nennt aber keinen Abschlussstatus.`);
+  }
+  if (!treffer.messausgang) {
+    fehler.push(
+      `${wo} ist eingeschlossen, traegt aber keinen Messausgang. ` +
+        `Steht die endgueltige Rechtswirkung noch aus, ist sie als "offen" zu benennen, nicht wegzulassen.`,
+    );
+  }
+
+  /* Abgeschlossen heisst: die Rechtswirkung steht fest. */
+  if (treffer.abschluss_status === "abgeschlossen" && treffer.messausgang?.wert === "offen") {
+    fehler.push(
+      `${wo} ist abgeschlossen, traegt aber den Messausgang "offen". ` +
+        `Beides zusammen ist ein Widerspruch: entweder steht die endgueltige Rechtswirkung fest, dann ist sie zu benennen, ` +
+        `oder sie steht aus, dann ist der Fall nicht abgeschlossen.`,
+    );
+  }
+
+  /* Rueckweisung: die gemessene Rechtsfrage ist gerade nicht entschieden. */
+  if (treffer.erledigungsweg?.modus === "rueckweisung_offen") {
+    if (treffer.abschluss_status !== "rueckweisung_offen") {
+      fehler.push(
+        `${wo}: Erledigungsweg "rueckweisung_offen", Abschlussstatus aber "${treffer.abschluss_status ?? "(fehlt)"}". ` +
+          `Eine Rueckweisung laesst die gemessene Rechtsfrage offen.`,
+      );
+    }
+    if (treffer.messausgang && treffer.messausgang.wert !== "offen") {
+      fehler.push(
+        `${wo}: Erledigungsweg "rueckweisung_offen", Messausgang aber "${treffer.messausgang.wert}". ` +
+          `Nach einer Rueckweisung ist die endgueltige Rechtswirkung noch nicht bestimmbar — sie heisst dann "offen".`,
+      );
+    }
+  }
+
+  return fehler;
 }
 
 /* ---------- Pruefung ---------- */
@@ -246,6 +387,7 @@ export function pruefeLauf(lauf: Messlauf, definition: Messdefinition): Befund {
   /* Treffer: Eindeutigkeit, Status, Fingerprint */
   const gesehen = new Set<string>();
   const ausschlussCodes = new Set(definition.ausschluss.map((k) => k.code));
+  const endwirkung = istEndwirkungsmodell(definition);
   for (const treffer of lauf.treffer) {
     if (gesehen.has(treffer.quelle_id)) {
       fehler.push(`Lauf ${lauf.id}: Treffer ${treffer.quelle_id} kommt mehrfach vor.`);
@@ -274,6 +416,22 @@ export function pruefeLauf(lauf: Messlauf, definition: Messdefinition): Befund {
         `Lauf ${lauf.id}: Treffer ${treffer.quelle_id} hat Status "${treffer.status}", traegt aber einen Ausschlussgrund.`,
       );
     }
+
+    if (treffer.erledigungsweg) {
+      fehler.push(...pruefeErledigungsweg(treffer.erledigungsweg, `Lauf ${lauf.id}: Treffer ${treffer.quelle_id}`));
+    }
+
+    /* "offen" ist eine Aussage des Endwirkungsmodells. Unter einer Definition,
+       die materiell prueft, hat der Wert keine festgelegte Bedeutung. */
+    if (!endwirkung && treffer.messausgang?.wert === "offen") {
+      fehler.push(
+        `Lauf ${lauf.id}: Treffer ${treffer.quelle_id} traegt den Messausgang "offen", ` +
+          `${definition.id} v${definition.version} wertet aber nach dem Modell "${auswertungsmodell(definition)}" aus. ` +
+          `Der Wert "offen" ist nur im Endwirkungsmodell definiert.`,
+      );
+    }
+
+    if (endwirkung) fehler.push(...pruefeEndwirkung(lauf.id, treffer));
 
     if (treffer.messausgang && !gehoertZu(treffer.messausgang, definition)) {
       fehler.push(
@@ -337,6 +495,11 @@ export interface Zaehleinheit {
   story_id?: string;
   abschluss_status: AbschlussStatus;
   messausgang?: Messausgang;
+  /**
+   * Mindestens ein Entscheid der Einheit laesst die endgueltige Rechtswirkung
+   * offen. Eine solche Einheit ist nie zaehlfaehig und sperrt jede Quote.
+   */
+  offen: boolean;
 }
 
 export interface Zaehleinheiten {
@@ -402,11 +565,30 @@ export function zaehleinheiten(lauf: Messlauf, definition: Messdefinition): Zaeh
 
     /* Der Abschluss der Einheit ist der guenstigste Stand ihrer Entscheide:
        ein spaeterer Endentscheid schliesst eine fruehere Rueckweisung ab. */
-    const abschluss: AbschlussStatus = treffer.some((t) => t.abschluss_status === "abgeschlossen")
+    const roherAbschluss: AbschlussStatus = treffer.some((t) => t.abschluss_status === "abgeschlossen")
       ? "abgeschlossen"
       : (treffer.find((t) => t.abschluss_status !== undefined)?.abschluss_status ?? "ungeklaert");
 
-    einheiten.push({ id, treffer, story_id: storyId, abschluss_status: abschluss, messausgang: ausgaenge[0] });
+    /* Ein offener Messausgang verdraengt "abgeschlossen": eine Einheit, deren
+       endgueltige Rechtswirkung noch aussteht, darf nie als abgeschlossene
+       Zaehleinheit gelten — sonst ginge sie in den Nenner ein, ohne einen
+       zaehlbaren Ausgang zu haben. */
+    const offenerTreffer = treffer.find(
+      (t) => t.messausgang !== undefined && gehoertZu(t.messausgang, definition) && t.messausgang.wert === "offen",
+    );
+    const abschluss: AbschlussStatus =
+      offenerTreffer && roherAbschluss === "abgeschlossen"
+        ? (offenerTreffer.abschluss_status ?? "ungeklaert")
+        : roherAbschluss;
+
+    einheiten.push({
+      id,
+      treffer,
+      story_id: storyId,
+      abschluss_status: abschluss,
+      messausgang: ausgaenge[0],
+      offen: offenerTreffer !== undefined,
+    });
   }
 
   return { einheiten, fehler };

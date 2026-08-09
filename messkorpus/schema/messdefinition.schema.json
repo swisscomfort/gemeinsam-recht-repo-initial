@@ -28,6 +28,10 @@
     "status": { "enum": ["entwurf", "eingefroren"] },
     "stand": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
     "messfrage": { "type": "string", "minLength": 20 },
+    "auswertungsmodell": {
+      "enum": ["materielle_pruefung", "endwirkung"],
+      "description": "Nach welchem Modell der Messausgang bestimmt wird. 'materielle_pruefung': gezaehlt wird die materielle Entscheidung zur gemessenen Norm. 'endwirkung': gezaehlt wird die endgueltige Rechtswirkung auf den gemessenen Sachverhalt, unabhaengig davon, ob sie materiell oder prozessual zustande kam (CR-03). Fehlt das Feld, gilt 'materielle_pruefung' — bestehende Definitionen verhalten sich unveraendert. Das Modell steht ausdruecklich hier; es wird nie aus id, Versionsnummer oder Dateinamen erschlossen."
+    },
     "norm": {
       "type": "object",
       "additionalProperties": false,
