@@ -8,7 +8,14 @@
 //
 // Nur lesend. Kein Netz.
 
-import { pruefeDefinitionInhalt, definitionsHash, type Messdefinition } from "./definition.ts";
+import {
+  auflösungsFehler,
+  findeFassung,
+  pruefeDefinitionInhalt,
+  definitionsHash,
+  sammleFassungen,
+  type Messdefinition,
+} from "./definition.ts";
 import { leseFaelle } from "./faelle.ts";
 import { bilanz, pruefeLauf, type Messlauf } from "./lauf.ts";
 import { sperren } from "./messquote.ts";
@@ -24,7 +31,7 @@ export function berichte(): Bericht {
   const zeilen: string[] = [];
   let fehler = 0;
 
-  const definitionen = new Map<string, Messdefinition>();
+  const gueltige: { datei: string; inhalt: Messdefinition }[] = [];
 
   zeilen.push("MESSDEFINITIONEN");
   const dateien = leseDefinitionen();
@@ -38,7 +45,7 @@ export function berichte(): Bericht {
       continue;
     }
     const definition = inhalt as Messdefinition;
-    definitionen.set(definition.id, definition);
+    gueltige.push({ datei, inhalt: definition });
 
     const inhaltlich = pruefeDefinitionInhalt(definition);
     const marke = inhaltlich.ok ? "ok" : "INHALT-FEHLER";
@@ -57,6 +64,18 @@ export function berichte(): Bericht {
     }
   }
 
+  // Fassungen nach id@version registrieren. Zwei Dateien mit identischem
+  // Schluessel werden hier gemeldet und nicht aufgeloest — sonst entschiede
+  // die Dateireihenfolge, welche Fassung gilt.
+  const register = sammleFassungen(gueltige);
+  for (const [schluessel, betroffene] of register.doppelte) {
+    fehler += 1;
+    zeilen.push(
+      `  ${schluessel}: mehrfach vorhanden (${betroffene.join(", ")}). ` +
+        `Zwei Dateien mit derselben id und derselben Version sind ein Widerspruch.`,
+    );
+  }
+
   zeilen.push("");
   zeilen.push("MESSLAEUFE");
   const laeufe = leseLaeufe();
@@ -72,12 +91,13 @@ export function berichte(): Bericht {
       continue;
     }
     const lauf = inhalt as Messlauf;
-    const definition = definitionen.get(lauf.messdefinition.id);
-    if (!definition) {
+    const auflösung = findeFassung(register, lauf.messdefinition);
+    if (auflösung.art !== "gefunden") {
       fehler += 1;
-      zeilen.push(`  ${lauf.id}: Messdefinition ${lauf.messdefinition.id} nicht gefunden.`);
+      zeilen.push(`  ${lauf.id}: ${auflösungsFehler(lauf.messdefinition, auflösung)}`);
       continue;
     }
+    const definition = auflösung.definition;
 
     const befund = pruefeLauf(lauf, definition);
     const b = bilanz(lauf);

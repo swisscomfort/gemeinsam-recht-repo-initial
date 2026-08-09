@@ -248,6 +248,94 @@ export function definitionsHash(definition: unknown): string {
   return createHash("sha256").update(kanonisch(definition), "utf8").digest("hex");
 }
 
+/* ---------- Auflösung einer Fassung ---------- */
+
+/**
+ * Kanonischer Schluessel einer Messdefinitions-FASSUNG.
+ *
+ * Eine Messdefinition ist nicht durch ihre `id` bestimmt, sondern durch
+ * `id` UND `version`: MD-001 v2.0.0 und MD-001 v3.0.0 sind zwei verschiedene
+ * Messungen, die nebeneinander bestehen duerfen — der alte Lauf gehoert zu
+ * seiner damaligen Fassung, nicht zur neuen (siehe pruefeLauf in lauf.ts).
+ * Wer nur ueber `id` aufloest, laesst die Dateireihenfolge entscheiden,
+ * welche Fassung "gilt", und macht damit einen unveraenderten alten Lauf
+ * ungueltig, sobald eine neue Fassung danebenliegt.
+ */
+export function definitionsSchluessel(id: string, version: string): string {
+  return `${id}@${version}`;
+}
+
+/** Ergebnis der Auflösung — die Mehrdeutigkeit ist ein eigener Fall, kein "nicht gefunden". */
+export type Fassungsauflösung =
+  | { art: "gefunden"; definition: Messdefinition }
+  | { art: "mehrdeutig"; dateien: readonly string[] }
+  | { art: "fehlt" };
+
+export interface Fassungsregister {
+  /** Eindeutige Fassungen nach `id@version`. Mehrdeutige fehlen hier bewusst. */
+  fassungen: ReadonlyMap<string, Messdefinition>;
+  /** `id@version`, die mehr als eine Datei belegt — je Schluessel die Dateinamen. */
+  doppelte: ReadonlyMap<string, readonly string[]>;
+}
+
+/**
+ * Baut das Register aus gelesenen Definitionsdateien.
+ *
+ * Zwei Dateien mit derselben `id` UND derselben `version` sind ein
+ * Widerspruch, kein Sortierproblem — sie werden NICHT nach Dateireihenfolge
+ * aufgeloest, sondern aus `fassungen` herausgehalten und in `doppelte`
+ * ausgewiesen. Analog MANIFEST v2.1 §4: zwei Fassungen derselben Liste sind
+ * ein Bruch.
+ */
+export function sammleFassungen(
+  dateien: readonly { datei: string; inhalt: Messdefinition }[],
+): Fassungsregister {
+  const nachSchluessel = new Map<string, { datei: string; inhalt: Messdefinition }[]>();
+  for (const eintrag of dateien) {
+    const schluessel = definitionsSchluessel(eintrag.inhalt.id, eintrag.inhalt.version);
+    const bisher = nachSchluessel.get(schluessel);
+    if (bisher) bisher.push(eintrag);
+    else nachSchluessel.set(schluessel, [eintrag]);
+  }
+
+  const fassungen = new Map<string, Messdefinition>();
+  const doppelte = new Map<string, readonly string[]>();
+  for (const [schluessel, eintraege] of nachSchluessel) {
+    if (eintraege.length === 1) fassungen.set(schluessel, eintraege[0]!.inhalt);
+    else doppelte.set(schluessel, eintraege.map((e) => e.datei).sort());
+  }
+  return { fassungen, doppelte };
+}
+
+/** Loest die Fassung auf, die ein Lauf ausdruecklich nennt — id UND version. */
+export function findeFassung(
+  register: Fassungsregister,
+  verweis: { id: string; version: string },
+): Fassungsauflösung {
+  const schluessel = definitionsSchluessel(verweis.id, verweis.version);
+  const doppelt = register.doppelte.get(schluessel);
+  if (doppelt) return { art: "mehrdeutig", dateien: doppelt };
+  const definition = register.fassungen.get(schluessel);
+  return definition ? { art: "gefunden", definition } : { art: "fehlt" };
+}
+
+/** Einheitlicher Fehlertext, damit pruefen und messquote nicht auseinanderlaufen. */
+export function auflösungsFehler(
+  verweis: { id: string; version: string },
+  auflösung: Fassungsauflösung,
+): string | null {
+  if (auflösung.art === "gefunden") return null;
+  const schluessel = definitionsSchluessel(verweis.id, verweis.version);
+  if (auflösung.art === "mehrdeutig") {
+    return (
+      `Messdefinition ${schluessel} liegt mehrfach vor (${auflösung.dateien.join(", ")}). ` +
+      `Zwei Dateien mit derselben id und derselben Version sind ein Widerspruch — welche gilt, darf nicht ` +
+      `die Dateireihenfolge entscheiden. Eine der beiden entfernen oder ihre Version erhoehen.`
+    );
+  }
+  return `Messdefinition ${schluessel} nicht gefunden.`;
+}
+
 /**
  * Darf aus dieser Definition eine Quote materialisiert werden?
  * Vier Bedingungen, alle menschlich verantwortet: eingefroren, und die drei
