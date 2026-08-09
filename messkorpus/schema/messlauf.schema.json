@@ -99,6 +99,46 @@
             "enum": ["abgeschlossen", "rueckweisung_offen", "zwischenentscheid", "ungeklaert"],
             "description": "Ist die gemessene Rechtsfrage endgueltig entschieden? Unabhaengig von der Rechtskraft des Entscheids selbst."
           },
+          "erledigungsweg": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["modus", "prozessgrund", "beleg"],
+            "description": "Auf welchem Weg die Streitigkeit endete — zweiachsig: 'modus' nennt die Form der Erledigung, 'prozessgrund' nur bei prozessualer Erledigung deren Ursache. Strikt getrennt vom 'messausgang': derselbe prozessuale Weg kann zu unterschiedlichen endgueltigen Rechtswirkungen fuehren, deshalb wird gezaehlt wird der Messausgang, nicht der Weg.",
+            "properties": {
+              "modus": {
+                "enum": ["materiell_entschieden", "prozessual_erledigt", "rueckweisung_offen"],
+                "description": "rueckweisung_offen: die gemessene Rechtsfrage ist gerade nicht entschieden — dann ist der Messausgang 'offen'."
+              },
+              "prozessgrund": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "rechtsmittelbegruendung_unzureichend",
+                      "aktivlegitimation_fehlte",
+                      "klagebewilligung_fehlte_oder_ungueltig",
+                      "anfechtungsfrist_verwirkt",
+                      "instanzverwirkung",
+                      "nichteintreten_sonstiger_grund",
+                      "sonstiger_prozessgrund"
+                    ]
+                  },
+                  { "type": "null" }
+                ],
+                "description": "Nur bei modus='prozessual_erledigt' belegt, sonst ausdruecklich null. Der Schluessel steht immer da, damit ein Fehlen nicht als 'noch nicht kodiert' durchgeht."
+              },
+              "beleg": { "type": "string", "minLength": 10 },
+              "stand_datum": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                "description": "Datum des Entscheids oder Verfahrensakts, der den hier kodierten Stand begruendet. NICHT dasselbe wie treffer.datum: das ist das Rohmetadatum des urspruenglichen Suchtreffers. Stammt der Endzustand aus einem nach CR-03 E2 zulaessigen verknuepften Folgeentscheid, ist dessen Datum massgeblich. Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer und nie spaeter als der Datenstand des Laufs; im Modell 'materielle_pruefung' ohne Bedeutung. Gehoert nicht in den Rohmetadaten-Fingerprint."
+              },
+              "quelle": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Primaerquelle des kodierten Standes: der Roh-Treffer selbst oder ein ausdruecklich verknuepfter Entscheid derselben Verfahrenskette (CR-03 Auflage E2). Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer; die Laufzeitpruefung lehnt dort zusaetzlich reine Leerzeichen ab."
+              }
+            }
+          },
           "messausgang": {
             "type": "object",
             "additionalProperties": false,
@@ -107,7 +147,10 @@
             "properties": {
               "messdefinition_id": { "type": "string", "pattern": "^MD-[0-9]{3}$" },
               "messdefinition_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
-              "wert": { "enum": ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar"] },
+              "wert": {
+                "enum": ["durchgesetzt", "teilweise", "nicht_durchgesetzt", "nicht_anwendbar", "offen"],
+                "description": "'offen' ist kein Ergebnis, sondern dessen ausdrueckliches Fehlen: die endgueltige Rechtswirkung steht noch aus. Der Wert zaehlt nie als Erfolg oder Misserfolg und sperrt jede Quote; er ist nur unter auswertungsmodell='endwirkung' definiert."
+              },
               "beleg": { "type": "string", "minLength": 10 },
               "quelle": { "type": "string" }
             }
