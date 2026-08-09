@@ -240,12 +240,19 @@ describe("bilanz", () => {
 });
 
 describe("zaehleinheiten", () => {
-  function eingeschlossen(id: string, einheit: string, story?: string, wert: "durchgesetzt" | "nicht_durchgesetzt" = "durchgesetzt") {
+  function eingeschlossen(
+    id: string,
+    einheit: string,
+    story?: string,
+    wert: "durchgesetzt" | "nicht_durchgesetzt" = "durchgesetzt",
+    datum?: string,
+  ) {
     return treffer({
       quelle_id: id,
       status: "eingeschlossen",
       zaehleinheit: einheit,
       story_id: story,
+      datum,
       abschluss_status: "abgeschlossen",
       messausgang: {
         messdefinition_id: DEFINITION.id,
@@ -286,12 +293,14 @@ describe("zaehleinheiten", () => {
     expect(ergebnis.fehler.join(" ")).toContain("doppelt in den Nenner");
   });
 
-  it("meldet widersprechende Normausgaenge innerhalb einer Einheit", () => {
+  it("meldet widersprechende Normausgaenge desselben Standes", () => {
+    // Gleiches Datum, unvereinbare Endausgaenge: hier gibt es kein "spaeter",
+    // das den Widerspruch aufloeste.
     const ergebnis = zaehleinheiten(
       lauf(
         [
-          eingeschlossen("a1", "streit-1", "FS-101", "durchgesetzt"),
-          eingeschlossen("a2", "streit-1", "FS-101", "nicht_durchgesetzt"),
+          eingeschlossen("a1", "streit-1", "FS-101", "durchgesetzt", "2020-05-01"),
+          eingeschlossen("a2", "streit-1", "FS-101", "nicht_durchgesetzt", "2020-05-01"),
         ],
         { abrufe: [abruf(2)] },
       ),
@@ -306,13 +315,18 @@ describe("zaehleinheiten", () => {
       status: "eingeschlossen",
       zaehleinheit: "streit-1",
       story_id: "FS-101",
+      datum: "2019-03-01",
       abschluss_status: "rueckweisung_offen",
     });
     const ergebnis = zaehleinheiten(
-      lauf([rueckweisung, eingeschlossen("a2", "streit-1", "FS-101")], { abrufe: [abruf(2)] }),
+      lauf([rueckweisung, eingeschlossen("a2", "streit-1", "FS-101", "durchgesetzt", "2020-04-01")], {
+        abrufe: [abruf(2)],
+      }),
       DEFINITION,
     );
+    expect(ergebnis.fehler).toEqual([]);
     expect(ergebnis.einheiten[0]?.abschluss_status).toBe("abgeschlossen");
+    expect(ergebnis.einheiten[0]?.messausgang?.wert).toBe("durchgesetzt");
   });
 });
 

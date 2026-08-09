@@ -305,24 +305,6 @@ describe("8 — Rueckweisung: strukturell gueltig, aber niemals zaehlbar", () =>
     expect(einheiten[0]!.abschluss_status).not.toBe("abgeschlossen");
   });
 
-  it("ein offener Entscheid verdraengt den Abschluss der ganzen Einheit", () => {
-    // Sonst wuerde ein spaeterer Endentscheid die noch offene Rechtsfrage
-    // ueberdecken und die Einheit als abgeschlossen in den Nenner tragen.
-    const l = endwirkungsLauf([
-      vollstaendig(1, { zaehleinheit: "streit-x", abschluss_status: "abgeschlossen" }),
-      vollstaendig(2, {
-        zaehleinheit: "streit-x",
-        abschluss_status: "rueckweisung_offen",
-        erledigungsweg: weg({ modus: "rueckweisung_offen" }),
-        messausgang: ausgang("offen"),
-      }),
-    ]);
-    const einheit = zaehleinheiten(l, ENDWIRKUNG).einheiten.find((e) => e.id === "streit-x");
-    expect(einheit).toBeDefined();
-    expect(einheit!.offen).toBe(true);
-    expect(einheit!.abschluss_status).toBe("rueckweisung_offen");
-  });
-
   it("sie sperrt die Quote", () => {
     const faelle = new Map([["FS-101", fall("FS-101")]]);
     const sperre = sperren(endwirkungsLauf([offenerTreffer]), ENDWIRKUNG, faelle);
@@ -357,6 +339,165 @@ describe("8 — Rueckweisung: strukturell gueltig, aber niemals zaehlbar", () =>
     expect(() => berechneMessquote(l, ENDWIRKUNG, faelle, { wert: "offen", zeitstand: HEUTE })).toThrow(
       /kein zaehlbarer Messausgang/,
     );
+  });
+});
+
+describe("Terminaler Stand einer Verfahrenskette", () => {
+  // "offen" beschreibt den Stand ZU SEINEM ZEITPUNKT, nicht auf Dauer. Eine
+  // Rueckweisung von 2019, die ein Endentscheid von 2020 erledigt hat, darf
+  // die Einheit nicht dauerhaft offen halten; umgekehrt darf ein Entscheid
+  // von 2020, der die Frage wieder aufmacht, nicht von einem Endentscheid
+  // von 2019 ueberdeckt werden. Gezaehlt wird der letzte Stand.
+
+  const EINHEIT = "streit-kette";
+
+  /** Ein Glied derselben Verfahrenskette — gemeinsame Einheit, gemeinsamer Fall. */
+  function glied(name: string, teil: Partial<Treffer>): Treffer {
+    return vollstaendig(0, { quelle_id: `q-${name}`, zaehleinheit: EINHEIT, story_id: "FS-100", ...teil });
+  }
+
+  const rueckweisung = (datum: string): Treffer =>
+    glied(`rw-${datum}`, {
+      datum,
+      abschluss_status: "rueckweisung_offen",
+      erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+      messausgang: ausgang("offen"),
+    });
+
+  const endentscheid = (datum: string, wert: "durchgesetzt" | "nicht_durchgesetzt"): Treffer =>
+    glied(`end-${datum}-${wert}`, { datum, abschluss_status: "abgeschlossen", messausgang: ausgang(wert) });
+
+  function einheitAus(liste: Treffer[]) {
+    const ergebnis = zaehleinheiten(endwirkungsLauf(liste), ENDWIRKUNG);
+    return { ergebnis, einheit: ergebnis.einheiten.find((e) => e.id === EINHEIT) };
+  }
+
+  it("A — 2019 Rueckweisung, 2020 durchgesetzt: abgeschlossen und durchgesetzt", () => {
+    const { ergebnis, einheit } = einheitAus([rueckweisung("2019-03-01"), endentscheid("2020-04-01", "durchgesetzt")]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit!.abschluss_status).toBe("abgeschlossen");
+    expect(einheit!.messausgang?.wert).toBe("durchgesetzt");
+    expect(einheit!.offen).toBe(false);
+  });
+
+  it("B — 2019 Rueckweisung, 2020 nicht_durchgesetzt: abgeschlossen und nicht_durchgesetzt", () => {
+    const { ergebnis, einheit } = einheitAus([
+      rueckweisung("2019-03-01"),
+      endentscheid("2020-04-01", "nicht_durchgesetzt"),
+    ]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit!.abschluss_status).toBe("abgeschlossen");
+    expect(einheit!.messausgang?.wert).toBe("nicht_durchgesetzt");
+    expect(einheit!.offen).toBe(false);
+  });
+
+  it("die Reihenfolge im Array aendert nichts — geordnet wird nach Datum", () => {
+    const vorwaerts = einheitAus([rueckweisung("2019-03-01"), endentscheid("2020-04-01", "durchgesetzt")]);
+    const rueckwaerts = einheitAus([endentscheid("2020-04-01", "durchgesetzt"), rueckweisung("2019-03-01")]);
+    expect(rueckwaerts.einheit!.abschluss_status).toBe(vorwaerts.einheit!.abschluss_status);
+    expect(rueckwaerts.einheit!.messausgang?.wert).toBe(vorwaerts.einheit!.messausgang?.wert);
+    expect(rueckwaerts.einheit!.offen).toBe(false);
+  });
+
+  it("C — 2019 abgeschlossen, 2020 Rueckweisung: die Einheit ist wieder offen", () => {
+    const { ergebnis, einheit } = einheitAus([endentscheid("2019-03-01", "durchgesetzt"), rueckweisung("2020-04-01")]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit!.offen).toBe(true);
+    expect(einheit!.abschluss_status).toBe("rueckweisung_offen");
+    expect(einheit!.messausgang?.wert).toBe("offen");
+  });
+
+  it("D — ein BGE/BGer-Paar am selben Datum mit gleichem Ausgang ist kein Konflikt", () => {
+    const { ergebnis, einheit } = einheitAus([
+      glied("bger", { datum: "2020-04-01", gericht: "CH_BGer", messausgang: ausgang("durchgesetzt") }),
+      glied("bge", { datum: "2020-04-01", gericht: "CH_BGE", messausgang: ausgang("durchgesetzt") }),
+    ]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit!.treffer).toHaveLength(2);
+    expect(einheit!.abschluss_status).toBe("abgeschlossen");
+    expect(einheit!.messausgang?.wert).toBe("durchgesetzt");
+  });
+
+  it("D — dasselbe Paar auch ohne Datum, solange es denselben Stand abbildet", () => {
+    // Ohne Zustandswechsel ist keine Chronologie noetig.
+    const { ergebnis, einheit } = einheitAus([
+      glied("bger", { gericht: "CH_BGer", messausgang: ausgang("durchgesetzt") }),
+      glied("bge", { gericht: "CH_BGE", messausgang: ausgang("durchgesetzt") }),
+    ]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit!.messausgang?.wert).toBe("durchgesetzt");
+  });
+
+  it("E — gleiches Datum mit unvereinbaren Endausgaengen ist ein Fehler", () => {
+    const { ergebnis, einheit } = einheitAus([
+      endentscheid("2020-04-01", "durchgesetzt"),
+      endentscheid("2020-04-01", "nicht_durchgesetzt"),
+    ]);
+    expect(ergebnis.fehler.join("\n")).toContain("widersprechende Normausgaenge");
+    expect(einheit!.messausgang).toBeUndefined();
+  });
+
+  it("F — fehlt das Datum, obwohl der Stand wechselt, wird nicht geraten", () => {
+    const ohneDatum = glied("end-ohne-datum", { abschluss_status: "abgeschlossen", messausgang: ausgang("durchgesetzt") });
+    const { ergebnis, einheit } = einheitAus([rueckweisung("2019-03-01"), ohneDatum]);
+    const text = ergebnis.fehler.join("\n");
+    expect(text).toContain("kein Entscheiddatum");
+    expect(text).toContain("nicht geraten");
+    // Kein stiller Rueckfall auf eine der beiden Lesarten.
+    expect(einheit!.messausgang).toBeUndefined();
+    expect(einheit!.abschluss_status).toBe("ungeklaert");
+  });
+
+  it("G — ein frueheres \"offen\" ist kein widersprechender Normausgang", () => {
+    const { ergebnis } = einheitAus([rueckweisung("2019-03-01"), endentscheid("2020-04-01", "durchgesetzt")]);
+    expect(ergebnis.fehler.join("\n")).not.toContain("widersprechende");
+  });
+
+  it("H — nach dem spaeteren Endentscheid sperrt die fruehere Rueckweisung die Quote nicht mehr", () => {
+    const basis = endwirkungsKorpus(12, 6);
+    const mitKette: Treffer[] = [
+      vollstaendig(0, {
+        quelle_id: "q0-2019",
+        datum: "2019-03-01",
+        abschluss_status: "rueckweisung_offen",
+        erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+        messausgang: ausgang("offen"),
+      }),
+      vollstaendig(0, { quelle_id: "q0-2020", datum: "2020-04-01", messausgang: ausgang("durchgesetzt") }),
+      ...basis.lauf.treffer.slice(1),
+    ];
+
+    const sperre = sperren(endwirkungsLauf(mitKette), ENDWIRKUNG, basis.faelle);
+    expect(sperre.gruende).toEqual([]);
+    expect(sperre.ok).toBe(true);
+
+    // Und die Quote entspricht der ohne Rueckweisung — gezaehlt wird die
+    // Einheit, nicht ihre Entscheide.
+    const mit = berechneMessquote(endwirkungsLauf(mitKette), ENDWIRKUNG, basis.faelle, {
+      wert: "durchgesetzt",
+      zeitstand: HEUTE,
+    });
+    const ohne = berechneMessquote(basis.lauf, ENDWIRKUNG, basis.faelle, { wert: "durchgesetzt", zeitstand: HEUTE });
+    expect(mit.zaehleinheiten).toBe(ohne.zaehleinheiten);
+    expect(mit.quote.anzeige).toBe(ohne.quote.anzeige);
+  });
+
+  it("bleibt die Kette offen, sperrt sie weiterhin", () => {
+    const basis = endwirkungsKorpus(12, 6);
+    const mitOffenerKette: Treffer[] = [
+      vollstaendig(0, { quelle_id: "q0-2019", datum: "2019-03-01", messausgang: ausgang("durchgesetzt") }),
+      vollstaendig(0, {
+        quelle_id: "q0-2020",
+        datum: "2020-04-01",
+        abschluss_status: "rueckweisung_offen",
+        erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+        messausgang: ausgang("offen"),
+      }),
+      ...basis.lauf.treffer.slice(1),
+    ];
+    const sperre = sperren(endwirkungsLauf(mitOffenerKette), ENDWIRKUNG, basis.faelle);
+    expect(sperre.ok).toBe(false);
+    expect(sperre.gruende.join("\n")).toContain('Messausgang "offen"');
   });
 });
 

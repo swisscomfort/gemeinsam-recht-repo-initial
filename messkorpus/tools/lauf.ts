@@ -489,15 +489,103 @@ export function bilanz(lauf: Messlauf): Bilanz {
 
 /* ---------- Zaehleinheiten ---------- */
 
+/** Der Stand, den ein einzelner Entscheid zur Messfrage hinterlaesst. */
+interface Kettenstand {
+  abschluss_status?: AbschlussStatus;
+  messausgang?: Messausgang;
+}
+
+/**
+ * Traegt dieser Treffer ueberhaupt eine Aussage zum Stand der Messfrage?
+ * Ein Messausgang zu einer anderen Fassung zaehlt nicht mit — er ist eine
+ * Aussage ueber eine andere Messung.
+ */
+function standDesTreffers(treffer: Treffer, definition: Messdefinition): Kettenstand | null {
+  const messausgang =
+    treffer.messausgang !== undefined && gehoertZu(treffer.messausgang, definition) ? treffer.messausgang : undefined;
+  if (treffer.abschluss_status === undefined && messausgang === undefined) return null;
+  return { abschluss_status: treffer.abschluss_status, messausgang };
+}
+
+/** Vergleichsschluessel eines Standes — zwei gleiche Schluessel sagen dasselbe. */
+function standSchluessel(stand: Kettenstand): string {
+  return `${stand.abschluss_status ?? "(ohne)"}/${stand.messausgang?.wert ?? "(ohne)"}`;
+}
+
+/**
+ * Bestimmt den terminalen Stand einer Verfahrenskette.
+ *
+ * Der Sinn: "offen" ist ein Zwischenzustand. Eine Rueckweisung von 2019, die
+ * ein Endentscheid von 2020 erledigt hat, darf die Einheit nicht dauerhaft
+ * offen halten — und ein Endentscheid von 2019, den ein Entscheid von 2020
+ * wieder aufgemacht hat, darf sie nicht als abgeschlossen ausweisen. Gezaehlt
+ * wird der letzte Stand, nicht der guenstigste und nicht der erste.
+ *
+ * Vier Faelle:
+ *   1. Alle Entscheide sagen dasselbe (z. B. ein BGE/BGer-Paar desselben
+ *      Entscheids) — die Reihenfolge ist dann ohne Belang.
+ *   2. Die Staende unterscheiden sich und lassen sich nach Datum ordnen —
+ *      der spaeteste gilt.
+ *   3. Am spaetesten Datum stehen unvereinbare Staende nebeneinander — nicht
+ *      aufloesbar, Fehler.
+ *   4. Die Staende unterscheiden sich, aber es fehlt ein Datum — die
+ *      Reihenfolge waere noetig und ist unbekannt. Es wird nicht geraten.
+ */
+function terminalerStand(
+  id: string,
+  treffer: readonly Treffer[],
+  definition: Messdefinition,
+): { stand: Kettenstand | null; fehler: string[] } {
+  const kette = treffer
+    .map((t) => ({ treffer: t, stand: standDesTreffers(t, definition) }))
+    .filter((e): e is { treffer: Treffer; stand: Kettenstand } => e.stand !== null);
+
+  if (kette.length === 0) return { stand: null, fehler: [] };
+
+  const schluessel = new Set(kette.map((e) => standSchluessel(e.stand)));
+  if (schluessel.size === 1) return { stand: kette[0]!.stand, fehler: [] };
+
+  const ohneDatum = kette.filter((e) => e.treffer.datum === undefined);
+  if (ohneDatum.length > 0) {
+    return {
+      stand: null,
+      fehler: [
+        `Zaehleinheit ${id} wechselt den Stand (${[...schluessel].sort().join(" / ")}), aber ` +
+          `${ohneDatum.map((e) => e.treffer.quelle_id).join(", ")} traegt kein Entscheiddatum. ` +
+          `Welcher Stand der letzte ist, laesst sich damit nicht bestimmen — und wird nicht geraten.`,
+      ],
+    };
+  }
+
+  const spaetestes = kette.reduce((bisher, e) => (e.treffer.datum! > bisher ? e.treffer.datum! : bisher), "");
+  const letzte = kette.filter((e) => e.treffer.datum === spaetestes);
+  const letzteSchluessel = new Set(letzte.map((e) => standSchluessel(e.stand)));
+  if (letzteSchluessel.size > 1) {
+    return {
+      stand: null,
+      fehler: [
+        `Zaehleinheit ${id} traegt am ${spaetestes} widersprechende Normausgaenge bzw. Abschlussstaende ` +
+          `(${[...letzteSchluessel].sort().join(" / ")}) — nicht automatisch aufloesbar. ` +
+          `Gleichzeitige Entscheide duerfen denselben Stand mehrfach abbilden, aber keine zwei verschiedenen.`,
+      ],
+    };
+  }
+
+  return { stand: letzte[0]!.stand, fehler: [] };
+}
+
 export interface Zaehleinheit {
   id: string;
   treffer: Treffer[];
   story_id?: string;
+  /** Terminaler Abschlussstand der Verfahrenskette, nicht ihr guenstigster. */
   abschluss_status: AbschlussStatus;
+  /** Terminaler Messausgang der Kette — der Stand des letzten Entscheids. */
   messausgang?: Messausgang;
   /**
-   * Mindestens ein Entscheid der Einheit laesst die endgueltige Rechtswirkung
-   * offen. Eine solche Einheit ist nie zaehlfaehig und sperrt jede Quote.
+   * Der TERMINALE Zustand der Kette laesst die endgueltige Rechtswirkung offen.
+   * Eine fruehere Rueckweisung, die ein spaeterer Endentscheid abgeschlossen
+   * hat, ergibt hier `false` — sie war ein Zwischenzustand.
    */
   offen: boolean;
 }
@@ -513,8 +601,18 @@ export interface Zaehleinheiten {
  * Revision) sind EINE Einheit und zaehlen einmal — sonst zaehlt ein
  * langer Streit mehrfach und verzerrt die Quote.
  *
- * Widersprueche innerhalb einer Einheit werden nicht aufgeloest, sondern
- * gemeldet: sie sperren die Quote.
+ * Massgeblich ist der TERMINALE Zustand der Verfahrenskette, nicht die
+ * Vereinigung aller je aufgetretenen Zustaende. Eine Rueckweisung beschreibt
+ * den Stand zu ihrem Zeitpunkt; ein spaeterer Endentscheid derselben Kette
+ * entscheidet die Messfrage abschliessend. Umgekehrt kann ein spaeterer
+ * Entscheid eine schon entschiedene Frage wieder oeffnen. Geordnet wird nach
+ * dem gespeicherten Entscheiddatum — nie nach der Reihenfolge im Array, die
+ * keine juristische Chronologie ist.
+ *
+ * Widersprueche innerhalb eines Standes werden nicht aufgeloest, sondern
+ * gemeldet: sie sperren die Quote. Ebenso, wenn die Reihenfolge fuer die
+ * Aufloesung noetig waere, die Datumsangaben dafuer aber fehlen — dann wird
+ * nicht geraten.
  */
 export function zaehleinheiten(lauf: Messlauf, definition: Messdefinition): Zaehleinheiten {
   const fehler: string[] = [];
@@ -553,41 +651,16 @@ export function zaehleinheiten(lauf: Messlauf, definition: Messdefinition): Zaeh
       storyZuEinheit.set(storyId, id);
     }
 
-    const ausgaenge = treffer
-      .map((t) => t.messausgang)
-      .filter((m): m is Messausgang => m !== undefined && gehoertZu(m, definition));
-    const werte = new Set(ausgaenge.map((m) => m.wert));
-    if (werte.size > 1) {
-      fehler.push(
-        `Zaehleinheit ${id} traegt widersprechende Normausgaenge (${[...werte].join(", ")}) — nicht automatisch aufloesbar.`,
-      );
-    }
-
-    /* Der Abschluss der Einheit ist der guenstigste Stand ihrer Entscheide:
-       ein spaeterer Endentscheid schliesst eine fruehere Rueckweisung ab. */
-    const roherAbschluss: AbschlussStatus = treffer.some((t) => t.abschluss_status === "abgeschlossen")
-      ? "abgeschlossen"
-      : (treffer.find((t) => t.abschluss_status !== undefined)?.abschluss_status ?? "ungeklaert");
-
-    /* Ein offener Messausgang verdraengt "abgeschlossen": eine Einheit, deren
-       endgueltige Rechtswirkung noch aussteht, darf nie als abgeschlossene
-       Zaehleinheit gelten — sonst ginge sie in den Nenner ein, ohne einen
-       zaehlbaren Ausgang zu haben. */
-    const offenerTreffer = treffer.find(
-      (t) => t.messausgang !== undefined && gehoertZu(t.messausgang, definition) && t.messausgang.wert === "offen",
-    );
-    const abschluss: AbschlussStatus =
-      offenerTreffer && roherAbschluss === "abgeschlossen"
-        ? (offenerTreffer.abschluss_status ?? "ungeklaert")
-        : roherAbschluss;
+    const auflösung = terminalerStand(id, treffer, definition);
+    fehler.push(...auflösung.fehler);
 
     einheiten.push({
       id,
       treffer,
       story_id: storyId,
-      abschluss_status: abschluss,
-      messausgang: ausgaenge[0],
-      offen: offenerTreffer !== undefined,
+      abschluss_status: auflösung.stand?.abschluss_status ?? "ungeklaert",
+      messausgang: auflösung.stand?.messausgang,
+      offen: auflösung.stand?.messausgang?.wert === "offen",
     });
   }
 
