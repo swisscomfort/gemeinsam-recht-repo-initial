@@ -22,7 +22,7 @@ import {
 } from "../tools/definition.ts";
 import { pruefeLauf, type Messlauf } from "../tools/lauf.ts";
 import { berichte } from "../tools/pruefen.ts";
-import { leseDefinitionen, leseJson, messkorpusPfad } from "../tools/umgebung.ts";
+import { leseDefinitionen, leseJson, leseText, messkorpusPfad, repoPfad } from "../tools/umgebung.ts";
 import { DEFINITION, lauf, treffer } from "./fixtures.ts";
 
 /** Fixture-Definition in einer anderen Fassung — gleiche id, andere version. */
@@ -171,6 +171,9 @@ describe("D — beide Werkzeuge loesen nach derselben Regel auf", () => {
   });
 });
 
+/** Kanonischer Freeze-Hash von MD-001@3.0.0 — Eintrag in FREEZE.txt, 2026-08-10. */
+const V3_FREEZE_HASH = "576d55c2464cbb4ceef8c8cccd2749ba9c70c78e67a16cf6b5f07c4f075cdc6f";
+
 describe("Der reale Parallelbestand: MD-001 in zwei Fassungen", () => {
   // Seit dem v3-Entwurf liegen zwei echte MD-001-Dateien nebeneinander. Bis
   // hierher pruefte nur die synthetische MD-999, ob das gutgeht — jetzt tut
@@ -196,14 +199,29 @@ describe("Der reale Parallelbestand: MD-001 in zwei Fassungen", () => {
     );
   });
 
-  it("v3.0.0 wird eindeutig gefunden und ist ein Entwurf", () => {
+  it("v3.0.0 wird eindeutig gefunden und behaelt ihren eingefrorenen Hash", () => {
     const auflösung = findeFassung(register, { id: "MD-001", version: "3.0.0" });
     expect(auflösung.art).toBe("gefunden");
     const definition = (auflösung as { definition: Messdefinition }).definition;
-    expect(definition.status).toBe("entwurf");
+    expect(definition.status).toBe("eingefroren");
     expect(definition.auswertungsmodell).toBe("endwirkung");
-    // Aus einem Entwurf entsteht keine Quote.
-    expect(darfQuoteMaterialisieren(definition).ok).toBe(false);
+    expect(definition.rechtskraft_regel.pruefstand).toBe("fachlich_bestaetigt");
+    expect(definition.abschluss_regel.pruefstand).toBe("fachlich_bestaetigt");
+    expect(definitionsHash(definition)).toBe(V3_FREEZE_HASH);
+    // Auf Definitionsebene ist die Quote jetzt freigegeben. Eine reale Quote
+    // existiert damit noch nicht: der Messlauf fehlt, und er traegt eigene
+    // Sperren (Vollstaendigkeit, Abschluss, Normausgang je Treffer).
+    expect(darfQuoteMaterialisieren(definition).ok).toBe(true);
+  });
+
+  it("FREEZE.txt traegt exakt den kanonischen v3-Hash aus definitionsHash()", () => {
+    // Kein eigenes Freeze-Werkzeug: der Eintrag in FREEZE.txt und die
+    // kanonische Form der Datei muessen dasselbe sagen, sonst ist der
+    // Freeze-Anker wertlos.
+    const block = leseText(repoPfad("FREEZE.txt")).split("MESSDEFINITION MD-001 v3.0.0")[1];
+    expect(block).toBeDefined();
+    const hashes = block?.match(/[0-9a-f]{64}/g) ?? [];
+    expect(hashes[0]).toBe(V3_FREEZE_HASH);
   });
 
   it("ML-001 bleibt gegen v2.0.0 gueltig — die neue Fassung verdraengt sie nicht", () => {

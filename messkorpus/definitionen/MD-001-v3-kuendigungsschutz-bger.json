@@ -1,7 +1,7 @@
 {
   "id": "MD-001",
   "version": "3.0.0",
-  "status": "entwurf",
+  "status": "eingefroren",
   "stand": "2026-08-10",
   "auswertungsmodell": "endwirkung",
   "messfrage": "Unter den im definierten Bundesgerichtskorpus erfassten Kuendigungsstreitigkeiten, in denen eine Mietpartei eine konkrete Kuendigung unter Berufung auf Art. 271/271a OR angegriffen hat und deren endgueltiger rechtlicher Zustand am Datenstand innerhalb der dokumentierten Verfahrenskette sicher bestimmbar ist: In wie vielen wurde der Kuendigungsschutz im endgueltigen Ergebnis durchgesetzt, also die konkrete Kuendigung aufgrund des geltend gemachten Kuendigungsschutzes aufgehoben oder unwirksam? Gemessen wird die endgueltige Rechtswirkung auf genau diese Kuendigung, NICHT die Frage, ob das Bundesgericht selbst materiell darueber entschieden hat: eine prozessuale Erledigung, die die Anfechtung endgueltig beendet, ist ein ebenso wirklicher Ausgang wie eine materielle Beurteilung. Eine Erstreckung des Mietverhaeltnisses nach Art. 272 OR zaehlt hier NICHT als Erfolg; sie ist eine andere Rechtsfolge und gehoert in eine eigene Messdefinition.",
