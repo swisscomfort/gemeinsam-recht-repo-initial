@@ -1,0 +1,85 @@
+{
+  "id": "MD-001",
+  "version": "3.0.0",
+  "status": "eingefroren",
+  "stand": "2026-08-10",
+  "auswertungsmodell": "endwirkung",
+  "messfrage": "Unter den im definierten Bundesgerichtskorpus erfassten Kuendigungsstreitigkeiten, in denen eine Mietpartei eine konkrete Kuendigung unter Berufung auf Art. 271/271a OR angegriffen hat und deren endgueltiger rechtlicher Zustand am Datenstand innerhalb der dokumentierten Verfahrenskette sicher bestimmbar ist: In wie vielen wurde der Kuendigungsschutz im endgueltigen Ergebnis durchgesetzt, also die konkrete Kuendigung aufgrund des geltend gemachten Kuendigungsschutzes aufgehoben oder unwirksam? Gemessen wird die endgueltige Rechtswirkung auf genau diese Kuendigung, NICHT die Frage, ob das Bundesgericht selbst materiell darueber entschieden hat: eine prozessuale Erledigung, die die Anfechtung endgueltig beendet, ist ein ebenso wirklicher Ausgang wie eine materielle Beurteilung. Eine Erstreckung des Mietverhaeltnisses nach Art. 272 OR zaehlt hier NICHT als Erfolg; sie ist eine andere Rechtsfolge und gehoert in eine eigene Messdefinition.",
+  "norm": {
+    "norm_fundstelle": "Art. 271 und Art. 271a OR (SR 220)",
+    "pruefstand": "fachlich_bestaetigt"
+  },
+  "quelle": {
+    "name": "entscheidsuche.ch",
+    "endpunkt": "https://entscheidsuche.ch/_search.php",
+    "abrufart": "metadaten"
+  },
+  "abfrage": {
+    "suchanfrage": "(\"271a\" OR \"Art. 271\" OR \"art. 271\" OR \"missbräuchliche Kündigung\" OR \"congé abusif\" OR \"annulation du congé\" OR \"disdetta abusiva\" OR \"annullamento della disdetta\") AND (Mietverhältnis OR Mietvertrag OR Mietzins OR \"bail à loyer\" OR locataire OR \"contratto di locazione\" OR conduttore)",
+    "gerichtsfilter": ["CH_BGer", "CH_BGE"]
+  },
+  "zeitraum": {
+    "von": "2026-01-01",
+    "bis": "2026-07-31"
+  },
+  "einschluss": [
+    {
+      "code": "konkrete_kuendigung_angegriffen",
+      "beschreibung": "Gegenstand des Verfahrens ist die Anfechtung einer konkreten Kuendigung eines Mietverhaeltnisses.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "mietpartei_beruft_sich",
+      "beschreibung": "Die Mietpartei stuetzt sich fuer genau diese konkrete Kuendigung auf den Schutz nach Art. 271 und/oder Art. 271a OR.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "endzustand_bestimmbar",
+      "beschreibung": "Der endgueltige rechtliche Zustand genau dieser angegriffenen Kuendigung ist am Datenstand innerhalb der nach CR-03 E2 zulaessigen dokumentierten Verfahrenskette sicher bestimmbar. Eine eigene materielle Beurteilung von Art. 271/271a OR durch das Bundesgericht ist dafuer NICHT erforderlich.",
+      "bezug": "verfahrensgegenstand"
+    }
+  ],
+  "ausschluss": [
+    {
+      "code": "andere_rechtsfrage",
+      "beschreibung": "Art. 271/271a OR ist nicht Teil der Anfechtung der konkreten Kuendigung; das Verfahren betrifft eine andere Bestimmung.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "nur_erstreckung",
+      "beschreibung": "Streitig ist allein die Erstreckung des Mietverhaeltnisses nach Art. 272 OR, nicht die Anfechtung der Kuendigung nach Art. 271/271a OR.",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "kein_mietverhaeltnis",
+      "beschreibung": "Dem Verfahren liegt kein Mietverhaeltnis nach Art. 253 ff. OR zugrunde (etwa Pacht oder Gebrauchsleihe).",
+      "bezug": "verfahrensgegenstand"
+    },
+    {
+      "code": "nur_prozessuale_nebenfrage",
+      "beschreibung": "Der Entscheid behandelt allein eine Nebenfrage neben der Hauptsache, etwa Kosten oder aufschiebende Wirkung, und beendet den Streit ueber die konkrete Kuendigung nicht selbst endgueltig. Eine prozessuale Erledigung, die diesen Streit endgueltig beendet, faellt ausdruecklich NICHT hierunter: sie ist ein Erledigungsweg und wird als solcher erfasst, nicht als Grund, die Streitigkeit aus dem Nenner zu nehmen.",
+      "bezug": "formal"
+    },
+    {
+      "code": "text_nicht_zugaenglich",
+      "beschreibung": "Der bei der Quelle verzeichnete Entscheidtext ist nicht abrufbar; die Zuordnung ist datenseitig unmoeglich.",
+      "bezug": "datenlage"
+    }
+  ],
+  "rechtskraft_regel": {
+    "art": "bundesgericht_art61_bgg",
+    "rechtsquelle": "Art. 61 BGG (SR 173.110); fuer die Beurteilung kantonaler Folgeentscheide zusaetzlich Art. 72 ff., Art. 74, Art. 75, Art. 90 ff. und Art. 113 ff. BGG",
+    "begruendung": "Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag ihrer Ausfaellung in Rechtskraft (Art. 61 BGG); ein ordentliches Rechtsmittel dagegen besteht nicht. Die Revision nach Art. 121 ff. BGG aendert daran nichts. WICHTIG UND NEU GEGENUEBER v2.0.0: Art. 61 BGG belegt ausschliesslich die Rechtskraft des Bundesgerichtsentscheids SELBST. Fuer einen kantonalen Entscheid folgt dessen bundesgerichtliche Anfechtbarkeit und damit die Beurteilung seiner Endgueltigkeit aus den jeweils einschlaegigen gesetzlichen Rechtsmittelvoraussetzungen des BGG (namentlich Art. 72 ff. BGG zur Beschwerde in Zivilsachen, Art. 74 BGG zum Streitwerterfordernis, Art. 75 BGG zu den Vorinstanzen und Art. 90 ff. BGG zur Anfechtbarkeit von End-, Teil-, Vor- und Zwischenentscheiden); sie folgt insbesondere NICHT allein aus seiner Stellung als kantonal letztinstanzlicher Entscheid und NICHT aus Art. 61 BGG. Wo die Beschwerde in Zivilsachen nicht offensteht, sind gegebenenfalls auch die Voraussetzungen der subsidiaeren Verfassungsbeschwerde nach Art. 113 ff. BGG zu beruecksichtigen. Es wird hier also gerade nicht behauptet, jeder kantonale Entscheid koenne ans Bundesgericht gezogen werden. Wird der fuer die Messung massgebliche Endzustand aus einem kantonalen Folgeentscheid abgeleitet, muss innerhalb der dokumentierten Verfahrenskette sicher feststehen, dass dieser Zustand am Datenstand fuer die konkrete Kuendigung endgueltig ist. Andernfalls bleibt der Treffer ungeklaert.",
+    "pruefstand": "fachlich_bestaetigt"
+  },
+  "abschluss_regel": {
+    "art": "endentscheid_zur_messfrage",
+    "begruendung": "Rechtskraft und Fallabschluss bleiben zwei verschiedene Dinge. Zaehlfaehig ist die Streitigkeit erst, wenn am Datenstand keine weitere Entscheidung mehr erforderlich ist, die den endgueltigen rechtlichen Zustand der konkreten Kuendigung offen laesst. Massgeblich ist damit die Endwirkung auf diese Kuendigung, nicht die Form ihres Zustandekommens: eine prozessuale Erledigung, die die Anfechtung endgueltig beendet, schliesst die Streitigkeit ebenso ab wie eine materielle Beurteilung. Dafuer spricht die bundesgerichtliche Umschreibung des Endentscheids in BGE 141 III 395 E. 2.2: Ein Endentscheid liegt vor, wenn das Verfahren in der Hauptsache beendet wird; unerheblich ist, ob dies aus verfahrensrechtlichen oder materiellrechtlichen Gruenden geschieht. Eine Rueckweisung mit offenem Entscheidungsbedarf schliesst die Streitigkeit dagegen nicht ab; nach BGE 145 III 42 E. 2.1 sind Rueckweisungsentscheide im Zivilrecht grundsaetzlich Vor- und Zwischenentscheide. Sie bleibt ein Zwischenzustand und ungeklaert, solange kein nach CR-03 E2 zulaessiger Folgeentscheid den Endzustand bestimmt. Reine Zwischen- und Nebenentscheide zaehlen nie.",
+    "pruefstand": "fachlich_bestaetigt"
+  },
+  "zaehleinheit": {
+    "art": "streitigkeit",
+    "beschreibung": "Eine zugrunde liegende Kuendigungsstreitigkeit zwischen denselben Parteien um dieselbe konkrete Kuendigung ist EINE Zaehleinheit. Rueckweisung, Folgeentscheid und Revision derselben Streitigkeit werden verknuepft und zaehlen zusammen einmal; massgeblich ist der terminale Stand der Kette, geordnet nach erledigungsweg.stand_datum. Alle Treffer bleiben im Rohkorpus erhalten."
+  },
+  "selektionsneutralitaet": "Alle Kriterien stuetzen sich auf den Streitgegenstand, eine formale Eigenschaft oder die Datenlage. Keine Regel kennt vor dem Einschluss den Gewinner oder den Messausgang. Prozessuale und materielle Erledigungen werden symmetrisch behandelt: Nichteintreten, Verwirkung der Anfechtungsfrist, fehlende Aktivlegitimation, fehlende oder ungueltige Klagebewilligung und ungenuegende Rechtsmittelbegruendung sind NICHT allein deshalb blosse Nebenfragen, wenn sie die Anfechtung der konkreten Kuendigung endgueltig beenden — sie bleiben im Nenner und werden als Erledigungsweg dokumentiert, getrennt vom Messausgang. Diese Symmetrie gilt in beide Richtungen: ein Nichteintretensentscheid zulasten der Mietpartei und einer zulasten der Vermieterpartei bleiben beide im Korpus, obwohl der eine gegen und der andere fuer die Durchsetzung des Kuendigungsschutzes wirkt. Die Suchanfrage und der Gerichtsfilter sind wortgleich aus MD-001 v2.0.0 uebernommen und wurden NICHT anhand der 249 bereits gesichteten Treffer jenes Laufs nachgeschaerft — geaendert wird die Messregel, nicht rueckblickend das Fangnetz. Kein Merkmal des Redaktionstrichters (redaktion/sieb.json) beeinflusst den Nenner; die Redaktion waehlt aus dem Messkorpus aus, nie umgekehrt. Es wird nicht nach Sprache sortiert: die Abfrage erfasst Deutsch, Franzoesisch und Italienisch, damit der Nenner nicht ein Sprachgebiet abbildet und sich schweizerisch nennt. Der Zeitraum 2026-01-01 bis 2026-07-31 wurde vor jedem Abruf festgelegt: vollstaendig disjunkt zum Zeitraum von ML-001 (2015-2025) und endend mit dem letzten vollstaendig abgeschlossenen Kalendermonat vor der Praeregistrierung; er wurde weder nach beobachteter Trefferzahl noch nach beobachtetem Ergebnis gewaehlt. Er wird auch nachtraeglich NICHT verlaengert: liegen nach der Erhebung weniger als zehn zaehlbare Faelle vor, entsteht aus diesem Lauf keine Quote, und ein groesserer Korpus waere als eigener, vorher eingefrorener Lauf zu definieren. Zeitraum und Abfrage stehen wortgleich in dieser Datei und sind durch den Definitions-Hash gebunden."
+}
