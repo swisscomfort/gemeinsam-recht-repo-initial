@@ -29,6 +29,7 @@ import {
 } from "../tools/definition.ts";
 import {
   ENDWIRKUNG_MESSAUSGAENGE,
+  istKalenderdatum,
   istZaehlbar,
   metadatenFingerprint,
   pruefeEndwirkung,
@@ -809,6 +810,106 @@ describe("S — das Standdatum, nicht das Datum des Rohtreffers", () => {
     expect(mit.metadaten_fingerprint).toBe(metadatenFingerprint(metadaten));
     // Und der Lauf bleibt fingerprint-fehlerfrei.
     expect(pruefeLauf(endwirkungsLauf([mit]), ENDWIRKUNG).fehler).toEqual([]);
+  });
+});
+
+describe("P — die Provenienz muss tatsaechlich etwas nennen", () => {
+  // Ein vorhandener leerer String erfuellt das Pflichtfeld formal und sagt
+  // nichts. Damit waere die Provenienz genau das, wogegen sie gedacht ist:
+  // ein Haken statt einer Fundstelle.
+  const befund = (quelle: string | undefined) =>
+    pruefeLauf(endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ quelle }) })]), ENDWIRKUNG);
+
+  it("P1 — fehlende Quelle ist ein Fehler", () => {
+    expect(befund(undefined).fehler.join("\n")).toContain("keine erledigungsweg.quelle");
+  });
+
+  it("P2 — die leere Quelle ist ein Fehler", () => {
+    expect(befund("").fehler.join("\n")).toContain("keine erledigungsweg.quelle");
+  });
+
+  it.each(["   ", "\t", " \n "])("P3 — reine Leerzeichen (%j) sind ein Fehler", (quelle) => {
+    expect(befund(quelle).fehler.join("\n")).toContain("keine erledigungsweg.quelle");
+  });
+
+  it("P4 — eine nichtleere Quelle ist gueltig", () => {
+    expect(befund("BGer 4A_1/2020 vom 1. April 2020, Erwaegung 3.2.").fehler).toEqual([]);
+  });
+
+  it("P5 — unter der materiellen Pruefung bleibt die Quelle optional", () => {
+    const l = lauf([
+      treffer({
+        quelle_id: "q1",
+        status: "eingeschlossen",
+        zaehleinheit: "streit-1",
+        abschluss_status: "abgeschlossen",
+        erledigungsweg: { modus: "materiell_entschieden", prozessgrund: null, beleg: "Erwaegung 3.2." },
+        messausgang: {
+          messdefinition_id: DEFINITION.id,
+          messdefinition_version: DEFINITION.version,
+          wert: "durchgesetzt",
+          beleg: "Dispositiv Ziffer 1 des Entscheids.",
+        },
+      }),
+    ]);
+    expect(pruefeLauf(l, DEFINITION).fehler).toEqual([]);
+  });
+
+  it("das Schema lehnt die leere Quelle ebenfalls ab", () => {
+    const l = endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ quelle: "" }) })]);
+    expect(pruefeMesslauf(l).ok).toBe(false);
+  });
+});
+
+describe("D — stand_datum muss ein echtes Kalenderdatum sein", () => {
+  // Das Muster JJJJ-MM-TT allein genuegt nicht: "2026-02-30" passt darauf,
+  // bezeichnet aber keinen Tag — und wuerde in der Chronologie trotzdem
+  // einsortiert.
+  const befund = (stand_datum: string, datenstand = "2026-08-09") =>
+    pruefeLauf(
+      { ...endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ stand_datum }) })]), datenstand },
+      ENDWIRKUNG,
+    );
+
+  it.each(["2026-00-05", "2026-13-01", "2026-02-30", "2025-02-29"])("%s ist kein Kalenderdatum", (datum) => {
+    expect(istKalenderdatum(datum)).toBe(false);
+  });
+
+  it.each([
+    ["D1", "2026-00-05"],
+    ["D2", "2026-13-01"],
+    ["D3", "2026-02-30"],
+    ["D4", "2025-02-29"],
+  ])("%s — %s wird abgelehnt", (_fall, datum) => {
+    expect(befund(datum).fehler.join("\n")).toContain("kein gueltiges Kalenderdatum");
+  });
+
+  it("D5 — der echte Schalttag 2024-02-29 ist gueltig", () => {
+    expect(istKalenderdatum("2024-02-29")).toBe(true);
+    expect(befund("2024-02-29").fehler).toEqual([]);
+  });
+
+  it("D6 — ein gueltiges Datum nach dem Datenstand bleibt ein Fehler", () => {
+    expect(befund("2026-08-10").fehler.join("\n")).toContain("liegt nach dem Datenstand des Laufs");
+  });
+
+  it("D7 — ein gueltiges Datum am Datenstand bleibt zulaessig", () => {
+    expect(befund("2026-08-09").fehler).toEqual([]);
+  });
+
+  it("die Pruefung verlangt zuerst das Format", () => {
+    expect(istKalenderdatum("2024-2-29")).toBe(false);
+    expect(istKalenderdatum("29.02.2024")).toBe(false);
+    expect(istKalenderdatum("")).toBe(false);
+  });
+
+  it("Monatsgrenzen stimmen", () => {
+    for (const gueltig of ["2026-01-31", "2026-04-30", "2026-12-31", "2000-02-29"]) {
+      expect(istKalenderdatum(gueltig), gueltig).toBe(true);
+    }
+    for (const ungueltig of ["2026-04-31", "2026-01-32", "2026-11-31", "1900-02-29"]) {
+      expect(istKalenderdatum(ungueltig), ungueltig).toBe(false);
+    }
   });
 });
 

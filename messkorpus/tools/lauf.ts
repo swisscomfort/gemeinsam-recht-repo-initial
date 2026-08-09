@@ -213,6 +213,26 @@ export function metadatenFingerprint(metadaten: Quellmetadaten): string {
 /* ---------- Erledigungsweg und Endwirkung ---------- */
 
 /**
+ * Ist das ein echtes ISO-Kalenderdatum?
+ *
+ * Das Muster JJJJ-MM-TT allein genuegt nicht: "2026-02-30" und "2026-13-01"
+ * passen darauf, bezeichnen aber keinen Tag. Ein solches Datum wuerde still
+ * in die Chronologie eingehen und dort sortiert, als gaebe es ihn.
+ *
+ * Rein und deterministisch: gerechnet wird in UTC, ohne Systemzeit.
+ */
+export function istKalenderdatum(iso: string): boolean {
+  if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(iso)) return false;
+  const jahr = Number(iso.slice(0, 4));
+  const monat = Number(iso.slice(5, 7));
+  const tag = Number(iso.slice(8, 10));
+  const datum = new Date(Date.UTC(jahr, monat - 1, tag));
+  return (
+    datum.getUTCFullYear() === jahr && datum.getUTCMonth() + 1 === monat && datum.getUTCDate() === tag
+  );
+}
+
+/**
  * Innere Stimmigkeit des Erledigungswegs. Gilt ueberall, wo er gefuehrt wird,
  * unabhaengig vom Auswertungsmodell: `prozessgrund` ist genau dann belegt,
  * wenn prozessual erledigt wurde. Sonst entstuende ein Grund ohne Erledigung
@@ -275,8 +295,11 @@ export function pruefeEndwirkung(laufId: string, datenstand: string, treffer: Tr
         `zwingend, wenn der Endzustand aus einem verknuepften Folgeentscheid stammt.`,
     );
   } else if (stand !== undefined) {
-    if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(stand)) {
-      fehler.push(`${wo}: erledigungsweg.stand_datum "${stand}" ist kein Datum im Format JJJJ-MM-TT.`);
+    if (!istKalenderdatum(stand)) {
+      fehler.push(
+        `${wo}: erledigungsweg.stand_datum "${stand}" ist kein gueltiges Kalenderdatum (JJJJ-MM-TT). ` +
+          `Ein Datum, das es nicht gibt, wuerde in der Chronologie trotzdem einsortiert.`,
+      );
     } else if (stand > datenstand) {
       fehler.push(
         `${wo}: erledigungsweg.stand_datum ${stand} liegt nach dem Datenstand des Laufs (${datenstand}). ` +
@@ -285,7 +308,7 @@ export function pruefeEndwirkung(laufId: string, datenstand: string, treffer: Tr
       );
     }
   }
-  if (treffer.erledigungsweg && treffer.erledigungsweg.quelle === undefined) {
+  if (treffer.erledigungsweg && (treffer.erledigungsweg.quelle ?? "").trim() === "") {
     fehler.push(
       `${wo} ist eingeschlossen, nennt aber keine erledigungsweg.quelle. ` +
         `Nachvollziehbar sein muss, aus welchem Entscheid der kodierte Stand stammt: aus dem Treffer selbst oder ` +
@@ -832,8 +855,9 @@ export interface Zaehleinheiten {
  * den Stand zu ihrem Zeitpunkt; ein spaeterer Endentscheid derselben Kette
  * entscheidet die Messfrage abschliessend. Umgekehrt kann ein spaeterer
  * Entscheid eine schon entschiedene Frage wieder oeffnen. Geordnet wird nach
- * dem gespeicherten Entscheiddatum — nie nach der Reihenfolge im Array, die
- * keine juristische Chronologie ist.
+ * dem gespeicherten Standdatum (`erledigungsweg.stand_datum`) — nie nach dem
+ * Datum des Rohtreffers und nie nach der Reihenfolge im Array, die keine
+ * juristische Chronologie ist.
  *
  * Widersprueche innerhalb eines Standes werden nicht aufgeloest, sondern
  * gemeldet: sie sperren die Quote. Ebenso, wenn die Reihenfolge fuer die

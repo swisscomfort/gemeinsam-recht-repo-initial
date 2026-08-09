@@ -134,7 +134,8 @@
               },
               "quelle": {
                 "type": "string",
-                "description": "Primaerquelle des kodierten Standes: der Roh-Treffer selbst oder ein ausdruecklich verknuepfter Entscheid derselben Verfahrenskette (CR-03 Auflage E2). Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer."
+                "minLength": 1,
+                "description": "Primaerquelle des kodierten Standes: der Roh-Treffer selbst oder ein ausdruecklich verknuepfter Entscheid derselben Verfahrenskette (CR-03 Auflage E2). Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer; die Laufzeitpruefung lehnt dort zusaetzlich reine Leerzeichen ab."
               }
             }
           },
