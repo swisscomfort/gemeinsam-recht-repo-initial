@@ -129,7 +129,9 @@
       "gericht": "CH_BGE_001",
       "link": "https://entscheidsuche.ch/view/CH_BGE_001_BGE-145-I-73_2019",
       "metadaten_fingerprint": "461db99eb19384ed03c8debc4834400cd99e8a2e508b3dfc3739691e61f2e1d9",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Abstrakte Normenkontrolle des Neuenburger Gesetzes ueber Lagerplaetze fahrender Gemeinschaften; Art. 271/272 OR nur als Analogiefrage erwaehnt, keine Beurteilung einer konkreten Kuendigung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_004_BGE-146-II-97_2020",
@@ -137,7 +139,9 @@
       "gericht": "CH_BGE_004",
       "link": "https://entscheidsuche.ch/view/CH_BGE_004_BGE-146-II-97_2020",
       "metadaten_fingerprint": "1d030e2c95e3a38d1c761a5f3437b50fedc46a26487f6fd1fcbdc511b92c502f",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Steuerrecht (Ist-Besteuerung, Art. 16 DBG); Mietverhaeltnis nur als Sachverhaltselement.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-141-III-101_2015",
@@ -145,7 +149,17 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-141-III-101_2015",
       "metadaten_fingerprint": "9b6e94a673d82836bad719ac249f83db6568f53404a64cfe64e1bed548c24d69",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Publikationsauszug zu 4A_482/2014; zeitlicher Kuendigungsschutz Art. 271a Abs. 1 lit. d OR. Rueckweisung nur zur Neuregelung der Kosten- und Entschaedigungsfolgen — die Messfrage ist endgueltig entschieden.",
+      "zaehleinheit": "4A_482/2014",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "Die Beschwerde wird gutgeheissen und das Urteil des Obergerichts des Kantons Zuerich vom 24. Juni 2014 aufgehoben. Die Kuendigung vom 25. Mai 2012 per 30. November 2012 ... wird fuer ungueltig erklaert.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-141-III-101_2015"
+      }
     },
     {
       "quelle_id": "CH_BGE_005_BGE-142-III-278_2016",
@@ -153,7 +167,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-142-III-278_2016",
       "metadaten_fingerprint": "51ff95e50e80224edca4f6d54007eafe9e080dc9649541f5f30ae1142ac289e6",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist der Geltungsbereich des vereinfachten Verfahrens (Art. 243 Abs. 2 lit. c ZPO) bei der Erstreckung; keine materielle Beurteilung einer Kuendigung an Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-142-III-336_2016",
@@ -161,7 +177,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-142-III-336_2016",
       "metadaten_fingerprint": "6ca100eaa06f084d2ad3ab5ffa44346f8f26437dbe6252aac878e4af6dd9e89a",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Beurteilt wird die vorzeitige Kuendigung nach Art. 261 Abs. 2 lit. a OR (dringender Eigenbedarf des Erwerbers); Art. 271a OR nur zum Begriffsvergleich herangezogen.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-142-III-402_2016",
@@ -169,7 +187,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-142-III-402_2016",
       "metadaten_fingerprint": "8d7917bfeba3a6ce6e1178bf1d57673ed185440d1ecd44b14c5bfbf7b37c6109",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die Verfahrensart nach Art. 243 Abs. 2 lit. c ZPO bei der Mieterausweisung; keine materielle Pruefung der Kuendigung an Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-142-III-91_2016",
@@ -177,7 +197,17 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-142-III-91_2016",
       "metadaten_fingerprint": "b56be11a0bdfb28645405ea256e713888a4c0a215e2b5562b7603abc08336475",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Publikationsauszug zu 4A_327/2015; Umbaukuendigung, Art. 271 Abs. 1 OR. Rueckweisung nur zur Kostenregelung.",
+      "zaehleinheit": "4A_327/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "In teilweiser Gutheissung der Beschwerde wird das angefochtene Urteil ... aufgehoben und die Kuendigung vom 21. November 2013 wird aufgehoben.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-142-III-91_2016"
+      }
     },
     {
       "quelle_id": "CH_BGE_005_BGE-143-III-344_2017",
@@ -185,7 +215,17 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-143-III-344_2017",
       "metadaten_fingerprint": "03a338c571865fbe7165112f9ac462ecafade4c5890b003dae040b2ac3aecfd0",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Publikationsauszug zu 4A_703/2016; Sanierungskuendigung, Begruendung nach Art. 271 Abs. 2 OR. Der Mieter focht an und unterlag.",
+      "zaehleinheit": "4A_703/2016",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Die Beschwerde wird abgewiesen, soweit darauf einzutreten ist.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-143-III-344_2017"
+      }
     },
     {
       "quelle_id": "CH_BGE_005_BGE-145-III-143_2019",
@@ -193,7 +233,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-145-III-143_2019",
       "metadaten_fingerprint": "0baa6c9a9c6f7ae6235cd81001dcdb3719f7fb74f7169da771f790b8bd160194",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die Rechtskraftwirkung eines frueheren Anfechtungsurteils auf eine spaetere Schadenersatzklage; die Missbraeuchlichkeit der Kuendigung wird hier nicht neu beurteilt.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-145-III-281_2019",
@@ -201,7 +243,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-145-III-281_2019",
       "metadaten_fingerprint": "46b0a51cde536b96a48fd1176c107b391855c331216dada3c47311ec7d1a8176",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die Aktivlegitimation bei gemeinsamer Miete (analoge Anwendung von Art. 273a OR), nicht die Frage, ob die Kuendigung dem Kuendigungsschutz standhaelt.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-146-III-346_2020",
@@ -209,7 +253,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-146-III-346_2020",
       "metadaten_fingerprint": "c7008159011a7b07eed11881dc22c9e2428a37a218eb03a19bc11a9bc0529e3c",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Mietzinsherabsetzungsbegehren von Mitmietern (Art. 270a OR, Art. 70 ZPO); keine Kuendigungsanfechtung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-148-III-215_2022",
@@ -217,7 +263,17 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-148-III-215_2022",
       "metadaten_fingerprint": "4b011a2e0e55e2e7c6032ec206fdba59ea390ab484fa615ec0062c1f5693944f",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Publikationsauszug zu 4A_247/2021; Renovationskuendigung, Art. 271 und 271a OR. Die Mietpartei als Beschwerdefuehrerin unterlag.",
+      "zaehleinheit": "4A_247/2021",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Le recours est rejete, dans la mesure ou il est recevable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-148-III-215_2022"
+      }
     },
     {
       "quelle_id": "CH_BGE_005_BGE-148-III-415_2022",
@@ -225,7 +281,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-148-III-415_2022",
       "metadaten_fingerprint": "3f8b2305f02b19bea8ba23e3c8786573f024180c554ea2813aa0eb2534a7cb83",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die Vormerkung eines Mietverhaeltnisses im Grundbuch (Art. 261b OR) und die Verfahrensart.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-150-III-103_2024",
@@ -233,7 +291,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-150-III-103_2024",
       "metadaten_fingerprint": "31e5242877ebc677cd00dd7f19e38916104fb4632567cf9ab0f8bf3d5a4af31e",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist das Eigentum an Fahrnisbauten (Art. 677 ZGB); keine Kuendigungsanfechtung nach Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-150-III-257_2024",
@@ -241,7 +301,9 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-150-III-257_2024",
       "metadaten_fingerprint": "5b05561bb4aec1951c0eface2b19f1584cc9d5697f01fe531fb92756ca50beea",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die Verfahrensart bei Kuendigung durch die Mietpartei (Art. 243 Abs. 2 lit. c ZPO).",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGE_005_BGE-151-III-481_2025",
@@ -249,7 +311,17 @@
       "gericht": "CH_BGE_005",
       "link": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-151-III-481_2025",
       "metadaten_fingerprint": "867ec0581eaeac652d52aeae71973088791b270da28ed711218a2d648cd02072",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Publikationsauszug zu 4A_576/2024; Abbruchkuendigung, Art. 271 OR. Die Rueckweisung betrifft nur die Erstreckung (Art. 272 OR) — zur Messfrage ist endgueltig entschieden.",
+      "zaehleinheit": "4A_576/2024",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Es wird festgestellt, dass die mit amtlichem Formular vom 7. Oktober 2022 erklaerte Kuendigung des Mietvertrags ... auf den 30. Juni 2023 gueltig ist.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGE_005_BGE-151-III-481_2025"
+      }
     },
     {
       "quelle_id": "CH_BGer_001_1C-188-2018_2019-02-13",
@@ -258,7 +330,9 @@
       "gericht": "CH_BGer_001",
       "link": "https://entscheidsuche.ch/view/CH_BGer_001_1C-188-2018_2019-02-13",
       "metadaten_fingerprint": "5d57ba3d8dc7c680db3e464caa02bba50c554d9e6e6b5354285ae4e2b67ff54c",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Vollentscheid zu BGE 145 I 73: abstrakte Normenkontrolle, keine Beurteilung einer konkreten Kuendigung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_002_2C-187-2017_2020-02-19",
@@ -267,7 +341,9 @@
       "gericht": "CH_BGer_002",
       "link": "https://entscheidsuche.ch/view/CH_BGer_002_2C-187-2017_2020-02-19",
       "metadaten_fingerprint": "237cf06162c6c14427ac05d68c0df6ba7be0a2267df07b4c8e5e319061c978f0",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Vollentscheid zu BGE 146 II 97: Steuerrecht.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_002_2C-520-2022_2022-12-01",
@@ -276,7 +352,9 @@
       "gericht": "CH_BGer_002",
       "link": "https://entscheidsuche.ch/view/CH_BGer_002_2C-520-2022_2022-12-01",
       "metadaten_fingerprint": "f2232007cd3121c4f86d2e5d21e806f035906d9b0f7df036c097a5e7581a82d4",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Staatshaftung fuer Handlungen von Amtstraegern; keine Fundstelle zu Art. 271/271a OR und keine Kuendigungsanfechtung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-100-2018_2018-03-05",
@@ -285,7 +363,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-100-2018_2018-03-05",
       "metadaten_fingerprint": "0949c579418f7a04ad631722e21e2cf6106d2149b269296ecaef9d7bba455610",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Ausweisungsverfahren nach Art. 257 ZPO; Art. 271 ff. OR nur bei Streitwert und Verfahrenskonkurrenz erwaehnt, keine materielle Pruefung der Kuendigung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-103-2015_2015-07-03",
@@ -294,7 +374,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-103-2015_2015-07-03",
       "metadaten_fingerprint": "44198638e87b4dc6107e95343df5e9c550a780536c240de899f7495c4224c553",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mieterin focht die Eigenbedarfskuendigung als missbraeuchlich an (Art. 271a Abs. 1 lit. e OR) und unterlag letztinstanzlich.",
+      "zaehleinheit": "4A_103/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Streitig ist, ob die Kuendigung vom 6. November 2012 missbraeuchlich ist, weil ihr die dreijaehrige Sperrfrist nach Art. 271a Abs. 1 lit. e OR entgegensteht ... Die Beschwerde wird abgewiesen.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-103-2015_2015-07-03"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-105-2024_2024-08-19",
@@ -303,7 +393,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-105-2024_2024-08-19",
       "metadaten_fingerprint": "fd38d7692f77173ee681d5c61079ddd539e9723ed4d2aaf854ac5d054cabb745",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist die einseitige Vertragsaenderung, nicht die Anfechtung einer Kuendigung nach Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-109-2015_2015-09-23",
@@ -312,7 +404,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-109-2015_2015-09-23",
       "metadaten_fingerprint": "49bca0a30bd6a6d9db9725f3a31a83918bb9f227c963f782b1fdcd364c63d610",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mietpartei berief sich ausdruecklich auf Art. 271 ff. OR; das Bundesgericht beurteilte materiell, dass der Kuendigungsschutz auf diesen Standplatzvertrag weder direkt noch analog anwendbar ist. Kein Ausschluss, weil die Nichtanwendbarkeit ein Messergebnis ist und ihr Ausschluss den Nenner verzerren wuerde.",
+      "zaehleinheit": "4A_109/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_anwendbar",
+        "beleg": "le contrat liant les parties n'est pas un bail d'habitation au sens du titre huitieme du CO et une application directe des art. 266l, 266o et 271 ss CO [est exclue]",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-109-2015_2015-09-23"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-111-2025_2025-05-12",
@@ -321,7 +423,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-111-2025_2025-05-12",
       "metadaten_fingerprint": "24aa48c691bf27d2f8b0fd1510ee00bfac9eb007c16e41d21faa6eb34c4ae085",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Ausserordentliche Kuendigung nach Art. 257f OR wegen Verletzung der Ruecksichtnahme; die Anfechtung stuetzte sich nicht auf Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-113-2019_2019-07-09",
@@ -330,7 +434,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-113-2019_2019-07-09",
       "metadaten_fingerprint": "3bbe249e8e06b36f4a15cb47f3584f4efa71aeaa2b4481150fc49a08c763b1d6",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Vorinstanz hatte die Kuendigung wegen Verstosses gegen Treu und Glauben aufgehoben; die Beschwerde der Vermieterin wurde abgewiesen, die Aufhebung bleibt bestehen.",
+      "zaehleinheit": "4A_113/2019",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "Au vu de ce qui precede, l'arret entrepris ne revele aucune violation des art. 271 CO ou 8 CC. ... Le recours est rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-113-2019_2019-07-09"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-115-2019_2019-04-17",
