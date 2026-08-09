@@ -501,6 +501,121 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
   });
 });
 
+describe("L — die Modellgrenze: Legacy behaelt seine Aggregation", () => {
+  // Dieselben Daten, dieselbe id, dieselbe Version — nur das erklaerte
+  // Auswertungsmodell unterscheidet die beiden Definitionen. Damit misst
+  // dieser Block genau eines: dass die Chronologie des Endwirkungsmodells
+  // nicht auf alte Definitionen durchschlaegt. Ihre Bedeutung gehoert zu
+  // ihnen; wer sie nachtraeglich verbessert, macht alte Quoten
+  // unreproduzierbar.
+  const LEGACY: Messdefinition = { ...ENDWIRKUNG, auswertungsmodell: undefined };
+  const EINHEIT = "streit-kette";
+
+  function glied(name: string, teil: Partial<Treffer>): Treffer {
+    return treffer({
+      quelle_id: `q-${name}`,
+      status: "eingeschlossen",
+      zaehleinheit: EINHEIT,
+      story_id: "FS-100",
+      ...teil,
+    });
+  }
+
+  const abgeschlossen = (datum: string | undefined, wert: "durchgesetzt" | "nicht_durchgesetzt"): Treffer =>
+    glied(`end-${datum ?? "ohne"}-${wert}`, { datum, abschluss_status: "abgeschlossen", messausgang: ausgang(wert) });
+
+  /** Rueckweisung in Legacy-Gestalt: ohne den Wert "offen", den es dort nicht gibt. */
+  const rueckweisung = (datum?: string): Treffer =>
+    glied(`rw-${datum ?? "ohne"}`, { datum, abschluss_status: "rueckweisung_offen" });
+
+  const einheitAus = (liste: Treffer[], definition: Messdefinition) => {
+    const ergebnis = zaehleinheiten(endwirkungsLauf(liste), definition);
+    return { ergebnis, einheit: ergebnis.einheiten.find((e) => e.id === EINHEIT)! };
+  };
+
+  it("L1 — Legacy: ein spaeterer Rueckweisungsentscheid oeffnet die Einheit NICHT wieder", () => {
+    const kette = [abgeschlossen("2019-03-01", "durchgesetzt"), rueckweisung("2020-04-01")];
+    const { ergebnis, einheit } = einheitAus(kette, LEGACY);
+
+    // Exakt die Regel von vor dem Endwirkungsmodell: irgendein
+    // "abgeschlossen" schliesst die Einheit ab, gleich wann es faellt.
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.abschluss_status).toBe("abgeschlossen");
+    expect(einheit.messausgang?.wert).toBe("durchgesetzt");
+    expect(einheit.offen).toBe(false);
+  });
+
+  it("L1 — dieselbe Kette unter Endwirkung ist wieder offen", () => {
+    const kette = [abgeschlossen("2019-03-01", "durchgesetzt"), rueckweisung("2020-04-01")];
+    const { ergebnis, einheit } = einheitAus(kette, ENDWIRKUNG);
+
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.abschluss_status).toBe("rueckweisung_offen");
+    // Der Unterschied haengt allein am Feld — die Daten sind identisch.
+    expect(LEGACY.id).toBe(ENDWIRKUNG.id);
+    expect(LEGACY.version).toBe(ENDWIRKUNG.version);
+  });
+
+  it("L2 — Legacy: zwei verschiedene Endausgaenge bleiben ein Widerspruch, auch mit Daten", () => {
+    const kette = [abgeschlossen("2019-03-01", "durchgesetzt"), abgeschlossen("2020-04-01", "nicht_durchgesetzt")];
+    const { ergebnis } = einheitAus(kette, LEGACY);
+
+    // Die Terminalchronologie darf diesen Konflikt hier NICHT aufloesen.
+    expect(ergebnis.fehler.join("\n")).toContain("widersprechende Normausgaenge");
+  });
+
+  it("L3 — Endwirkung: dieselben Ausgaenge loest der terminale Stand auf", () => {
+    const kette = [abgeschlossen("2019-03-01", "durchgesetzt"), abgeschlossen("2020-04-01", "nicht_durchgesetzt")];
+    const { ergebnis, einheit } = einheitAus(kette, ENDWIRKUNG);
+
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.messausgang?.wert).toBe("nicht_durchgesetzt");
+    expect(einheit.abschluss_status).toBe("abgeschlossen");
+  });
+
+  it("L4 — Legacy ohne Datumsangaben bekommt keinen neuen Chronologiefehler", () => {
+    const kette = [abgeschlossen(undefined, "durchgesetzt"), rueckweisung(undefined)];
+    const { ergebnis, einheit } = einheitAus(kette, LEGACY);
+
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.abschluss_status).toBe("abgeschlossen");
+    expect(einheit.messausgang?.wert).toBe("durchgesetzt");
+  });
+
+  it("L4 — dieselbe undatierte Kette unter Endwirkung wird nicht geraten", () => {
+    const kette = [abgeschlossen(undefined, "durchgesetzt"), rueckweisung(undefined)];
+    const { ergebnis } = einheitAus(kette, ENDWIRKUNG);
+    expect(ergebnis.fehler.join("\n")).toContain("kein Entscheiddatum");
+  });
+
+  it("die Entscheidung faellt allein ueber istEndwirkungsmodell", () => {
+    expect(istEndwirkungsmodell(LEGACY)).toBe(false);
+    expect(istEndwirkungsmodell(ENDWIRKUNG)).toBe(true);
+    expect(auswertungsmodell(LEGACY)).toBe("materielle_pruefung");
+  });
+
+  it("L5 — die realen Zaehleinheiten von ML-001 bleiben unveraendert", () => {
+    const md = leseJson(messkorpusPfad("definitionen", "MD-001-kuendigungsschutz-bger.json")) as Messdefinition;
+    const ml = leseJson(messkorpusPfad("laeufe", "ML-001", "lauf.json")) as Messlauf;
+    const ergebnis = zaehleinheiten(ml, md);
+
+    expect(istEndwirkungsmodell(md)).toBe(false);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(ergebnis.einheiten).toHaveLength(119);
+    // Keine Einheit gilt als offen — den Wert gibt es unter diesem Modell nicht.
+    expect(ergebnis.einheiten.some((e) => e.offen)).toBe(false);
+    // Die einzige nicht abgeschlossene Einheit ist die bekannte Rueckweisung.
+    expect(ergebnis.einheiten.filter((e) => e.abschluss_status !== "abgeschlossen").map((e) => e.id)).toEqual([
+      "4A_347/2017",
+    ]);
+  });
+
+  it("L6 — MD-001 v2.0.0 behaelt denselben kanonischen Hash", () => {
+    const md = leseJson(messkorpusPfad("definitionen", "MD-001-kuendigungsschutz-bger.json")) as Messdefinition;
+    expect(definitionsHash(md)).toBe("a9b2143bd2873f1b5df2b9bebaf8247283158c9bb86d9f233fbb330f860244af");
+  });
+});
+
 describe("9/10 — Abschluss und Messausgang muessen zusammenpassen", () => {
   it("9 — abgeschlossen mit Messausgang \"offen\" ist ein Fehler", () => {
     const l = endwirkungsLauf([vollstaendig(1, { messausgang: ausgang("offen") })]);

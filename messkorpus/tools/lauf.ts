@@ -495,6 +495,55 @@ interface Kettenstand {
   messausgang?: Messausgang;
 }
 
+/** Das Aggregat einer ganzen Zaehleinheit. */
+interface Einheitsstand {
+  abschluss_status: AbschlussStatus;
+  messausgang?: Messausgang;
+  offen: boolean;
+}
+
+/** Kein auswertbarer Stand — die Einheit zaehlt nicht und sperrt jede Quote. */
+const UNBESTIMMT: Einheitsstand = { abschluss_status: "ungeklaert", messausgang: undefined, offen: false };
+
+/**
+ * Aggregation der Zaehleinheit im Modell "materielle_pruefung" — Wort fuer
+ * Wort die Regel, die vor dem Endwirkungsmodell galt.
+ *
+ * Sie wird hier NICHT nachtraeglich verbessert. Alte Messdefinitionen tragen
+ * ihre Bedeutung mit sich; wer die Aggregation unter ihnen aendert, aendert
+ * rueckwirkend, was ihre Laeufe aussagen, und macht frueher berechnete Quoten
+ * unreproduzierbar. Die Chronologie des Endwirkungsmodells bleibt deshalb
+ * draussen: ein Widerspruch zweier Endausgaenge wird hier gemeldet und nicht
+ * nach Datum aufgeloest, und ein "abgeschlossen" irgendwo in der Einheit
+ * schliesst sie ab, gleich wann es faellt.
+ */
+function bisherigerStand(
+  id: string,
+  treffer: readonly Treffer[],
+  definition: Messdefinition,
+): { stand: Einheitsstand; fehler: string[] } {
+  const fehler: string[] = [];
+
+  const ausgaenge = treffer
+    .map((t) => t.messausgang)
+    .filter((m): m is Messausgang => m !== undefined && gehoertZu(m, definition));
+  const werte = new Set(ausgaenge.map((m) => m.wert));
+  if (werte.size > 1) {
+    fehler.push(
+      `Zaehleinheit ${id} traegt widersprechende Normausgaenge (${[...werte].join(", ")}) — nicht automatisch aufloesbar.`,
+    );
+  }
+
+  /* Der Abschluss der Einheit ist der guenstigste Stand ihrer Entscheide:
+     ein spaeterer Endentscheid schliesst eine fruehere Rueckweisung ab. */
+  const abschluss_status: AbschlussStatus = treffer.some((t) => t.abschluss_status === "abgeschlossen")
+    ? "abgeschlossen"
+    : (treffer.find((t) => t.abschluss_status !== undefined)?.abschluss_status ?? "ungeklaert");
+
+  // "offen" gibt es in diesem Modell nicht; pruefeLauf lehnt den Wert dort ab.
+  return { stand: { abschluss_status, messausgang: ausgaenge[0], offen: false }, fehler };
+}
+
 /**
  * Traegt dieser Treffer ueberhaupt eine Aussage zum Stand der Messfrage?
  * Ein Messausgang zu einer anderen Fassung zaehlt nicht mit — er ist eine
@@ -513,7 +562,8 @@ function standSchluessel(stand: Kettenstand): string {
 }
 
 /**
- * Bestimmt den terminalen Stand einer Verfahrenskette.
+ * Bestimmt den terminalen Stand einer Verfahrenskette. Gilt AUSSCHLIESSLICH
+ * im Modell "endwirkung" — im Legacy-Modell aggregiert `bisherigerStand`.
  *
  * Der Sinn: "offen" ist ein Zwischenzustand. Eine Rueckweisung von 2019, die
  * ein Endentscheid von 2020 erledigt hat, darf die Einheit nicht dauerhaft
@@ -535,20 +585,26 @@ function terminalerStand(
   id: string,
   treffer: readonly Treffer[],
   definition: Messdefinition,
-): { stand: Kettenstand | null; fehler: string[] } {
+): { stand: Einheitsstand; fehler: string[] } {
+  const alsEinheit = (stand: Kettenstand): Einheitsstand => ({
+    abschluss_status: stand.abschluss_status ?? "ungeklaert",
+    messausgang: stand.messausgang,
+    offen: stand.messausgang?.wert === "offen",
+  });
+
   const kette = treffer
     .map((t) => ({ treffer: t, stand: standDesTreffers(t, definition) }))
     .filter((e): e is { treffer: Treffer; stand: Kettenstand } => e.stand !== null);
 
-  if (kette.length === 0) return { stand: null, fehler: [] };
+  if (kette.length === 0) return { stand: UNBESTIMMT, fehler: [] };
 
   const schluessel = new Set(kette.map((e) => standSchluessel(e.stand)));
-  if (schluessel.size === 1) return { stand: kette[0]!.stand, fehler: [] };
+  if (schluessel.size === 1) return { stand: alsEinheit(kette[0]!.stand), fehler: [] };
 
   const ohneDatum = kette.filter((e) => e.treffer.datum === undefined);
   if (ohneDatum.length > 0) {
     return {
-      stand: null,
+      stand: UNBESTIMMT,
       fehler: [
         `Zaehleinheit ${id} wechselt den Stand (${[...schluessel].sort().join(" / ")}), aber ` +
           `${ohneDatum.map((e) => e.treffer.quelle_id).join(", ")} traegt kein Entscheiddatum. ` +
@@ -562,7 +618,7 @@ function terminalerStand(
   const letzteSchluessel = new Set(letzte.map((e) => standSchluessel(e.stand)));
   if (letzteSchluessel.size > 1) {
     return {
-      stand: null,
+      stand: UNBESTIMMT,
       fehler: [
         `Zaehleinheit ${id} traegt am ${spaetestes} widersprechende Normausgaenge bzw. Abschlussstaende ` +
           `(${[...letzteSchluessel].sort().join(" / ")}) — nicht automatisch aufloesbar. ` +
@@ -571,21 +627,28 @@ function terminalerStand(
     };
   }
 
-  return { stand: letzte[0]!.stand, fehler: [] };
+  return { stand: alsEinheit(letzte[0]!.stand), fehler: [] };
 }
 
 export interface Zaehleinheit {
   id: string;
   treffer: Treffer[];
   story_id?: string;
-  /** Terminaler Abschlussstand der Verfahrenskette, nicht ihr guenstigster. */
+  /**
+   * Im Endwirkungsmodell der terminale Abschlussstand der Kette; im Modell
+   * "materielle_pruefung" wie bisher ihr guenstigster.
+   */
   abschluss_status: AbschlussStatus;
-  /** Terminaler Messausgang der Kette — der Stand des letzten Entscheids. */
+  /**
+   * Im Endwirkungsmodell der Messausgang des letzten Entscheids; im Modell
+   * "materielle_pruefung" wie bisher der erste vorhandene.
+   */
   messausgang?: Messausgang;
   /**
    * Der TERMINALE Zustand der Kette laesst die endgueltige Rechtswirkung offen.
    * Eine fruehere Rueckweisung, die ein spaeterer Endentscheid abgeschlossen
-   * hat, ergibt hier `false` — sie war ein Zwischenzustand.
+   * hat, ergibt hier `false` — sie war ein Zwischenzustand. Im Modell
+   * "materielle_pruefung" immer `false`: dort gibt es den Wert "offen" nicht.
    */
   offen: boolean;
 }
@@ -601,8 +664,15 @@ export interface Zaehleinheiten {
  * Revision) sind EINE Einheit und zaehlen einmal — sonst zaehlt ein
  * langer Streit mehrfach und verzerrt die Quote.
  *
- * Massgeblich ist der TERMINALE Zustand der Verfahrenskette, nicht die
- * Vereinigung aller je aufgetretenen Zustaende. Eine Rueckweisung beschreibt
+ * Wie aggregiert wird, entscheidet allein das erklaerte Auswertungsmodell der
+ * Definition. Ohne `auswertungsmodell` gilt unveraendert die Regel von vor dem
+ * Endwirkungsmodell (`bisherigerStand`): der guenstigste Abschlussstand, der
+ * erste Messausgang, und zwei verschiedene Endausgaenge sind ein Widerspruch,
+ * den keine Chronologie aufloest. Alte Definitionen behalten damit ihre
+ * Bedeutung, und alte Quoten bleiben reproduzierbar.
+ *
+ * Im Endwirkungsmodell dagegen ist der TERMINALE Zustand der Verfahrenskette
+ * massgeblich, nicht die Vereinigung aller je aufgetretenen Zustaende. Eine Rueckweisung beschreibt
  * den Stand zu ihrem Zeitpunkt; ein spaeterer Endentscheid derselben Kette
  * entscheidet die Messfrage abschliessend. Umgekehrt kann ein spaeterer
  * Entscheid eine schon entschiedene Frage wieder oeffnen. Geordnet wird nach
@@ -651,16 +721,22 @@ export function zaehleinheiten(lauf: Messlauf, definition: Messdefinition): Zaeh
       storyZuEinheit.set(storyId, id);
     }
 
-    const auflösung = terminalerStand(id, treffer, definition);
+    /* Die Aggregation richtet sich allein nach dem erklaerten Modell der
+       Definition — nie nach id, Version oder Dateiname. Eine Definition ohne
+       `auswertungsmodell` wird exakt so aggregiert wie vor dem
+       Endwirkungsmodell. */
+    const auflösung = istEndwirkungsmodell(definition)
+      ? terminalerStand(id, treffer, definition)
+      : bisherigerStand(id, treffer, definition);
     fehler.push(...auflösung.fehler);
 
     einheiten.push({
       id,
       treffer,
       story_id: storyId,
-      abschluss_status: auflösung.stand?.abschluss_status ?? "ungeklaert",
-      messausgang: auflösung.stand?.messausgang,
-      offen: auflösung.stand?.messausgang?.wert === "offen",
+      abschluss_status: auflösung.stand.abschluss_status,
+      messausgang: auflösung.stand.messausgang,
+      offen: auflösung.stand.offen,
     });
   }
 
