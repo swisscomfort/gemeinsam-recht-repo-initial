@@ -127,9 +127,14 @@
                 "description": "Nur bei modus='prozessual_erledigt' belegt, sonst ausdruecklich null. Der Schluessel steht immer da, damit ein Fehlen nicht als 'noch nicht kodiert' durchgeht."
               },
               "beleg": { "type": "string", "minLength": 10 },
+              "stand_datum": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                "description": "Datum des Entscheids oder Verfahrensakts, der den hier kodierten Stand begruendet. NICHT dasselbe wie treffer.datum: das ist das Rohmetadatum des urspruenglichen Suchtreffers. Stammt der Endzustand aus einem nach CR-03 E2 zulaessigen verknuepften Folgeentscheid, ist dessen Datum massgeblich. Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer und nie spaeter als der Datenstand des Laufs; im Modell 'materielle_pruefung' ohne Bedeutung. Gehoert nicht in den Rohmetadaten-Fingerprint."
+              },
               "quelle": {
                 "type": "string",
-                "description": "Herkunft des Belegs, wenn er nicht aus dem Treffer selbst stammt, sondern aus einem ausdruecklich verknuepften Entscheid derselben Verfahrenskette (CR-03 Auflage E2)."
+                "description": "Primaerquelle des kodierten Standes: der Roh-Treffer selbst oder ein ausdruecklich verknuepfter Entscheid derselben Verfahrenskette (CR-03 Auflage E2). Unter auswertungsmodell='endwirkung' Pflicht fuer eingeschlossene Treffer."
               }
             }
           },

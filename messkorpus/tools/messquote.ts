@@ -40,7 +40,9 @@ import {
 import { leseFaelle } from "./faelle.ts";
 import {
   bilanz,
+  ENDWIRKUNG_MESSAUSGAENGE,
   istZaehlbar,
+  kenntMessausgang,
   pruefeLauf,
   zaehleinheiten,
   type Bilanz,
@@ -181,11 +183,21 @@ export function korpusFaelle(
  * Durchsetzungsquote, sondern eine Aussage ueber den Erhebungsstand, die als
  * Quote gelesen wuerde.
  */
-export function nichtZaehlbarerWert(wert: MessausgangWert): string | null {
-  return istZaehlbar(wert)
-    ? null
-    : `Gemessener Wert "${wert}": kein zaehlbarer Messausgang. ` +
-        `"offen" heisst, dass die endgueltige Rechtswirkung aussteht — daraus entsteht keine Quote.`;
+export function nichtZaehlbarerWert(wert: MessausgangWert, definition: Messdefinition): string | null {
+  if (!istZaehlbar(wert)) {
+    return (
+      `Gemessener Wert "${wert}": kein zaehlbarer Messausgang. ` +
+      `"offen" heisst, dass die endgueltige Rechtswirkung aussteht — daraus entsteht keine Quote.`
+    );
+  }
+  if (!kenntMessausgang(wert, definition)) {
+    return (
+      `Gemessener Wert "${wert}": ${definition.id} v${definition.version} wertet nach dem Endwirkungsmodell aus, ` +
+      `das diesen Wert nicht kennt (${ENDWIRKUNG_MESSAUSGAENGE.join(", ")}). Eine Quote ueber einen Wert, den die ` +
+      `Messdefinition nicht vergibt, waere immer null — und laese sich als Aussage ueber die Sache missverstehen.`
+    );
+  }
+  return null;
 }
 
 export interface QuoteAuftrag {
@@ -205,7 +217,7 @@ export function berechneMessquote(
   stories: ReadonlyMap<string, KodierteStory>,
   auftrag: QuoteAuftrag,
 ): Messquote {
-  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert);
+  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert, definition);
   if (unzaehlbar) throw new Error(`Quote gesperrt:\n- ${unzaehlbar}`);
 
   const sperre = sperren(lauf, definition, stories);
@@ -251,7 +263,7 @@ export function quoteBericht(
   stories: ReadonlyMap<string, KodierteStory>,
   auftrag: QuoteAuftrag,
 ): { zeilen: string[]; ok: boolean } {
-  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert);
+  const unzaehlbar = nichtZaehlbarerWert(auftrag.wert, definition);
   const sperre = sperren(lauf, definition, stories);
   const gruende = unzaehlbar ? [unzaehlbar, ...sperre.gruende] : sperre.gruende;
   if (gruende.length > 0) {

@@ -28,7 +28,10 @@ import {
   type Messdefinition,
 } from "../tools/definition.ts";
 import {
+  ENDWIRKUNG_MESSAUSGAENGE,
   istZaehlbar,
+  metadatenFingerprint,
+  pruefeEndwirkung,
   pruefeLauf,
   zaehleinheiten,
   type Erledigungsweg,
@@ -36,7 +39,7 @@ import {
   type Messlauf,
   type Treffer,
 } from "../tools/lauf.ts";
-import { berechneMessquote, sperren } from "../tools/messquote.ts";
+import { berechneMessquote, nichtZaehlbarerWert, quoteBericht, sperren } from "../tools/messquote.ts";
 import { berichte } from "../tools/pruefen.ts";
 import { leseJson, messkorpusPfad } from "../tools/umgebung.ts";
 import { pruefeMessdefinition, pruefeMesslauf } from "../tools/validierung.ts";
@@ -67,6 +70,8 @@ function weg(teil: Partial<Erledigungsweg> = {}): Erledigungsweg {
     modus: "materiell_entschieden",
     prozessgrund: null,
     beleg: "Erwaegung 3.2 des Entscheids.",
+    stand_datum: "2020-04-01",
+    quelle: "Entscheid des Bundesgerichts, Erwaegung 3.2.",
     ...teil,
   };
 }
@@ -294,8 +299,11 @@ describe("8 — Rueckweisung: strukturell gueltig, aber niemals zaehlbar", () =>
     messausgang: ausgang("offen"),
   });
 
-  it("der Treffer ist strukturell gueltig", () => {
-    expect(pruefeLauf(endwirkungsLauf([offenerTreffer]), ENDWIRKUNG).fehler).toEqual([]);
+  it("die drei Felder des Treffers sind in sich stimmig", () => {
+    // Die Kopplung stimmt — dass der Lauf ihn trotzdem nicht einschliessen
+    // darf, ist eine Aussage ueber die Zaehleinheit, nicht ueber den Treffer
+    // (siehe Block U).
+    expect(pruefeEndwirkung("ML-999", "2026-08-08", offenerTreffer)).toEqual([]);
   });
 
   it("die Zaehleinheit gilt als offen und nicht als abgeschlossen", () => {
@@ -360,12 +368,17 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
     glied(`rw-${datum}`, {
       datum,
       abschluss_status: "rueckweisung_offen",
-      erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+      erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: datum }),
       messausgang: ausgang("offen"),
     });
 
   const endentscheid = (datum: string, wert: "durchgesetzt" | "nicht_durchgesetzt"): Treffer =>
-    glied(`end-${datum}-${wert}`, { datum, abschluss_status: "abgeschlossen", messausgang: ausgang(wert) });
+    glied(`end-${datum}-${wert}`, {
+      datum,
+      abschluss_status: "abgeschlossen",
+      erledigungsweg: weg({ stand_datum: datum }),
+      messausgang: ausgang(wert),
+    });
 
   function einheitAus(liste: Treffer[]) {
     const ergebnis = zaehleinheiten(endwirkungsLauf(liste), ENDWIRKUNG);
@@ -421,8 +434,8 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
   it("D — dasselbe Paar auch ohne Datum, solange es denselben Stand abbildet", () => {
     // Ohne Zustandswechsel ist keine Chronologie noetig.
     const { ergebnis, einheit } = einheitAus([
-      glied("bger", { gericht: "CH_BGer", messausgang: ausgang("durchgesetzt") }),
-      glied("bge", { gericht: "CH_BGE", messausgang: ausgang("durchgesetzt") }),
+      glied("bger", { gericht: "CH_BGer", erledigungsweg: weg({ stand_datum: undefined }), messausgang: ausgang("durchgesetzt") }),
+      glied("bge", { gericht: "CH_BGE", erledigungsweg: weg({ stand_datum: undefined }), messausgang: ausgang("durchgesetzt") }),
     ]);
     expect(ergebnis.fehler).toEqual([]);
     expect(einheit!.messausgang?.wert).toBe("durchgesetzt");
@@ -438,10 +451,14 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
   });
 
   it("F — fehlt das Datum, obwohl der Stand wechselt, wird nicht geraten", () => {
-    const ohneDatum = glied("end-ohne-datum", { abschluss_status: "abgeschlossen", messausgang: ausgang("durchgesetzt") });
+    const ohneDatum = glied("end-ohne-datum", {
+      abschluss_status: "abgeschlossen",
+      erledigungsweg: weg({ stand_datum: undefined }),
+      messausgang: ausgang("durchgesetzt"),
+    });
     const { ergebnis, einheit } = einheitAus([rueckweisung("2019-03-01"), ohneDatum]);
     const text = ergebnis.fehler.join("\n");
-    expect(text).toContain("kein Entscheiddatum");
+    expect(text).toContain("kein Standdatum");
     expect(text).toContain("nicht geraten");
     // Kein stiller Rueckfall auf eine der beiden Lesarten.
     expect(einheit!.messausgang).toBeUndefined();
@@ -460,10 +477,15 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
         quelle_id: "q0-2019",
         datum: "2019-03-01",
         abschluss_status: "rueckweisung_offen",
-        erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+        erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: "2019-03-01" }),
         messausgang: ausgang("offen"),
       }),
-      vollstaendig(0, { quelle_id: "q0-2020", datum: "2020-04-01", messausgang: ausgang("durchgesetzt") }),
+      vollstaendig(0, {
+        quelle_id: "q0-2020",
+        datum: "2020-04-01",
+        erledigungsweg: weg({ stand_datum: "2020-04-01" }),
+        messausgang: ausgang("durchgesetzt"),
+      }),
       ...basis.lauf.treffer.slice(1),
     ];
 
@@ -485,12 +507,17 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
   it("bleibt die Kette offen, sperrt sie weiterhin", () => {
     const basis = endwirkungsKorpus(12, 6);
     const mitOffenerKette: Treffer[] = [
-      vollstaendig(0, { quelle_id: "q0-2019", datum: "2019-03-01", messausgang: ausgang("durchgesetzt") }),
+      vollstaendig(0, {
+        quelle_id: "q0-2019",
+        datum: "2019-03-01",
+        erledigungsweg: weg({ stand_datum: "2019-03-01" }),
+        messausgang: ausgang("durchgesetzt"),
+      }),
       vollstaendig(0, {
         quelle_id: "q0-2020",
         datum: "2020-04-01",
         abschluss_status: "rueckweisung_offen",
-        erledigungsweg: weg({ modus: "rueckweisung_offen" }),
+        erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: "2020-04-01" }),
         messausgang: ausgang("offen"),
       }),
       ...basis.lauf.treffer.slice(1),
@@ -498,6 +525,290 @@ describe("Terminaler Stand einer Verfahrenskette", () => {
     const sperre = sperren(endwirkungsLauf(mitOffenerKette), ENDWIRKUNG, basis.faelle);
     expect(sperre.ok).toBe(false);
     expect(sperre.gruende.join("\n")).toContain('Messausgang "offen"');
+  });
+});
+
+describe("W — das Endwirkungsmodell kennt kein \"teilweise\"", () => {
+  // CR-03 legt fuer die Endwirkung genau vier Werte fest. Gemessen wird die
+  // endgueltige Rechtswirkung auf eine konkrete Kuendigung — die ist
+  // eingetreten oder nicht. Ein "teilweise" waere dort keine Beobachtung,
+  // sondern eine Zwischenkategorie, ueber die niemand entschieden hat.
+  it("W1 — unter der materiellen Pruefung bleibt \"teilweise\" gueltig", () => {
+    const l = lauf([
+      treffer({
+        quelle_id: "q1",
+        status: "eingeschlossen",
+        zaehleinheit: "streit-1",
+        abschluss_status: "abgeschlossen",
+        messausgang: {
+          messdefinition_id: DEFINITION.id,
+          messdefinition_version: DEFINITION.version,
+          wert: "teilweise",
+          beleg: "Dispositiv Ziffer 1 des Entscheids.",
+        },
+      }),
+    ]);
+    expect(pruefeLauf(l, DEFINITION).fehler).toEqual([]);
+    expect(istZaehlbar("teilweise")).toBe(true);
+  });
+
+  it("W2 — unter Endwirkung ist \"teilweise\" ein Fehler", () => {
+    const l = endwirkungsLauf([
+      vollstaendig(1, {
+        erledigungsweg: weg({ modus: "materiell_entschieden" }),
+        abschluss_status: "abgeschlossen",
+        messausgang: ausgang("teilweise"),
+      }),
+    ]);
+    const text = pruefeLauf(l, ENDWIRKUNG).fehler.join("\n");
+    expect(text).toContain("im Endwirkungsmodell nicht definiert");
+    expect(text).toContain(ENDWIRKUNG_MESSAUSGAENGE.join(", "));
+  });
+
+  it("W3 — eine Endwirkungs-Quote ueber \"teilweise\" wird abgelehnt", () => {
+    const { lauf: l, faelle } = endwirkungsKorpus(12, 6);
+    // Kein einziger Treffer traegt den Wert — abgelehnt wird er trotzdem.
+    expect(l.treffer.some((t) => t.messausgang?.wert === "teilweise")).toBe(false);
+    expect(() => berechneMessquote(l, ENDWIRKUNG, faelle, { wert: "teilweise", zeitstand: HEUTE })).toThrow(
+      /nicht kennt/,
+    );
+    expect(quoteBericht(l, ENDWIRKUNG, faelle, { wert: "teilweise", zeitstand: HEUTE }).ok).toBe(false);
+  });
+
+  it("W3 — unter der materiellen Pruefung bleibt dieselbe Quote zulaessig", () => {
+    expect(nichtZaehlbarerWert("teilweise", DEFINITION)).toBeNull();
+    expect(nichtZaehlbarerWert("teilweise", ENDWIRKUNG)).not.toBeNull();
+  });
+
+  it.each(["durchgesetzt", "nicht_durchgesetzt", "nicht_anwendbar"] as const)(
+    "W4 — %s bleibt unter Endwirkung zulaessig",
+    (wert) => {
+      const l = endwirkungsLauf([
+        vollstaendig(1, { abschluss_status: "abgeschlossen", messausgang: ausgang(wert) }),
+      ]);
+      expect(pruefeLauf(l, ENDWIRKUNG).fehler).toEqual([]);
+      expect(nichtZaehlbarerWert(wert, ENDWIRKUNG)).toBeNull();
+    },
+  );
+});
+
+describe("U — terminal offen heisst noch nicht einschliessbar", () => {
+  // CR-03 verlangt fuer den Einschluss, dass der endgueltige rechtliche
+  // Zustand der Kuendigung bestimmbar ist. Steht der terminale Stand einer
+  // Einheit noch auf "offen", ist genau dieses Merkmal nicht erfuellt. Der
+  // Wert "offen" bleibt trotzdem noetig: INNERHALB einer spaeter
+  // abgeschlossenen Kette benennt er den Zwischenstand.
+  const EINHEIT = "streit-kette";
+
+  const glied = (name: string, teil: Partial<Treffer>): Treffer =>
+    vollstaendig(0, { quelle_id: `q-${name}`, zaehleinheit: EINHEIT, story_id: "FS-100", ...teil });
+
+  const offenerStand = (datum: string): Treffer =>
+    glied(`offen-${datum}`, {
+      datum,
+      abschluss_status: "rueckweisung_offen",
+      erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: datum }),
+      messausgang: ausgang("offen"),
+    });
+
+  const finalerStand = (datum: string): Treffer =>
+    glied(`final-${datum}`, {
+      datum,
+      abschluss_status: "abgeschlossen",
+      erledigungsweg: weg({ stand_datum: datum }),
+      messausgang: ausgang("durchgesetzt"),
+    });
+
+  it("U1 — ein einzelner eingeschlossener, terminal offener Fall macht den Lauf ungueltig", () => {
+    const befund = pruefeLauf(endwirkungsLauf([offenerStand("2019-03-01")]), ENDWIRKUNG);
+    expect(befund.ok).toBe(false);
+    const text = befund.fehler.join("\n");
+    expect(text).toContain('terminaler Stand ist aber "offen"');
+    expect(text).toContain("nicht bestimmbar");
+    expect(text).toContain('nach CR-03 E2 als "ungeklaert" gefuehrt werden');
+  });
+
+  it("U2 — offen und danach final: der Lauf bleibt gueltig", () => {
+    const befund = pruefeLauf(
+      endwirkungsLauf([offenerStand("2019-03-01"), finalerStand("2020-04-01")]),
+      ENDWIRKUNG,
+    );
+    expect(befund.fehler).toEqual([]);
+  });
+
+  it("U3 — final und danach offen: terminal offen, der Lauf ist ungueltig", () => {
+    const befund = pruefeLauf(
+      endwirkungsLauf([finalerStand("2019-03-01"), offenerStand("2020-04-01")]),
+      ENDWIRKUNG,
+    );
+    expect(befund.ok).toBe(false);
+    expect(befund.fehler.join("\n")).toContain('terminaler Stand ist aber "offen"');
+  });
+
+  it("U4 — derselbe ungeloeste Rohtreffer als \"ungeklaert\" ist gueltig, ohne erfundene Felder", () => {
+    const roh = treffer({ quelle_id: "q-offen", datum: "2019-03-01", status: "ungeklaert" });
+    expect(roh.erledigungsweg).toBeUndefined();
+    expect(roh.messausgang).toBeUndefined();
+    expect(pruefeLauf(endwirkungsLauf([roh]), ENDWIRKUNG).fehler).toEqual([]);
+  });
+
+  it("U5 — ein ungeklaerter Treffer sperrt die Quote wie bisher", () => {
+    const basis = endwirkungsKorpus(12, 6);
+    const mitUngeklaertem = endwirkungsLauf([
+      ...basis.lauf.treffer,
+      treffer({ quelle_id: "q-rest", status: "ungeklaert" }),
+    ]);
+    const sperre = sperren(mitUngeklaertem, ENDWIRKUNG, basis.faelle);
+    expect(sperre.ok).toBe(false);
+    expect(sperre.gruende.join("\n")).toContain('1 Treffer sind noch "ungeklaert"');
+  });
+
+  it("der Wert \"offen\" bleibt erhalten — er benennt den Zwischenstand", () => {
+    expect(ENDWIRKUNG_MESSAUSGAENGE).toContain("offen");
+    const einheit = zaehleinheiten(
+      endwirkungsLauf([offenerStand("2019-03-01"), finalerStand("2020-04-01")]),
+      ENDWIRKUNG,
+    ).einheiten.find((e) => e.id === EINHEIT);
+    expect(einheit!.treffer.some((t) => t.messausgang?.wert === "offen")).toBe(true);
+    expect(einheit!.offen).toBe(false);
+  });
+});
+
+describe("S — das Standdatum, nicht das Datum des Rohtreffers", () => {
+  // `treffer.datum` ist Rohquellen-Metadatum des urspruenglichen Suchtreffers.
+  // Stammt der kodierte Endzustand aus einem nach CR-03 E2 zulaessigen
+  // verknuepften Folgeentscheid, ist DESSEN Datum massgeblich — sonst ordnete
+  // die Kette nach dem Datum des falschen Entscheids.
+  const EINHEIT = "streit-kette";
+
+  const glied = (name: string, teil: Partial<Treffer>): Treffer =>
+    vollstaendig(0, { quelle_id: `q-${name}`, zaehleinheit: EINHEIT, story_id: "FS-100", ...teil });
+
+  const offen = (rohDatum: string, standDatum: string): Treffer =>
+    glied(`offen-${standDatum}`, {
+      datum: rohDatum,
+      abschluss_status: "rueckweisung_offen",
+      erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: standDatum }),
+      messausgang: ausgang("offen"),
+    });
+
+  const final = (rohDatum: string, standDatum: string, wert: "durchgesetzt" | "nicht_durchgesetzt"): Treffer =>
+    glied(`final-${standDatum}-${wert}`, {
+      datum: rohDatum,
+      abschluss_status: "abgeschlossen",
+      erledigungsweg: weg({ stand_datum: standDatum, quelle: `Verknuepfter Entscheid vom ${standDatum}.` }),
+      messausgang: ausgang(wert),
+    });
+
+  const einheitAus = (liste: Treffer[]) => {
+    const ergebnis = zaehleinheiten(endwirkungsLauf(liste), ENDWIRKUNG);
+    return { ergebnis, einheit: ergebnis.einheiten.find((e) => e.id === EINHEIT)! };
+  };
+
+  it("S1 — Rohdatum und Standdatum stimmen ueberein: der spaetere Stand gilt", () => {
+    const { ergebnis, einheit } = einheitAus([
+      offen("2019-03-01", "2019-03-01"),
+      final("2020-04-01", "2020-04-01", "durchgesetzt"),
+    ]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.abschluss_status).toBe("abgeschlossen");
+    expect(einheit.messausgang?.wert).toBe("durchgesetzt");
+  });
+
+  it("S2 — der Stand aus einer verknuepften Quelle ordnet nach deren Datum", () => {
+    // Der Rohtreffer ist von 2019, sein Endzustand stammt aus einem Entscheid
+    // von 2021. Waere `treffer.datum` massgeblich, gewaenne die Rueckweisung
+    // von 2020 — und die Einheit bliebe faelschlich offen.
+    const { ergebnis, einheit } = einheitAus([
+      final("2019-01-01", "2021-06-15", "nicht_durchgesetzt"),
+      offen("2020-05-01", "2020-05-01"),
+    ]);
+    expect(ergebnis.fehler).toEqual([]);
+    expect(einheit.abschluss_status).toBe("abgeschlossen");
+    expect(einheit.messausgang?.wert).toBe("nicht_durchgesetzt");
+    expect(einheit.offen).toBe(false);
+  });
+
+  it("S3 — die Array-Reihenfolge aendert nichts", () => {
+    const vorwaerts = einheitAus([offen("2019-03-01", "2019-03-01"), final("2020-04-01", "2020-04-01", "durchgesetzt")]);
+    const rueckwaerts = einheitAus([final("2020-04-01", "2020-04-01", "durchgesetzt"), offen("2019-03-01", "2019-03-01")]);
+    expect(rueckwaerts.einheit.abschluss_status).toBe(vorwaerts.einheit.abschluss_status);
+    expect(rueckwaerts.einheit.messausgang?.wert).toBe(vorwaerts.einheit.messausgang?.wert);
+  });
+
+  it("S4 — das spaeteste Standdatum gewinnt", () => {
+    const { einheit } = einheitAus([
+      final("2019-01-01", "2019-02-02", "durchgesetzt"),
+      final("2019-01-01", "2022-09-09", "nicht_durchgesetzt"),
+    ]);
+    expect(einheit.messausgang?.wert).toBe("nicht_durchgesetzt");
+  });
+
+  it("S5 — gleiches spaetestes Standdatum mit widersprechenden Staenden ist ein Fehler", () => {
+    const { ergebnis, einheit } = einheitAus([
+      final("2019-01-01", "2020-04-01", "durchgesetzt"),
+      final("2019-02-01", "2020-04-01", "nicht_durchgesetzt"),
+    ]);
+    expect(ergebnis.fehler.join("\n")).toContain("widersprechende Normausgaenge");
+    expect(einheit.messausgang).toBeUndefined();
+  });
+
+  it("S6 — ein eingeschlossener Endwirkungs-Treffer ohne Standdatum ist ein Fehler", () => {
+    const l = endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ stand_datum: undefined }) })]);
+    expect(pruefeLauf(l, ENDWIRKUNG).fehler.join("\n")).toContain("kein erledigungsweg.stand_datum");
+  });
+
+  it("S7 — ein eingeschlossener Endwirkungs-Treffer ohne Provenienz ist ein Fehler", () => {
+    const l = endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ quelle: undefined }) })]);
+    expect(pruefeLauf(l, ENDWIRKUNG).fehler.join("\n")).toContain("keine erledigungsweg.quelle");
+  });
+
+  it("S8 — ein Standdatum nach dem Datenstand des Laufs ist ein Fehler", () => {
+    const l: Messlauf = {
+      ...endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ stand_datum: "2026-08-10" }) })]),
+      datenstand: "2026-08-09",
+    };
+    const text = pruefeLauf(l, ENDWIRKUNG).fehler.join("\n");
+    expect(text).toContain("liegt nach dem Datenstand des Laufs");
+    expect(text).toContain("spaeteres Wissen in eine historische Messung");
+  });
+
+  it("S8 — am Datenstand selbst ist es zulaessig", () => {
+    const l: Messlauf = {
+      ...endwirkungsLauf([vollstaendig(1, { erledigungsweg: weg({ stand_datum: "2026-08-09" }) })]),
+      datenstand: "2026-08-09",
+    };
+    expect(pruefeLauf(l, ENDWIRKUNG).fehler).toEqual([]);
+  });
+
+  it("S9 — Legacy verlangt weder Standdatum noch Provenienz", () => {
+    const l = lauf([
+      treffer({
+        quelle_id: "q1",
+        status: "eingeschlossen",
+        zaehleinheit: "streit-1",
+        abschluss_status: "abgeschlossen",
+        erledigungsweg: { modus: "materiell_entschieden", prozessgrund: null, beleg: "Erwaegung 3.2." },
+        messausgang: {
+          messdefinition_id: DEFINITION.id,
+          messdefinition_version: DEFINITION.version,
+          wert: "durchgesetzt",
+          beleg: "Dispositiv Ziffer 1 des Entscheids.",
+        },
+      }),
+    ]);
+    expect(pruefeLauf(l, DEFINITION).fehler).toEqual([]);
+  });
+
+  it("S10 — das Standdatum aendert den Rohmetadaten-Fingerprint nicht", () => {
+    const metadaten = { quelle_id: "q1", datum: "2019-03-01", gericht: "CH_BGer" };
+    const ohne = vollstaendig(1, { ...metadaten, erledigungsweg: weg({ stand_datum: "2019-03-01" }) });
+    const mit = vollstaendig(1, { ...metadaten, erledigungsweg: weg({ stand_datum: "2021-06-15" }) });
+
+    expect(mit.metadaten_fingerprint).toBe(ohne.metadaten_fingerprint);
+    expect(mit.metadaten_fingerprint).toBe(metadatenFingerprint(metadaten));
+    // Und der Lauf bleibt fingerprint-fehlerfrei.
+    expect(pruefeLauf(endwirkungsLauf([mit]), ENDWIRKUNG).fehler).toEqual([]);
   });
 });
 
@@ -521,12 +832,25 @@ describe("L — die Modellgrenze: Legacy behaelt seine Aggregation", () => {
     });
   }
 
+  // Dieselben Treffer werden gegen beide Definitionen gehalten. Der
+  // Erledigungsweg samt stand_datum steht mit dabei — Legacy ignoriert ihn,
+  // Endwirkung braucht ihn. So bleiben die DATEN identisch, und nur das
+  // Modell unterscheidet sich.
   const abgeschlossen = (datum: string | undefined, wert: "durchgesetzt" | "nicht_durchgesetzt"): Treffer =>
-    glied(`end-${datum ?? "ohne"}-${wert}`, { datum, abschluss_status: "abgeschlossen", messausgang: ausgang(wert) });
+    glied(`end-${datum ?? "ohne"}-${wert}`, {
+      datum,
+      abschluss_status: "abgeschlossen",
+      erledigungsweg: weg({ stand_datum: datum }),
+      messausgang: ausgang(wert),
+    });
 
   /** Rueckweisung in Legacy-Gestalt: ohne den Wert "offen", den es dort nicht gibt. */
   const rueckweisung = (datum?: string): Treffer =>
-    glied(`rw-${datum ?? "ohne"}`, { datum, abschluss_status: "rueckweisung_offen" });
+    glied(`rw-${datum ?? "ohne"}`, {
+      datum,
+      abschluss_status: "rueckweisung_offen",
+      erledigungsweg: weg({ modus: "rueckweisung_offen", stand_datum: datum }),
+    });
 
   const einheitAus = (liste: Treffer[], definition: Messdefinition) => {
     const ergebnis = zaehleinheiten(endwirkungsLauf(liste), definition);
@@ -585,7 +909,7 @@ describe("L — die Modellgrenze: Legacy behaelt seine Aggregation", () => {
   it("L4 — dieselbe undatierte Kette unter Endwirkung wird nicht geraten", () => {
     const kette = [abgeschlossen(undefined, "durchgesetzt"), rueckweisung(undefined)];
     const { ergebnis } = einheitAus(kette, ENDWIRKUNG);
-    expect(ergebnis.fehler.join("\n")).toContain("kein Entscheiddatum");
+    expect(ergebnis.fehler.join("\n")).toContain("kein Standdatum");
   });
 
   it("die Entscheidung faellt allein ueber istEndwirkungsmodell", () => {
@@ -780,17 +1104,24 @@ describe("K — Erledigungsweg, Abschlussstatus und Messausgang sind vollstaendi
     ] as const;
 
     for (const k of kombinationen) {
-      const f = befund({
-        erledigungsweg:
-          k.modus === "prozessual_erledigt"
-            ? weg({ modus: k.modus, prozessgrund: "aktivlegitimation_fehlte" })
-            : weg({ modus: k.modus }),
-        abschluss_status: k.abschluss,
-        messausgang: ausgang(k.wert),
-      });
+      // Geprueft wird die Kopplung der drei Felder, nicht der ganze Lauf: ein
+      // terminal offener Fall ist in sich stimmig und trotzdem nicht
+      // einschliessbar (Block U).
+      const fehler = pruefeEndwirkung(
+        "ML-999",
+        "2026-08-08",
+        vollstaendig(1, {
+          erledigungsweg:
+            k.modus === "prozessual_erledigt"
+              ? weg({ modus: k.modus, prozessgrund: "aktivlegitimation_fehlte" })
+              : weg({ modus: k.modus }),
+          abschluss_status: k.abschluss,
+          messausgang: ausgang(k.wert),
+        }),
+      );
       expect(
-        f.ok,
-        `${k.modus} / ${k.abschluss} / ${k.wert} sollte ${k.gueltig ? "gueltig" : "abgelehnt"} sein: ${f.fehler.join(" | ")}`,
+        fehler.length === 0,
+        `${k.modus} / ${k.abschluss} / ${k.wert} sollte ${k.gueltig ? "gueltig" : "abgelehnt"} sein: ${fehler.join(" | ")}`,
       ).toBe(k.gueltig);
     }
   });

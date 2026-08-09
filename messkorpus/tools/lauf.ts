@@ -45,6 +45,30 @@ export function istZaehlbar(wert: MessausgangWert): boolean {
   return (ZAEHLBARE_MESSAUSGAENGE as readonly MessausgangWert[]).includes(wert);
 }
 
+/**
+ * Die Werte, die CR-03 fuer das Endwirkungsmodell festlegt. "teilweise"
+ * gehoert nicht dazu: gemessen wird die endgueltige Rechtswirkung auf eine
+ * konkrete Kuendigung, und die ist eingetreten oder nicht. Ein "teilweise"
+ * waere dort keine Beobachtung, sondern eine Zwischenkategorie, ueber die
+ * niemand entschieden hat. Im Modell "materielle_pruefung" bleibt der Wert
+ * unveraendert gueltig.
+ */
+export const ENDWIRKUNG_MESSAUSGAENGE = [
+  "durchgesetzt",
+  "nicht_durchgesetzt",
+  "nicht_anwendbar",
+  "offen",
+] as const satisfies readonly MessausgangWert[];
+
+function kenntMessausgangsmodell(wert: MessausgangWert): boolean {
+  return (ENDWIRKUNG_MESSAUSGAENGE as readonly MessausgangWert[]).includes(wert);
+}
+
+/** Kennt das Modell dieser Definition den Wert ueberhaupt? */
+export function kenntMessausgang(wert: MessausgangWert, definition: Messdefinition): boolean {
+  return istEndwirkungsmodell(definition) ? kenntMessausgangsmodell(wert) : wert !== "offen";
+}
+
 export interface Messausgang {
   messdefinition_id: string;
   messdefinition_version: string;
@@ -75,7 +99,26 @@ export interface Erledigungsweg {
   prozessgrund: Prozessgrund | null;
   /** Konkrete Textstelle oder praeziser Fundstellenhinweis aus der Primaerquelle. */
   beleg: string;
-  /** Herkunft des Belegs, wenn er nicht aus dem Treffer selbst stammt (E2 Ziff. 3). */
+  /**
+   * Datum des Entscheids oder Verfahrensakts, der DEN HIER KODIERTEN STAND
+   * begruendet (JJJJ-MM-TT).
+   *
+   * Nicht dasselbe wie `treffer.datum`: das ist das Rohmetadatum des
+   * urspruenglichen Suchtreffers. Stammt der Endzustand aus einem nach CR-03
+   * E2 zulaessigen verknuepften Folgeentscheid, ist dessen Datum massgeblich —
+   * sonst ordnete die Kette nach dem Datum des falschen Entscheids.
+   *
+   * Im Endwirkungsmodell Pflicht fuer eingeschlossene Treffer; im Modell
+   * "materielle_pruefung" ohne Bedeutung.
+   */
+  stand_datum?: string;
+  /**
+   * Primaerquelle des kodierten Standes: der Roh-Treffer selbst oder ein nach
+   * CR-03 E2 zulaessiger, ausdruecklich verknuepfter Folgeentscheid derselben
+   * Verfahrenskette. Im Endwirkungsmodell Pflicht fuer eingeschlossene
+   * Treffer — sonst bliebe offen, welcher Entscheid Standdatum, Weg und
+   * Endzustand traegt.
+   */
   quelle?: string;
 }
 
@@ -217,11 +260,47 @@ export function pruefeErledigungsweg(weg: Erledigungsweg, wo: string): string[] 
  *   materiell_entschieden  ⇒  abschluss_status abgeschlossen, zaehlbarer Messausgang
  *   prozessual_erledigt    ⇒  abschluss_status abgeschlossen, zaehlbarer Messausgang
  */
-function pruefeEndwirkung(laufId: string, treffer: Treffer): string[] {
+export function pruefeEndwirkung(laufId: string, datenstand: string, treffer: Treffer): string[] {
   const fehler: string[] = [];
   const wo = `Lauf ${laufId}: Treffer ${treffer.quelle_id}`;
 
   if (treffer.status !== "eingeschlossen") return fehler;
+
+  /* Standdatum und Provenienz: welcher Entscheid traegt den kodierten Stand? */
+  const stand = treffer.erledigungsweg?.stand_datum;
+  if (treffer.erledigungsweg && stand === undefined) {
+    fehler.push(
+      `${wo} ist eingeschlossen, nennt aber kein erledigungsweg.stand_datum. ` +
+        `Welcher Entscheid den kodierten Stand traegt, muss feststehen — das Datum des Roh-Treffers ist es nicht ` +
+        `zwingend, wenn der Endzustand aus einem verknuepften Folgeentscheid stammt.`,
+    );
+  } else if (stand !== undefined) {
+    if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(stand)) {
+      fehler.push(`${wo}: erledigungsweg.stand_datum "${stand}" ist kein Datum im Format JJJJ-MM-TT.`);
+    } else if (stand > datenstand) {
+      fehler.push(
+        `${wo}: erledigungsweg.stand_datum ${stand} liegt nach dem Datenstand des Laufs (${datenstand}). ` +
+          `Ein Entscheid, den es am Datenstand noch nicht gab, darf diesen Lauf nicht bestimmen — sonst zoege ` +
+          `spaeteres Wissen in eine historische Messung ein. Fuer diesen Lauf bleibt der Treffer "ungeklaert".`,
+      );
+    }
+  }
+  if (treffer.erledigungsweg && treffer.erledigungsweg.quelle === undefined) {
+    fehler.push(
+      `${wo} ist eingeschlossen, nennt aber keine erledigungsweg.quelle. ` +
+        `Nachvollziehbar sein muss, aus welchem Entscheid der kodierte Stand stammt: aus dem Treffer selbst oder ` +
+        `aus einem nach CR-03 E2 zulaessigen verknuepften Entscheid derselben Verfahrenskette.`,
+    );
+  }
+
+  /* "teilweise" ist im Endwirkungsmodell nicht definiert. */
+  if (treffer.messausgang && !kenntMessausgangsmodell(treffer.messausgang.wert)) {
+    fehler.push(
+      `${wo}: Messausgang "${treffer.messausgang.wert}" ist im Endwirkungsmodell nicht definiert. ` +
+        `Gemessen wird die endgueltige Rechtswirkung auf eine konkrete Kuendigung; CR-03 kennt dafuer ` +
+        `${ENDWIRKUNG_MESSAUSGAENGE.join(", ")}.`,
+    );
+  }
 
   if (!treffer.erledigungsweg) {
     fehler.push(
@@ -483,13 +562,32 @@ export function pruefeLauf(lauf: Messlauf, definition: Messdefinition): Befund {
       );
     }
 
-    if (endwirkung) fehler.push(...pruefeEndwirkung(lauf.id, treffer));
+    if (endwirkung) fehler.push(...pruefeEndwirkung(lauf.id, lauf.datenstand, treffer));
 
     if (treffer.messausgang && !gehoertZu(treffer.messausgang, definition)) {
       fehler.push(
         `Lauf ${lauf.id}: Treffer ${treffer.quelle_id} traegt einen Messausgang zu ${treffer.messausgang.messdefinition_id}@${treffer.messausgang.messdefinition_version}, ` +
           `der Lauf gehoert aber zu ${definition.id}@${definition.version}. Ein Normausgang gilt nur fuer seine eigene Messdefinition ` +
           `UND deren Fassung — mit einer neuen Version koennen sich Messfrage und Kriterien geaendert haben, dann ist die alte Kodierung nicht mehr dieselbe Aussage.`,
+      );
+    }
+  }
+
+  /* Terminal offen heisst: noch nicht einschliessbar.
+     CR-03 verlangt fuer den Einschluss, dass der endgueltige rechtliche
+     Zustand der Kuendigung bestimmbar ist. Steht der TERMINALE Stand einer
+     Zaehleinheit noch auf "offen", ist genau dieses Merkmal nicht erfuellt —
+     die Streitigkeit gehoert bis zur Klaerung nicht in den Nenner, sondern
+     bleibt "ungeklaert" (Auflage E2 Ziff. 6). Ein frueherer offener Entscheid
+     INNERHALB einer spaeter abgeschlossenen Kette bleibt davon unberuehrt. */
+  if (endwirkung) {
+    for (const einheit of zaehleinheiten(lauf, definition).einheiten) {
+      if (!einheit.offen) continue;
+      fehler.push(
+        `Lauf ${lauf.id}: Zaehleinheit ${einheit.id} ist eingeschlossen, ihr terminaler Stand ist aber "offen" ` +
+          `(${einheit.treffer.map((t) => t.quelle_id).join(", ")}). Der endgueltige Zustand ist am Datenstand ` +
+          `${lauf.datenstand} nicht bestimmbar; die Streitigkeit muss nach CR-03 E2 als "ungeklaert" gefuehrt werden, ` +
+          `bis ein zulaessiger Folgeentscheid den Endzustand bestimmt.`,
       );
     }
   }
@@ -653,20 +751,26 @@ function terminalerStand(
   const schluessel = new Set(kette.map((e) => standSchluessel(e.stand)));
   if (schluessel.size === 1) return { stand: alsEinheit(kette[0]!.stand), fehler: [] };
 
-  const ohneDatum = kette.filter((e) => e.treffer.datum === undefined);
+  /* Geordnet wird nach dem Standdatum, nicht nach `treffer.datum`: stammt der
+     kodierte Stand aus einem verknuepften Folgeentscheid, ist dessen Datum
+     massgeblich, nicht das des urspruenglichen Suchtreffers. */
+  const standDatum = (e: { treffer: Treffer }): string | undefined => e.treffer.erledigungsweg?.stand_datum;
+
+  const ohneDatum = kette.filter((e) => standDatum(e) === undefined);
   if (ohneDatum.length > 0) {
     return {
       stand: UNBESTIMMT,
       fehler: [
         `Zaehleinheit ${id} wechselt den Stand (${[...schluessel].sort().join(" / ")}), aber ` +
-          `${ohneDatum.map((e) => e.treffer.quelle_id).join(", ")} traegt kein Entscheiddatum. ` +
-          `Welcher Stand der letzte ist, laesst sich damit nicht bestimmen — und wird nicht geraten.`,
+          `${ohneDatum.map((e) => e.treffer.quelle_id).join(", ")} traegt kein Standdatum ` +
+          `(erledigungsweg.stand_datum). Welcher Stand der letzte ist, laesst sich damit nicht bestimmen — ` +
+          `und wird nicht geraten.`,
       ],
     };
   }
 
-  const spaetestes = kette.reduce((bisher, e) => (e.treffer.datum! > bisher ? e.treffer.datum! : bisher), "");
-  const letzte = kette.filter((e) => e.treffer.datum === spaetestes);
+  const spaetestes = kette.reduce((bisher, e) => (standDatum(e)! > bisher ? standDatum(e)! : bisher), "");
+  const letzte = kette.filter((e) => standDatum(e) === spaetestes);
   const letzteSchluessel = new Set(letzte.map((e) => standSchluessel(e.stand)));
   if (letzteSchluessel.size > 1) {
     return {
