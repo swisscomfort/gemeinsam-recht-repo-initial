@@ -204,6 +204,18 @@ export function pruefeErledigungsweg(weg: Erledigungsweg, wo: string): string[] 
  * Die Pflichten des Endwirkungsmodells fuer einen EINGESCHLOSSENEN Treffer
  * (CR-03). Ein `ungeklaert` gebliebener Treffer faellt nicht hierunter — dort
  * wird ausdruecklich nichts erfunden (Auflage E2 Ziff. 6).
+ *
+ * `erledigungsweg.modus`, `abschluss_status` und `messausgang` beschreiben
+ * denselben Sachverhalt aus drei Richtungen. Sie werden deshalb in BEIDE
+ * Richtungen gekoppelt: nicht nur "eine Rueckweisung laesst die Messfrage
+ * offen", sondern ebenso "eine offene Messfrage kommt nur aus einer
+ * Rueckweisung". Ohne die Gegenrichtung waeren Datensaetze gueltig, in denen
+ * der Erledigungsweg etwas anderes behauptet als die beiden anderen Felder —
+ * dann bezeichnete er nicht mehr den Zustand, den sie ausdruecken.
+ *
+ *   rueckweisung_offen    ⟺  abschluss_status rueckweisung_offen ⟺ messausgang "offen"
+ *   materiell_entschieden  ⇒  abschluss_status abgeschlossen, zaehlbarer Messausgang
+ *   prozessual_erledigt    ⇒  abschluss_status abgeschlossen, zaehlbarer Messausgang
  */
 function pruefeEndwirkung(laufId: string, treffer: Treffer): string[] {
   const fehler: string[] = [];
@@ -253,6 +265,46 @@ function pruefeEndwirkung(laufId: string, treffer: Treffer): string[] {
           `Nach einer Rueckweisung ist die endgueltige Rechtswirkung noch nicht bestimmbar — sie heisst dann "offen".`,
       );
     }
+  }
+
+  /* Gegenrichtung: ein offener Stand kommt nur aus einer Rueckweisung. Ohne
+     diese Richtung koennte der Erledigungsweg eine Erledigung behaupten,
+     waehrend die beiden anderen Felder die Sache offen halten. */
+  const weg = treffer.erledigungsweg;
+  if (weg && weg.modus !== "rueckweisung_offen") {
+    if (treffer.messausgang?.wert === "offen") {
+      fehler.push(
+        `${wo}: Messausgang "offen", Erledigungsweg aber "${weg.modus}". ` +
+          `Ein offener Messausgang heisst, dass die endgueltige Rechtswirkung aussteht — das ist keine Erledigung. ` +
+          `Entweder ist der Weg "rueckweisung_offen", oder der Messausgang benennt die eingetretene Wirkung.`,
+      );
+    }
+    if (treffer.abschluss_status === "rueckweisung_offen") {
+      fehler.push(
+        `${wo}: Abschlussstatus "rueckweisung_offen", Erledigungsweg aber "${weg.modus}". ` +
+          `Beide Felder beschreiben denselben Sachverhalt; hier sagen sie Verschiedenes.`,
+      );
+    }
+    /* materiell_entschieden und prozessual_erledigt sind Endzustaende. */
+    if (treffer.abschluss_status !== undefined && treffer.abschluss_status !== "abgeschlossen") {
+      fehler.push(
+        `${wo}: Erledigungsweg "${weg.modus}", Abschlussstatus aber "${treffer.abschluss_status}". ` +
+          `Eine Erledigung schliesst die gemessene Rechtsfrage ab — sonst ist sie keine.`,
+      );
+    }
+  }
+
+  /* Zwischenstaende sind kein Endzustand. Sie werden NICHT still einem der
+     drei Erledigungsmodi zugeschlagen: fuer sie ist bisher keiner definiert,
+     und einen zu erfinden waere eine fachliche Entscheidung, keine
+     technische. Ist die Sachlage wirklich noch nicht klassifizierbar, bleibt
+     der Treffer "ungeklaert" — dann verlangt das Modell gar keine Felder. */
+  if (treffer.abschluss_status === "zwischenentscheid" || treffer.abschluss_status === "ungeklaert") {
+    fehler.push(
+      `${wo} ist eingeschlossen, traegt aber den Abschlussstatus "${treffer.abschluss_status}". ` +
+        `Die drei Erledigungsmodi beschreiben nur Endzustaende; fuer einen Zwischenstand ist keiner definiert. ` +
+        `Ist die Sachlage noch nicht klassifizierbar, bleibt der Treffer "ungeklaert" statt eingeschlossen.`,
+    );
   }
 
   return fehler;

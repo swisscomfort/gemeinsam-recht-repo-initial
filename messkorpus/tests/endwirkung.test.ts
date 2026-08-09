@@ -653,6 +653,149 @@ describe("9/10 — Abschluss und Messausgang muessen zusammenpassen", () => {
   });
 });
 
+describe("K — Erledigungsweg, Abschlussstatus und Messausgang sind vollstaendig gekoppelt", () => {
+  // Die drei Felder beschreiben denselben Sachverhalt aus drei Richtungen.
+  // Geprueft wird deshalb in beide Richtungen: nicht nur "eine Rueckweisung
+  // laesst die Messfrage offen", sondern ebenso "eine offene Messfrage kommt
+  // nur aus einer Rueckweisung". Ohne die Gegenrichtung waere ein Datensatz
+  // gueltig, in dem der Erledigungsweg etwas anderes behauptet als die beiden
+  // anderen Felder — dann bezeichnete er nicht mehr deren Zustand.
+  const befund = (teil: Partial<Treffer>) => pruefeLauf(endwirkungsLauf([vollstaendig(1, teil)]), ENDWIRKUNG);
+
+  it("K1 — prozessual_erledigt mit rueckweisung_offen und offen ist ein Fehler", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "prozessual_erledigt", prozessgrund: "anfechtungsfrist_verwirkt" }),
+      abschluss_status: "rueckweisung_offen",
+      messausgang: ausgang("offen"),
+    });
+    expect(f.ok).toBe(false);
+    expect(f.fehler.join("\n")).toContain('Messausgang "offen", Erledigungsweg aber "prozessual_erledigt"');
+  });
+
+  it("K2 — materiell_entschieden mit rueckweisung_offen und offen ist ein Fehler", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "materiell_entschieden" }),
+      abschluss_status: "rueckweisung_offen",
+      messausgang: ausgang("offen"),
+    });
+    expect(f.ok).toBe(false);
+    expect(f.fehler.join("\n")).toContain('Abschlussstatus "rueckweisung_offen", Erledigungsweg aber');
+  });
+
+  it.each(["materiell_entschieden", "prozessual_erledigt"] as const)(
+    "K3 — Messausgang \"offen\" bei modus %s ist ein Fehler",
+    (modus) => {
+      const f = befund({
+        erledigungsweg:
+          modus === "prozessual_erledigt"
+            ? weg({ modus, prozessgrund: "instanzverwirkung" })
+            : weg({ modus }),
+        messausgang: ausgang("offen"),
+      });
+      expect(f.ok).toBe(false);
+      expect(f.fehler.join("\n")).toContain("das ist keine Erledigung");
+    },
+  );
+
+  it.each(["materiell_entschieden", "prozessual_erledigt"] as const)(
+    "K4 — Abschlussstatus rueckweisung_offen bei modus %s ist ein Fehler",
+    (modus) => {
+      const f = befund({
+        erledigungsweg:
+          modus === "prozessual_erledigt"
+            ? weg({ modus, prozessgrund: "instanzverwirkung" })
+            : weg({ modus }),
+        abschluss_status: "rueckweisung_offen",
+      });
+      expect(f.ok).toBe(false);
+      expect(f.fehler.join("\n")).toContain("hier sagen sie Verschiedenes");
+    },
+  );
+
+  it("K5 — materiell_entschieden, abgeschlossen, durchgesetzt ist gueltig", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "materiell_entschieden" }),
+      abschluss_status: "abgeschlossen",
+      messausgang: ausgang("durchgesetzt"),
+    });
+    expect(f.fehler).toEqual([]);
+  });
+
+  it("K6 — prozessual_erledigt mit Grund, abgeschlossen, nicht_durchgesetzt ist gueltig", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "prozessual_erledigt", prozessgrund: "klagebewilligung_fehlte_oder_ungueltig" }),
+      abschluss_status: "abgeschlossen",
+      messausgang: ausgang("nicht_durchgesetzt"),
+    });
+    expect(f.fehler).toEqual([]);
+  });
+
+  it("K7 — prozessual_erledigt, abgeschlossen, offen ist ein Fehler", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "prozessual_erledigt", prozessgrund: "nichteintreten_sonstiger_grund" }),
+      abschluss_status: "abgeschlossen",
+      messausgang: ausgang("offen"),
+    });
+    expect(f.ok).toBe(false);
+    expect(f.fehler.join("\n")).toContain("das ist keine Erledigung");
+  });
+
+  it("K8 — materiell_entschieden mit zwischenentscheid ist ein Fehler", () => {
+    const f = befund({ erledigungsweg: weg({ modus: "materiell_entschieden" }), abschluss_status: "zwischenentscheid" });
+    expect(f.ok).toBe(false);
+    expect(f.fehler.join("\n")).toContain("fuer einen Zwischenstand ist keiner definiert");
+  });
+
+  it("K9 — prozessual_erledigt mit ungeklaertem Abschluss ist ein Fehler", () => {
+    const f = befund({
+      erledigungsweg: weg({ modus: "prozessual_erledigt", prozessgrund: "sonstiger_prozessgrund" }),
+      abschluss_status: "ungeklaert",
+    });
+    expect(f.ok).toBe(false);
+    expect(f.fehler.join("\n")).toContain("fuer einen Zwischenstand ist keiner definiert");
+  });
+
+  it("K9 — es wird kein Modus fuer den Zwischenstand erfunden", () => {
+    // Der Fehlertext verweist auf "ungeklaert" als Ausweg, nicht auf einen
+    // vierten Modus. Einen einzufuehren waere eine fachliche Entscheidung.
+    const f = befund({ erledigungsweg: weg(), abschluss_status: "zwischenentscheid" });
+    expect(f.fehler.join("\n")).toContain('bleibt der Treffer "ungeklaert" statt eingeschlossen');
+  });
+
+  it("K10 — ein ungeklaerter Treffer bleibt ohne Endwirkungsfelder gueltig", () => {
+    const l = endwirkungsLauf([treffer({ quelle_id: "q1", status: "ungeklaert" })]);
+    expect(pruefeLauf(l, ENDWIRKUNG).fehler).toEqual([]);
+  });
+
+  it("nur drei Kombinationen sind gueltig — jede andere faellt auf", () => {
+    const kombinationen = [
+      { modus: "materiell_entschieden", abschluss: "abgeschlossen", wert: "durchgesetzt", gueltig: true },
+      { modus: "prozessual_erledigt", abschluss: "abgeschlossen", wert: "nicht_durchgesetzt", gueltig: true },
+      { modus: "rueckweisung_offen", abschluss: "rueckweisung_offen", wert: "offen", gueltig: true },
+      { modus: "materiell_entschieden", abschluss: "abgeschlossen", wert: "offen", gueltig: false },
+      { modus: "materiell_entschieden", abschluss: "rueckweisung_offen", wert: "durchgesetzt", gueltig: false },
+      { modus: "prozessual_erledigt", abschluss: "rueckweisung_offen", wert: "offen", gueltig: false },
+      { modus: "rueckweisung_offen", abschluss: "abgeschlossen", wert: "offen", gueltig: false },
+      { modus: "rueckweisung_offen", abschluss: "rueckweisung_offen", wert: "durchgesetzt", gueltig: false },
+    ] as const;
+
+    for (const k of kombinationen) {
+      const f = befund({
+        erledigungsweg:
+          k.modus === "prozessual_erledigt"
+            ? weg({ modus: k.modus, prozessgrund: "aktivlegitimation_fehlte" })
+            : weg({ modus: k.modus }),
+        abschluss_status: k.abschluss,
+        messausgang: ausgang(k.wert),
+      });
+      expect(
+        f.ok,
+        `${k.modus} / ${k.abschluss} / ${k.wert} sollte ${k.gueltig ? "gueltig" : "abgelehnt"} sein: ${f.fehler.join(" | ")}`,
+      ).toBe(k.gueltig);
+    }
+  });
+});
+
 describe("11 — derselbe prozessuale Weg kann verschieden ausgehen", () => {
   // Der Kern von CR-03: der Erledigungsweg praejudiziert die Rechtswirkung
   // nicht. Wuerde die Pruefung aus dem Weg auf den Ausgang schliessen, waere
