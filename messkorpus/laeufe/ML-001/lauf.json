@@ -2739,7 +2739,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-535-2020_2020-12-03",
       "metadaten_fingerprint": "8d99e86fb911d11c9b0779cbd1cbfcf462bcc484d6a9659d9aa750c9f2c8d182",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mieterin berief sich auf die Sperrfrist nach Art. 271a Abs. 1 lit. e Ziff. 4 OR. Das Bundesgericht prueft innerhalb des Art. 271a-Rahmens die Ausnahme von Abs. 3 lit. c OR und verneint den Schutz, weil eine schwere Sorgfaltspflichtverletzung nach Art. 257f Abs. 3 OR vorliegt. Endentscheid.",
+      "zaehleinheit": "4A_535/2020",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Il resulte des considerations qui precedent que la recourante a viole son devoir de diligence au sens de l' art. 257f al. 3 CO. Ainsi, la protection garantie par l' art. 271a al. 1 let. e CO est exclue. ... En definitive, le recours doit etre rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-535-2020_2020-12-03"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-539-2019_2020-01-06",
@@ -2748,7 +2758,8 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-539-2019_2020-01-06",
       "metadaten_fingerprint": "3a08e6cbfdb48113807559cd527e523a82274424f01510c8e0dc2ba06b26acaf",
-      "status": "ungeklaert"
+      "status": "ungeklaert",
+      "notiz": "Die Anfechtungsklage wurde gegenueber zwei Mitmieterinnen fuer unzulaessig erklaert (fehlende Teilnahme am Schlichtungsverfahren) und im Uebrigen mangels Aktivlegitimation abgewiesen; der Kuendigungsschutz wurde nicht materiell beurteilt. Derselbe methodische Konflikt wie beim Nichteintreten und wie bei 4A_282/2021. Bleibt ungeklaert bis zur Entscheidung des Projektinhabers."
     },
     {
       "quelle_id": "CH_BGer_004_4A-547-2015_2016-04-14",
@@ -2757,7 +2768,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-547-2015_2016-04-14",
       "metadaten_fingerprint": "5fcb65c81e627d910dae9c5352dd08a9db5563cbf5429424f7b623bcf3b7f5d6",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Kuendigung aus wirtschaftlichen Gruenden. Die kantonalen Instanzen hoben sie nach Art. 271a Abs. 1 lit. b und ergaenzend nach Art. 271 Abs. 1 OR auf, weil die Vermieterin die orts- und quartierueblichen Mietzinse nicht nachwies; die Beschwerde der Vermieterin wird abgewiesen. Endentscheid.",
+      "zaehleinheit": "4A_547/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "Par surabondance, le conge etait aussi annulable en vertu de l' art. 271 al. 1 CO. La bailleresse n'avait pas etabli quels etaient les loyers usuels du quartier, echouant ainsi dans la preuve qu'elle pourrait obtenir [un loyer superieur]. ... Le recours est rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-547-2015_2016-04-14"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-550-2020_2021-04-29",
@@ -2766,7 +2787,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-550-2020_2021-04-29",
       "metadaten_fingerprint": "0391db6f8e9f402f4eabe59bb2a0aa4f502af75c0f89729589e3eacc9882487d",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Ausweisung des Untermieters im Verfahren des klaren Falls nach Art. 257 ZPO. Art. 271 Abs. 1 OR wird nur vorfrageweise gestreift; Streitgegenstand ist die Ausweisung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-551-2016_2016-11-03",
@@ -2775,7 +2798,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-551-2016_2016-11-03",
       "metadaten_fingerprint": "649e750911798583f7daabbc81f76b1241ba62cd501b8584ed1b8fdfb93f47cb",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Ausweisung des Mieters. Streitgegenstand ist die Ausweisung, nicht der Kuendigungsschutz nach Art. 271/271a OR.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-552-2019_2020-04-21",
@@ -2784,7 +2809,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-552-2019_2020-04-21",
       "metadaten_fingerprint": "715442614ea2f9147187aca01f8ba3d74bfd95f90280a8d6b72cf8239f1e7e00",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Die Gueltigkeit der Kuendigung stand bereits erstinstanzlich fest und war vor Bundesgericht nicht mehr streitig; Gegenstand ist allein das Erstreckungsbegehren, das abgewiesen wird.",
+      "ausschlussgrund": "nur_erstreckung"
     },
     {
       "quelle_id": "CH_BGer_004_4A-556-2015_2016-05-03",
@@ -2793,7 +2820,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-556-2015_2016-05-03",
       "metadaten_fingerprint": "ecb0cd092454d46e6501e33a4c859eeb2226f81f360f740da53f4c2423299e7a",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Anfechtung der Kuendigung. Das Bundesgericht heisst die Beschwerde gut, prueft Art. 271/271a OR materiell und erklaert die Kuendigung fuer gueltig. Endentscheid.",
+      "zaehleinheit": "4A_556/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Le recours est admis ... le conge signifie par avis du 2 juillet 2013 pour le 31 octobre 2013 est valable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-556-2015_2016-05-03"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-556-2024_2025-09-25",
@@ -2802,7 +2839,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-556-2024_2025-09-25",
       "metadaten_fingerprint": "2926522e2e3dd301c499496f63f314616cc9a99187f183708e40211a39f7cb71",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mieterinnen machten geltend, die Kuendigung sei nach Art. 271 und 271a OR anfechtbar. Das Bundesgericht prueft die Treuwidrigkeit materiell und verneint sie. Endentscheid.",
+      "zaehleinheit": "4A_556/2024",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Enfin, les recourantes ne parviennent pas a demontrer que l'intimee aurait adopte un comportement deloyal en resiliant le contrat, au point de rendre le conge annulable. ... Le recours est rejete dans la mesure ou il est recevable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-556-2024_2025-09-25"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-557-2017_2018-02-21",
@@ -2811,7 +2858,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-557-2017_2018-02-21",
       "metadaten_fingerprint": "d60c15014be08f750574616ea1f74103968f47b4eb2a0c079c65a9fc94c4d10e",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Mieterausweisung im Verfahren nach Art. 257 ZPO. Der Einwand der Anfechtbarkeit nach Art. 271 OR wird nur vorfrageweise behandelt; Streitgegenstand ist die Ausweisung.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-557-2024_2025-09-23",
@@ -2820,7 +2869,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-557-2024_2025-09-23",
       "metadaten_fingerprint": "38f80255da2a3119166e3781cd6a79592eb2ebe7bc010b4e5c7b060a81f5e588",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Anfechtung der Kuendigung. Das Bundesgericht prueft Art. 271 Abs. 1 OR materiell und bestaetigt die Aufhebung durch beide kantonalen Instanzen; die Beschwerde der Vermieterseite wird abgewiesen. Endentscheid.",
+      "zaehleinheit": "4A_557/2024",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "En definitive, le conge est bel et bien annulable, comme l'avait juge le tribunal de premiere instance, puis la Cour de justice. ... Le recours est rejete, dans la mesure ou il est recevable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-557-2024_2025-09-23"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-560-2017_2018-03-01",
@@ -2829,7 +2888,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-560-2017_2018-03-01",
       "metadaten_fingerprint": "b316233c5c27e91c3e93c6f3b020dec342d0de4f048972a81c26770e7f29aba9",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Der Mieter verlangte die Aufhebung der Kuendigungen. Das Bundesgericht prueft Art. 271 Abs. 1 OR frei und verneint die Treuwidrigkeit. Endentscheid.",
+      "zaehleinheit": "4A_560/2017",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "la Cour de justice etait fondee a retenir que les resiliations ne contrevenaient pas aux regles de la bonne foi. ... Le recours est rejete dans la mesure ou il est recevable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-560-2017_2018-03-01"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-563-2017_2019-02-19",
@@ -2838,7 +2907,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-563-2017_2019-02-19",
       "metadaten_fingerprint": "b64e3e79a290d4f9727a23dabbecbee5f5f89b7ccaa93a43ab4acb6d4774bb21",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist eine Schadenersatzklage. Dass die Kuendigung nicht missbraeuchlich ist, war bereits in einem frueheren, rechtskraeftigen Urteil festgestellt worden und bindet das Gericht im zweiten Prozess; eine erneute materielle Beurteilung nach Art. 271/271a OR findet nicht statt.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-565-2017_2018-07-11",
@@ -2847,7 +2918,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-565-2017_2018-07-11",
       "metadaten_fingerprint": "ff352b41913c11093a4fea9aa59815f70b79918a343db22b409671955568e109",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Dem Verfahren liegt ein Pachtvertrag zugrunde (Ausweisung aus Pacht im Verfahren nach Art. 257 ZPO), kein Mietverhaeltnis nach Art. 253 ff. OR.",
+      "ausschlussgrund": "kein_mietverhaeltnis"
     },
     {
       "quelle_id": "CH_BGer_004_4A-568-2023_2024-07-10",
@@ -2856,7 +2929,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-568-2023_2024-07-10",
       "metadaten_fingerprint": "a42dbd3e955aaf6c9c761e04574ece6301f19e950c7bec11a1e5f91437f3926d",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Anfechtung der Kuendigung. Das Bundesgericht prueft Art. 271 Abs. 1 OR materiell (vorgeschobener Kuendigungsgrund) und bestaetigt die Treuwidrigkeit; die Beschwerde des Vermieters wird abgewiesen. Endentscheid.",
+      "zaehleinheit": "4A_568/2023",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "dans le cas present, celle que le bailleur a notifiee a sa belle-soeur est contraire a la bonne foi. Le scenario que le bailleur a mis sur pied n'a pas leurre la cour cantonale. ... Le recours est rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-568-2023_2024-07-10"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-569-2017_2018-04-27",
@@ -2865,7 +2948,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-569-2017_2018-04-27",
       "metadaten_fingerprint": "e8058408fb2354524864993882dc78c46a6ec01af707d508b3cf4ba7bbc81da6",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Ausweisung im Verfahren des klaren Falls nach Art. 257 ZPO; streitig ist, ob die Wohnung eine Familienwohnung nach Art. 266m und 266n OR ist und die Kuendigung deshalb nichtig waere. Eine materielle Beurteilung nach Art. 271/271a OR erfolgt nicht.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-570-2018_2019-07-31",
@@ -2874,7 +2959,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-570-2018_2019-07-31",
       "metadaten_fingerprint": "d84f840e701efb205cd6752cfb6de1d1cf8b8a7f5adc29cd35e594d0b01e61c5",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Kuendigungsschutz bei einer Familienwohnung. Das Mietgericht stellte die Missbraeuchlichkeit der Kuendigung fest; die Beschwerde der Vermieterin wird abgewiesen. Endentscheid.",
+      "zaehleinheit": "4A_570/2018",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "durchgesetzt",
+        "beleg": "Mit Urteil vom 16. Februar 2018 wies das Mietgericht das Hauptbegehren ab. Das Eventualbegehren hiess es hingegen gut und stellte die Missbraeuchlichkeit der Kuendigung vom 22. Oktober 2015 fest. ... Die Beschwerde ist daher abzuweisen, soweit darauf eingetreten werden kann.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-570-2018_2019-07-31"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-571-2018_2019-01-14",
@@ -2883,7 +2978,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-571-2018_2019-01-14",
       "metadaten_fingerprint": "1b2229b34aee71582f64f18da6e83f0369f6abcc819d4c252ab7b042d8dc3e72",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Zahlungsverzugskuendigung; die Mieterin berief sich auf Art. 271 Abs. 1 OR. Das Bundesgericht prueft die anerkannten Fallgruppen materiell und verneint sie alle. Endentscheid.",
+      "zaehleinheit": "4A_571/2018",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "En l'occurrence, aucune de ces hypotheses n'entre en consideration. ... Le recours est rejete.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-571-2018_2019-01-14"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-571-2020_2021-03-23",
@@ -2892,7 +2997,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-571-2020_2021-03-23",
       "metadaten_fingerprint": "00e6bf166081b5412b657653753b156aa9d234f456d053c7d0a02776e0a1d0ae",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Mieterausweisung. Das Bundesgericht haelt fest, die Mieterin habe auf eine Anfechtung der Kuendigung verzichtet, weshalb auf die Ruege der Rechtsmissbraeuchlichkeit nicht einzugehen sei; die Mietpartei hat sich damit nicht auf den Kuendigungsschutz berufen.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-576-2014_2015-03-25",
@@ -2901,7 +3008,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-576-2014_2015-03-25",
       "metadaten_fingerprint": "4b647f4eb80372ea35c7fb757f2471b6b5f46cbd929caed549be2d2aff3c7eb7",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Mieterausweisung und unentgeltliche Rechtspflege. Der Beschwerdefuehrer ist ausgezogen und hat kein aktuelles Interesse mehr; die Kuendigung wurde nicht innert der Frist von Art. 273 Abs. 1 OR angefochten. Streitgegenstand ist die Ausweisung, nicht der Kuendigungsschutz.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-576-2024_2025-04-29",
@@ -2910,7 +3019,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-576-2024_2025-04-29",
       "metadaten_fingerprint": "3b843f602faddce1c408c20eebbe877917c846baae9e66c4da312aeac04096c0",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Vollentscheid zum bereits erfassten Publikationsauszug BGE 151 III 481 (Rohposition 016); dieselbe Streitigkeit, dieselbe Zaehleinheit. Abbruchkuendigung; das Bundesgericht hebt die kantonale Ungueltigerklaerung auf, die Rueckweisung betrifft nur die Erstreckung.",
+      "zaehleinheit": "4A_576/2024",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Da die Vorinstanz die Kuendigung fuer ungueltig erklaerte, eruebrigte sich die Pruefung des Erstreckungsbegehrens des Beschwerdegegners. ... Die Beschwerde wird gutgeheissen.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-576-2024_2025-04-29"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-583-2014_2015-01-23",
@@ -2919,7 +3038,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-583-2014_2015-01-23",
       "metadaten_fingerprint": "5c40ebfc8510b7d8c66bb9f45bf8909ced0816a43e2e547a357e0879e9aa38b3",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Renovationskuendigungen; die Mieter verlangten deren Aufhebung. Das Bundesgericht prueft Art. 271 Abs. 1 OR materiell (Reife des Projekts, fehlende Bewilligungen im Kuendigungszeitpunkt) und verneint die Treuwidrigkeit. Endentscheid.",
+      "zaehleinheit": "4A_583/2014",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Peu importe que les intimees n'aient pas dispose d'autorisations administratives au moment ou les conges ont ete donnes. Les recourants ne demontrent en outre pas que leur octroi futur parait exclu. ... Le recours est rejete dans la mesure ou il est recevable.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-583-2014_2015-01-23"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-588-2019_2020-05-12",
@@ -2928,7 +3057,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-588-2019_2020-05-12",
       "metadaten_fingerprint": "5b5913b9421cc73dc18e86fabc769e2d3eefd47dda8ecc56a618c19c48a6119d",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Gegenstand des bundesgerichtlichen Verfahrens ist die Saeumnis an der Schlichtungsverhandlung und die Gueltigkeit der Klagebewilligung; die materielle Beurteilung der Kuendigung steht noch aus. Der Entscheid betrifft allein diese formale Frage neben der Hauptsache und trifft hier die Vermieterseite.",
+      "ausschlussgrund": "nur_prozessuale_nebenfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-598-2018_2019-04-12",
@@ -2937,7 +3068,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-598-2018_2019-04-12",
       "metadaten_fingerprint": "434874e2092481aca9de5eb0eefcacb623f6ab032c34e4c3c862dd60aa49e24c",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Streitgegenstand ist, ob ein als befristet bezeichneter Mietvertrag in Wahrheit unbefristet ist (Gesetzesumgehung). Eine Kuendigung wurde nicht angefochten; Art. 271 OR erscheint nur in der allgemeinen Darstellung des Kuendigungsschutzes.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-605-2015_2016-02-18",
@@ -2946,7 +3079,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-605-2015_2016-02-18",
       "metadaten_fingerprint": "30a8245eed063fb646e256bdaee4e6aa3c06ea51208e84ec250effcfbd9aecc8",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Die Mieter verlangten die Aufhebung der Kuendigungen und beriefen sich auf Art. 271 Abs. 1 und Art. 271a Abs. 1 lit. e OR. Das Bundesgericht bestaetigt die materielle Beurteilung: die Kuendigungen sind durch das Verhalten der Mieter gegenueber der Nachbarin motiviert und mit Art. 271 Abs. 1 OR vereinbar. Endentscheid.",
+      "zaehleinheit": "4A_605/2015",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "La Cour constate egalement que les conges litigieux ont leur motif dans ces comportements. ... les demandeurs ne mettent pas en doute que les conges litigieux soient reellement motives par leurs comportements nuisibles a leur voisine; ils ne contestent pas davantage que les conges ainsi motives soient compatibles avec l' art. 271 al. 1 CO.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-605-2015_2016-02-18"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-608-2020_2021-02-26",
@@ -2955,7 +3098,17 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-608-2020_2021-02-26",
       "metadaten_fingerprint": "1daa004c7cc8dc2dbcfbb2daffac40fd95bb332a19a4a7a7d14be8e5a3a1c5e1",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Kuendigung aus wichtigen Gruenden (Art. 266g Abs. 1 OR). Die Mieterin berief sich zusaetzlich auf die Sperrfrist nach Art. 271a Abs. 1 lit. e Ziff. 4 OR und auf Missbraeuchlichkeit; das Bundesgericht beurteilt diese Frage materiell und verneint sie ausdruecklich. Wie bei 4A_20/2015 liegt damit neben der Beurteilung von Art. 266g OR eine eigenstaendige materielle Beurteilung des Kuendigungsschutzes vor. Endentscheid.",
+      "zaehleinheit": "4A_608/2020",
+      "abschluss_status": "abgeschlossen",
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "2.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "Es verletzt insgesamt kein Bundesrecht, wenn die Vorinstanz die Voraussetzungen einer Kuendigung aus wichtigen Gruenden gemaess Art. 266g Abs. 1 OR bejaht hat. ... Auch verletzt es kein Bundesrecht, wenn die Vorinstanz nicht von einer rechtsmissbraeuchlichen Kuendigung ausgegangen ist.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-608-2020_2021-02-26"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-609-2021_2022-07-05",
