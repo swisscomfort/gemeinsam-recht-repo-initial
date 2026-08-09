@@ -1,8 +1,58 @@
 # CR-03 — Durchsetzungswirklichkeit statt nur materielle Prüfung
 
-**Status:** VORSCHLAG — nicht angenommen. `messkorpus/definitionen/MD-001-kuendigungsschutz-bger.json` bleibt unverändert Version 2.0.0, `eingefroren`.
-**Entscheidung (nur Projektinhaber, schriftlich):** ________________________
+**Status:** ANGENOMMEN — Projektinhaberentscheid vom 9. August 2026. Umsetzung erfolgt separat; MD-001 v2.0.0 und ML-001 bleiben unverändert.
+**Entscheidung (nur Projektinhaber, schriftlich):** ANGENOMMEN am 9. August 2026.
 **Referenz:** MANIFEST v2.1 §1 (Zweck), §5 (Zählregeln), §9 (Publikationsgrenzen), §15 (Änderungsverfahren); MD-001 v2.0.0; ML-001 (Kalibrierungslauf, PR #8)
+
+## Eigentümerauflagen zur Umsetzung
+
+Die Annahme gilt mit folgenden vorab festgelegten Umsetzungsregeln. Diese Regeln
+dürfen bei der späteren Klassifikation nicht anhand beobachteter Ergebnisse
+optimiert werden.
+
+### E1 — `erledigungsweg` wird zweiachsig modelliert
+
+Kein flaches Enum, das Entscheidform und Ursache vermischt.
+
+Pflichtfeld `erledigungsweg`:
+
+- `modus`:
+  - `materiell_entschieden`
+  - `prozessual_erledigt`
+  - `rueckweisung_offen`
+- `prozessgrund`: nur bei `prozessual_erledigt` belegt, sonst `null`:
+  - `rechtsmittelbegruendung_unzureichend`
+  - `aktivlegitimation_fehlte`
+  - `klagebewilligung_fehlte_oder_ungueltig`
+  - `anfechtungsfrist_verwirkt`
+  - `instanzverwirkung`
+  - `nichteintreten_sonstiger_grund`
+  - `sonstiger_prozessgrund`
+- `beleg`: konkrete Textstelle oder präziser Fundstellenhinweis aus der
+  Primärquelle.
+
+`erledigungsweg` ist strikt vom `messausgang` getrennt. Der gleiche
+prozessuale Weg kann zu unterschiedlichen endgültigen Rechtswirkungen führen.
+
+### E2 — Recherchegrenze für den endgültigen Zustand
+
+1. Zuerst ist der Bundesgerichtsentscheid selbst auszuwerten.
+2. Ist daraus der endgültige rechtliche Zustand der konkreten Kündigung nicht
+   bestimmbar, dürfen und müssen nur **explizit verknüpfte Entscheidungen
+   derselben Verfahrenskette** nachgelesen werden.
+3. Zulässig sind primär amtliche Entscheidquellen des Bundesgerichts und der
+   kantonalen Gerichte. Ein exakter Entscheidsuche-Spiegel desselben Entscheids
+   ist zulässig, wenn der amtliche Volltext technisch nicht zugänglich ist;
+   die Provenienz ist festzuhalten.
+4. Die Recherche endet, sobald die Rechtswirkung auf genau diese Kündigung
+   bestimmbar ist.
+5. Keine offene Suche nach Parteinamen, ähnlichen Fällen oder vermutetem
+   Ausgang; keine Medienberichte, Kommentare oder Sekundärquellen zur
+   Bestimmung des Messausgangs.
+6. Bleibt der Endzustand innerhalb dieser dokumentierten Verfahrenskette nicht
+   sicher bestimmbar, bleibt der Treffer `ungeklaert`. Es wird nicht geraten.
+
+Diese beiden Auflagen sind Teil des Eigentümerentscheids zu CR-03.
 
 ## Betroffene Paragrafen
 
