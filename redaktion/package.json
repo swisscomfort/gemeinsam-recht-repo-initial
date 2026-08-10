@@ -8,6 +8,7 @@
     "kandidaten": "tsc -p tsconfig.build.json && node dist/kandidaten.js",
     "sieben": "tsc -p tsconfig.build.json && node dist/sieben.js",
     "messlauf-erheben": "tsc -p tsconfig.build.json && node dist/messlauf-erheben.js",
+    "volltexte-holen": "tsc -p tsconfig.build.json && node dist/volltexte-holen.js",
     "kodierung-export": "tsc -p tsconfig.build.json && node dist/kodierung-export.js",
     "kodierung-import": "tsc -p tsconfig.build.json && node dist/kodierung-import.js",
     "test": "tsc --noEmit && vitest run"
