@@ -156,20 +156,55 @@ describe("MD-001 v3.1.0 — eingefrorenes historisches Fenster", () => {
     expect(darfQuoteMaterialisieren(fassung("3.1.0"))).toEqual({ ok: true, fehler: [] });
   });
 
-  it("die bestehenden Laeufe bleiben an ihren eigenen Fassungen — kein ML-003", () => {
+  it("die bestehenden Laeufe bleiben an ihren eigenen Fassungen — ML-003 ist der rohe v3.1.0-Lauf", () => {
     const ml1 = leseJson(messkorpusPfad("laeufe", "ML-001", "lauf.json")) as Messlauf;
     const ml2 = leseJson(messkorpusPfad("laeufe", "ML-002", "lauf.json")) as Messlauf;
+    const ml3 = leseJson(messkorpusPfad("laeufe", "ML-003", "lauf.json")) as Messlauf;
+
     expect(ml1.messdefinition.version).toBe("2.0.0");
     expect(ml2.messdefinition.version).toBe("3.0.0");
+    expect(ml3.messdefinition.version).toBe("3.1.0");
+    expect(ml3.messdefinition.sha256).toBe(V31_FREEZE_HASH);
+
     expect(findeFassung(register, ml1.messdefinition).art).toBe("gefunden");
     expect(findeFassung(register, ml2.messdefinition).art).toBe("gefunden");
-    // Zur neuen Fassung gehoert noch kein einziger Lauf: das Verzeichnis
-    // selbst wird gelesen, nicht eine Liste erwarteter Namen.
+    expect(findeFassung(register, ml3.messdefinition).art).toBe("gefunden");
+
     const vorhandene = leseLaeufe()
       .map((l) => (l.inhalt as Messlauf).id)
       .sort();
-    expect(vorhandene).toEqual(["ML-001", "ML-002"]);
-    expect(vorhandene).not.toContain("ML-003");
-    expect(leseLaeufe().some((l) => (l.inhalt as Messlauf).messdefinition.version === "3.1.0")).toBe(false);
+    expect(vorhandene).toEqual(["ML-001", "ML-002", "ML-003"]);
+
+    expect(ml3.roh_treffer).toBe(129);
+    expect(ml3.treffer).toHaveLength(129);
+    expect(ml3.abrufe).toHaveLength(48);
+    expect(ml3.duplikate).toBe(0);
+    expect(ml3.gekappt).toBe(false);
+    expect(ml3.abrufe.every((a) =>
+      a.gemeldet_relation === "eq" &&
+      a.empfangen === a.gemeldet_total &&
+      a.ohne_id === 0
+    )).toBe(true);
+    expect(
+      ml3.abrufe.reduce((summe, a) => summe + a.nach_gerichtsfilter, 0) - ml3.duplikate,
+    ).toBe(129);
+
+    const klassifikationsfelder = [
+      "ausschlussgrund",
+      "zaehleinheit",
+      "abschluss_status",
+      "erledigungsweg",
+      "messausgang",
+      "verfahrensrecht_nachweis",
+    ];
+    expect(ml3.treffer.every((t) => t.status === "ungeklaert")).toBe(true);
+    expect(ml3.treffer.every((t) => /^[a-f0-9]{64}$/.test(t.metadaten_fingerprint))).toBe(true);
+    expect(
+      ml3.treffer.every((t) =>
+        klassifikationsfelder.every(
+          (feld) => !Object.prototype.hasOwnProperty.call(t as unknown as Record<string, unknown>, feld),
+        ),
+      ),
+    ).toBe(true);
   });
 });
