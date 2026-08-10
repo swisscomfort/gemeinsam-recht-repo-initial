@@ -94,33 +94,81 @@ export interface Messdefinition {
 export const BUNDESGERICHT_SIGNATUREN = ["CH_BGer", "CH_BGE"] as const;
 
 /**
+ * Welches Verfahrensrecht galt fuer das konkrete Verfahren? Das ist eine
+ * Feststellung am EINZELNEN Treffer, keine Eigenschaft des Korpus — deshalb
+ * steht sie dort und nicht in der Definition.
+ *
+ * - `bgg`: das Verfahren untersteht dem Bundesgerichtsgesetz.
+ * - `og`: es untersteht noch dem vor dem BGG geltenden Verfahrensrecht.
+ * - `ungeklaert`: es liess sich nicht sicher feststellen. Dann wird nichts
+ *   abgeleitet — das ist der Normalfall des Nichtwissens, kein Mangel.
+ */
+export type Verfahrensregime = "bgg" | "og" | "ungeklaert";
+
+/**
+ * Positiver Nachweis des anwendbaren Verfahrensrechts fuer genau einen
+ * Treffer. Ohne Beleg und Primaerquelle ist er keiner: die Feststellung muss
+ * nachlesbar sein, sonst waere sie eine Behauptung.
+ */
+export interface VerfahrensrechtNachweis {
+  regime: Verfahrensregime;
+  /** Konkrete Textstelle oder praeziser Fundstellenhinweis. */
+  beleg: string;
+  /** Primaerquelle, aus der die Feststellung stammt. */
+  quelle: string;
+}
+
+/** Traegt der Nachweis das Regime tatsaechlich — also mit Beleg und Quelle? */
+export function belegtRegime(
+  nachweis: VerfahrensrechtNachweis | undefined,
+  regime: Verfahrensregime,
+): boolean {
+  if (!nachweis || nachweis.regime !== regime) return false;
+  return nachweis.beleg.trim() !== "" && nachweis.quelle.trim() !== "";
+}
+
+/**
  * Traegt die Instanz die Rechtskraft nach der Regel der Definition? Nur
  * Bundesgerichtsentscheide; eine kantonale Signatur ergibt false, auch wenn
  * das kantonale Gericht dort letzte Instanz war.
  *
- * Gesteuert wird ausschliesslich ueber `rechtskraft_regel.art`. Eine
- * Fallunterscheidung nach id, Versionsnummer, Dateiname oder Zeitraum gibt es
- * hier so wenig wie beim Auswertungsmodell — sonst entschiede die Numerierung
- * spaeterer Fassungen darueber, wie alte Daten zu lesen sind.
+ * Gesteuert wird ausschliesslich ueber `rechtskraft_regel.art` und den
+ * konkreten Nachweis am Treffer. Eine Fallunterscheidung nach id,
+ * Versionsnummer, Dateiname oder Zeitraum gibt es hier so wenig wie beim
+ * Auswertungsmodell — sonst entschiede die Numerierung spaeterer Fassungen
+ * darueber, wie alte Daten zu lesen sind.
+ *
+ * `nachweis` ist optional und wird nur unter dem Uebergangsrecht gelesen. Die
+ * Art.-61-Regel verhaelt sich mit und ohne Nachweis exakt wie bisher.
  */
-export function rechtskraftAusInstanz(definition: Messdefinition, gericht: string | undefined): boolean {
+export function rechtskraftAusInstanz(
+  definition: Messdefinition,
+  gericht: string | undefined,
+  nachweis?: VerfahrensrechtNachweis,
+): boolean {
   const art = definition.rechtskraft_regel.art;
+  const istBundesgericht =
+    gericht !== undefined && (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
 
   if (art === "bundesgericht_art61_bgg") {
     // Unveraendert seit v2.0.0: die Signatur allein traegt die Aussage, weil
-    // die Definition erklaert, dass ihr Korpus dem BGG untersteht.
-    if (gericht === undefined) return false;
-    return (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
+    // die Definition erklaert, dass ihr Korpus dem BGG untersteht. Ein
+    // Nachweis wird hier NICHT verlangt und aendert nichts.
+    return istBundesgericht;
   }
 
   if (art === "bundesgericht_uebergangsrecht_art132_bgg") {
-    // Fail closed, und zwar ausdruecklich: unter dem Uebergangsrecht sagt eine
-    // Bundesgerichtssignatur NICHT, welches Verfahrensrecht auf dieses
-    // Verfahren anwendbar war. Die Ableitung aus der Instanz steht deshalb
-    // nicht zur Verfuegung — der Beleg gehoert an den einzelnen Treffer.
-    // Diese Zeile ist der Grund, warum die Art ueberhaupt existiert; sie darf
-    // nicht durch einen Rueckfall auf die Signaturliste ersetzt werden.
-    return false;
+    // Unter dem Uebergangsrecht sagt die Bundesgerichtssignatur NICHT,
+    // welches Verfahrensrecht auf dieses Verfahren anwendbar war. Erst der
+    // belegte Einzelnachweis "dieses Verfahren untersteht dem BGG" oeffnet
+    // die Art.-61-Wirkung; ohne ihn, bei "ungeklaert" und bei "og" bleibt es
+    // fail closed.
+    //
+    // "og" ergibt hier bewusst kein true: fuer das vor dem BGG geltende Recht
+    // ist in dieser Fassung keine Rechtskraftregel mit belegter Normgrundlage
+    // hinterlegt. Eine zu erfinden waere eine fachliche Entscheidung, keine
+    // technische — sie braucht eine eigene Messdefinition.
+    return istBundesgericht && belegtRegime(nachweis, "bgg");
   }
 
   // "quellenangabe" und jede spaeter ergaenzte Art: nichts wird abgeleitet,
