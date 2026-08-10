@@ -1,0 +1,61 @@
+{
+  "schema": "gemeinsam-recht.ml002.kodierungsabgleich.v1",
+  "messlauf": "ML-002",
+  "raw_checkpoint": "e3c089a378aed2dfa038d76e9705a69f2a170542",
+  "definition": "MD-001@3.0.0",
+  "definitionshash": "576d55c2464cbb4ceef8c8cccd2749ba9c70c78e67a16cf6b5f07c4f075cdc6f",
+  "bundle_sha256": "5f84f9f60a0837abab6923b903a2769a83a692035de8beb16de439815776233c",
+  "kodierer_a": {
+    "modell": "GPT-5.6 Sol",
+    "artefakt_sha256": "903be6892d47cc27f22123d3459faf7b26defdc16271b4fbc6648bf51b07e0b3",
+    "artefakt_im_repository": false
+  },
+  "kodierer_b2": {
+    "modell": "Claude Opus 5 (claude-opus-5)",
+    "artefakt_sha256": "4a7df371406b22a8f3f575c187d8fa383fc38dda528b597fcb9b70633b22086f",
+    "artefakt_im_repository": false
+  },
+  "blindvergleich_sha256": "9503ada9477b44589748a1a53a9b110da33cbb8cd576b660bd0da9db82b281d8",
+  "status_agreement": "5/7",
+  "agreement_rate": 0.7142857142857143,
+  "konsensregel": "Uebernommen wird nur, worin Kodierer A und Kodierer B2 uebereinstimmen. Bei einem Statuskonflikt bleibt der Treffer ungeklaert: kein Mehrheitsentscheid, kein drittes Urteil, keine nachtraegliche Interpretation.",
+  "doppelt_bestaetigt_eingeschlossen": ["4A_281/2025", "4A_288/2025", "4A_624/2025"],
+  "doppelt_bestaetigt_ausgeschlossen": ["4A_493/2025"],
+  "doppelt_bestaetigt_ungeklaert": ["4A_442/2025"],
+  "kodierkonflikte": [
+    {
+      "aktenzeichen": "4A_162/2026",
+      "a": "ungeklaert",
+      "b2": "eingeschlossen (nicht_durchgesetzt, prozessual_erledigt, rechtsmittelbegruendung_unzureichend)",
+      "konsens": "ungeklaert",
+      "streitpunkt": "Kodierer A bewertet das Einschlussmerkmal \"mietpartei_beruft_sich\" ohne ausdruecklichen Nachweis von Art. 271/271a OR als nicht sicher belegt; Kodierer B2 leitet es aus der Klage auf \"annulation du conge\" ab."
+    },
+    {
+      "aktenzeichen": "4A_561/2025",
+      "a": "ausgeschlossen (andere_rechtsfrage)",
+      "b2": "eingeschlossen (nicht_durchgesetzt)",
+      "konsens": "ungeklaert",
+      "streitpunkt": "A ordnet den bundesgerichtlich entschiedenen Teil der ausserordentlichen Kuendigung nach Art. 257f/266a OR zu und sieht die ordentliche Kuendigung nicht als vom entschiedenen Teil erfasst; B2 wertet den Reformentscheid als endgueltige Erledigung auch der parallel angefochtenen ordentlichen Kuendigung nach Art. 271a OR."
+    }
+  ],
+  "konsens_bilanz": {
+    "roh": 7,
+    "eingeschlossen": 3,
+    "ausgeschlossen": 1,
+    "ungeklaert": 3
+  },
+  "messausgaenge_doppelt_bestaetigt_eingeschlossen": {
+    "durchgesetzt": 0,
+    "nicht_durchgesetzt": 3,
+    "nicht_anwendbar": 0
+  },
+  "quote": {
+    "zulaessig": false,
+    "gruende": [
+      "Die gesamte Rohpopulation umfasst 7 Treffer und liegt damit unter der eingefrorenen Mindestfallzahl 10.",
+      "3 Treffer bleiben ungeklaert; ohne vollstaendige Zuordnung gibt es keinen vollstaendigen Nenner.",
+      "Zwei dieser drei sind A/B2-Kodierkonflikte und werden nach der Konsensregel nicht aufgeloest."
+    ]
+  },
+  "ablage": "Die vollstaendigen A- und B2-Kodierartefakte bleiben ausserhalb des Repositoriums und sind hier ausschliesslich ueber ihre SHA-256-Werte verankert. Keine Volltexte im Repository."
+}

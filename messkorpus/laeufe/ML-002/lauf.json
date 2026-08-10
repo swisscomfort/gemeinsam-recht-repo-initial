@@ -90,7 +90,8 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-162-2026_2026-05-04",
       "metadaten_fingerprint": "98a706947dd710f3175578e9939cf1a99dd69552c951a6b608c8128e60911809",
-      "status": "ungeklaert"
+      "status": "ungeklaert",
+      "notiz": "Kodierkonflikt A/B2: Kodierer A bewertet das Einschlussmerkmal \"mietpartei_beruft_sich\" ohne ausdruecklichen Nachweis von Art. 271/271a OR als nicht sicher belegt; Kodierer B2 leitet es aus der Klage auf \"annulation du conge\" ab. Nach Konsensregel bleibt der Treffer ungeklaert. Siehe kodierungsabgleich-A-B2.json."
     },
     {
       "quelle_id": "CH_BGer_004_4A-281-2025_2026-01-20",
@@ -99,7 +100,24 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-281-2025_2026-01-20",
       "metadaten_fingerprint": "01c6825b27997dc970d90e842ba036474cae38c49f2c2eb279cbc529dc38d794",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Doppelt bestaetigt durch Kodierer A und B2; siehe kodierungsabgleich-A-B2.json.",
+      "zaehleinheit": "4A_281/2025",
+      "abschluss_status": "abgeschlossen",
+      "erledigungsweg": {
+        "modus": "materiell_entschieden",
+        "prozessgrund": null,
+        "beleg": "Das Bundesgericht prueft die Ruegen nach Art. 271/271a OR materiell und bestaetigt den Kuendigungsgrund als nicht treuwidrig.",
+        "stand_datum": "2026-01-20",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-281-2025_2026-01-20"
+      },
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "3.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "E. 4.3/4.4 und Dispositiv: die Anfechtung nach Art. 271/271a OR bleibt erfolglos, die Kuendigung bleibt wirksam.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-281-2025_2026-01-20"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-288-2025_2026-03-13",
@@ -108,7 +126,24 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-288-2025_2026-03-13",
       "metadaten_fingerprint": "7ee96a84b87244eca5bded64dde8b3c0e411a8a34a311d7aa379b761fb8a457e",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Doppelt bestaetigt durch Kodierer A und B2; siehe kodierungsabgleich-A-B2.json.",
+      "zaehleinheit": "4A_288/2025",
+      "abschluss_status": "abgeschlossen",
+      "erledigungsweg": {
+        "modus": "materiell_entschieden",
+        "prozessgrund": null,
+        "beleg": "Materielle Behandlung der Rache- und Verkaufskuendigung sowie der Ruegen nach Art. 271/271a OR; der Kuendigungsgrund bleibt bestehen.",
+        "stand_datum": "2026-03-13",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-288-2025_2026-03-13"
+      },
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "3.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "E. 3.2/3.3 und Dispositiv: die Kuendigung bleibt endgueltig wirksam.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-288-2025_2026-03-13"
+      }
     },
     {
       "quelle_id": "CH_BGer_004_4A-442-2025_2026-02-20",
@@ -117,7 +152,8 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-442-2025_2026-02-20",
       "metadaten_fingerprint": "5997934bf0fc3ec38ecae84d29cc8c2226095c4ab0f41af150e043bec3f4ed2d",
-      "status": "ungeklaert"
+      "status": "ungeklaert",
+      "notiz": "Status von A und B2 uebereinstimmend ungeklaert. Die Detailbegruendungen unterscheiden sich teilweise; insbesondere bleibt die Zuordnung zu einem zulaessigen MD-001-v3-Messausgang nicht sicher. Kein zaehlbarer Wert. Siehe kodierungsabgleich-A-B2.json."
     },
     {
       "quelle_id": "CH_BGer_004_4A-493-2025_2026-02-24",
@@ -126,7 +162,9 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-493-2025_2026-02-24",
       "metadaten_fingerprint": "4528422146777e98ecce50cc5324850452aab113ab9cdf7ea92211acd9e91691",
-      "status": "ungeklaert"
+      "status": "ausgeschlossen",
+      "notiz": "Doppelt bestaetigt ausgeschlossen: Gegenstand ist Mietzinsherabsetzung bzw. Abschreibung; Art. 271a OR erscheint nur im Zusammenhang mit einer moeglichen zukuenftigen Kuendigungssperrfrist. Keine konkrete Kuendigungsanfechtung. Siehe kodierungsabgleich-A-B2.json.",
+      "ausschlussgrund": "andere_rechtsfrage"
     },
     {
       "quelle_id": "CH_BGer_004_4A-561-2025_2026-04-27",
@@ -135,7 +173,8 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-561-2025_2026-04-27",
       "metadaten_fingerprint": "64cd58990113188c1fdbf6c2691483621b6de5c1d047d799476fdadf3aa31a26",
-      "status": "ungeklaert"
+      "status": "ungeklaert",
+      "notiz": "Kodierkonflikt A/B2: A ordnet den bundesgerichtlich entschiedenen Teil der ausserordentlichen Kuendigung nach Art. 257f/266a OR zu und sieht die ordentliche Kuendigung nicht als vom entschiedenen Teil erfasst; B2 wertet den Reformentscheid als endgueltige Erledigung auch der parallel angefochtenen ordentlichen Kuendigung nach Art. 271a OR. Nach Konsensregel bleibt der Treffer ungeklaert. Siehe kodierungsabgleich-A-B2.json."
     },
     {
       "quelle_id": "CH_BGer_004_4A-624-2025_2026-03-23",
@@ -144,7 +183,24 @@
       "gericht": "CH_BGer_004",
       "link": "https://entscheidsuche.ch/view/CH_BGer_004_4A-624-2025_2026-03-23",
       "metadaten_fingerprint": "ec2a513ccd58cf440533073741922652576d20a007e1f63a174e576b4662bd92",
-      "status": "ungeklaert"
+      "status": "eingeschlossen",
+      "notiz": "Doppelt bestaetigt durch Kodierer A und B2; siehe kodierungsabgleich-A-B2.json.",
+      "zaehleinheit": "4A_624/2025",
+      "abschluss_status": "abgeschlossen",
+      "erledigungsweg": {
+        "modus": "materiell_entschieden",
+        "prozessgrund": null,
+        "beleg": "Materielle Pruefung von Art. 271 Abs. 1 und Art. 271a Abs. 1 lit. a OR; der festgestellte Konflikt als Kuendigungsgrund macht die Kuendigung nicht missbraeuchlich.",
+        "stand_datum": "2026-03-23",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-624-2025_2026-03-23"
+      },
+      "messausgang": {
+        "messdefinition_id": "MD-001",
+        "messdefinition_version": "3.0.0",
+        "wert": "nicht_durchgesetzt",
+        "beleg": "E. 4/5 und Dispositiv: die Kuendigung bleibt gueltig, die Beschwerde wird abgewiesen.",
+        "quelle": "https://entscheidsuche.ch/view/CH_BGer_004_4A-624-2025_2026-03-23"
+      }
     }
   ]
 }
