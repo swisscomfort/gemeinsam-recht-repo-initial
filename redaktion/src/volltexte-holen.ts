@@ -27,13 +27,14 @@
 
 import { mkdirSync, readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join, resolve, relative, isAbsolute } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import {
   alsDatei,
   argumentName,
   baueManifest,
   bytes,
   feldAus,
+  liegtImRepo,
   sha256,
   trefferAusLauf,
   vollstaendigkeit,
@@ -82,14 +83,30 @@ interface McpAntwort {
   sitzung: string | null;
 }
 
-/** Liest eine SSE-Antwort und gibt die erste JSON-Nachricht mit Ergebnis zurueck. */
-function ausEreignisstrom(roh: string): Record<string, unknown> | null {
+/**
+ * Fortlaufende JSON-RPC-Nummer. Jede Anfrage bekommt ihre eigene, sonst
+ * liesse sich im Ereignisstrom nicht sagen, welche Antwort zu welcher Anfrage
+ * gehoert — bei 129 Aufrufen nacheinander waere das eine stille Fehlerquelle.
+ */
+let naechsteNummer = 0;
+function nummer(): number {
+  naechsteNummer += 1;
+  return naechsteNummer;
+}
+
+/**
+ * Liest eine SSE-Antwort und gibt die Nachricht zur erwarteten Nummer zurueck.
+ * Nachrichten mit fremder Nummer werden uebergangen; eine Antwort ohne
+ * passende Nummer gilt als keine.
+ */
+function ausEreignisstrom(roh: string, erwartet: number): Record<string, unknown> | null {
   for (const zeile of roh.split(/\r?\n/)) {
     if (!zeile.startsWith("data:")) continue;
     const nutzlast = zeile.slice(5).trim();
     if (nutzlast === "" || nutzlast === "[DONE]") continue;
     try {
       const nachricht = JSON.parse(nutzlast) as Record<string, unknown>;
+      if (nachricht.id !== erwartet) continue;
       if ("result" in nachricht || "error" in nachricht) return nachricht;
     } catch {
       // Kein JSON in dieser Zeile — weiterlesen statt raten.
@@ -123,7 +140,7 @@ async function mcpAufruf(
 
   const typ = antwort.headers.get("content-type") ?? "";
   const json = typ.includes("text/event-stream")
-    ? ausEreignisstrom(roh)
+    ? ausEreignisstrom(roh, typeof koerper.id === "number" ? koerper.id : -1)
     : (JSON.parse(roh) as Record<string, unknown>);
   return { json, sitzung: neueSitzung };
 }
@@ -146,7 +163,7 @@ async function anmelden(): Promise<{ sitzung: string | null; inputSchema: unknow
   const start = await mcpAufruf(
     {
       jsonrpc: "2.0",
-      id: 1,
+      id: nummer(),
       method: "initialize",
       params: {
         protocolVersion: PROTOKOLL_VERSION,
@@ -160,7 +177,7 @@ async function anmelden(): Promise<{ sitzung: string | null; inputSchema: unknow
 
   await mcpAufruf({ jsonrpc: "2.0", method: "notifications/initialized" }, start.sitzung);
 
-  const liste = await mcpAufruf({ jsonrpc: "2.0", id: 2, method: "tools/list" }, start.sitzung);
+  const liste = await mcpAufruf({ jsonrpc: "2.0", id: nummer(), method: "tools/list" }, start.sitzung);
   const ergebnis = ergebnisOderFehler(liste.json, "tools/list");
   const werkzeuge = Array.isArray(ergebnis.tools) ? (ergebnis.tools as Array<Record<string, unknown>>) : [];
   const gefunden = werkzeuge.find((w) => w.name === WERKZEUG);
@@ -190,7 +207,7 @@ async function holeDokument(
   const antwort = await mcpAufruf(
     {
       jsonrpc: "2.0",
-      id: 3,
+      id: nummer(),
       method: "tools/call",
       params: { name: WERKZEUG, arguments: { [argName]: treffer.quelle_id } },
     },
@@ -248,9 +265,8 @@ async function holeDokument(
 /* ---------- Ablage ausserhalb des Repositoriums ---------- */
 
 function pruefeZiel(ziel: string, wurzel: string): string {
-  const abs = isAbsolute(ziel) ? ziel : resolve(process.cwd(), ziel);
-  const drin = relative(wurzel, abs);
-  if (drin !== "" && !drin.startsWith("..") && !isAbsolute(drin)) {
+  const abs = resolve(process.cwd(), ziel);
+  if (liegtImRepo(abs, wurzel)) {
     throw new Error(
       `Das Zielverzeichnis ${abs} liegt INNERHALB des Repositoriums (${wurzel}). ` +
         `Volltexte gehoeren nie ins Repository — bitte ein Verzeichnis ausserhalb waehlen.`,

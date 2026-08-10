@@ -12,6 +12,7 @@ import {
   baueManifest,
   bytes,
   feldAus,
+  liegtImRepo,
   sha256,
   trefferAusLauf,
   vollstaendigkeit,
@@ -32,6 +33,27 @@ function lauf(ids: string[]): unknown {
     })),
   };
 }
+
+describe("liegtImRepo", () => {
+  const wurzel = "/pfad/zum/repo";
+
+  it("erkennt die Repository-Wurzel selbst als drinnen", () => {
+    // Der uebersehene Fall: relative(wurzel, wurzel) ist leer. Wer nur auf
+    // ".." prueft, laesst ausgerechnet das Repository-Verzeichnis durch.
+    expect(liegtImRepo(wurzel, wurzel)).toBe(true);
+  });
+
+  it("erkennt Unterverzeichnisse als drinnen", () => {
+    expect(liegtImRepo("/pfad/zum/repo/messkorpus/laeufe/ML-003", wurzel)).toBe(true);
+    expect(liegtImRepo("/pfad/zum/repo/redaktion", wurzel)).toBe(true);
+  });
+
+  it("laesst Verzeichnisse ausserhalb zu", () => {
+    expect(liegtImRepo("/home/emil/gr-volltexte/ML-003", wurzel)).toBe(false);
+    expect(liegtImRepo("/pfad/zum/repo-daneben", wurzel)).toBe(false);
+    expect(liegtImRepo("/pfad/zum", wurzel)).toBe(false);
+  });
+});
 
 describe("trefferAusLauf", () => {
   it("nimmt alle Bezeichner des Laufs in stabiler Reihenfolge", () => {

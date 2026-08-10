@@ -16,6 +16,24 @@
 //      aussehen.
 
 import { createHash } from "node:crypto";
+import { isAbsolute, relative } from "node:path";
+
+/* ---------- Ablageort ---------- */
+
+/**
+ * Liegt ein Zielverzeichnis innerhalb des Repositoriums? Beide Pfade muessen
+ * bereits absolut und aufgeloest sein.
+ *
+ * Die Wurzel SELBST zaehlt als drinnen. Das ist der Fall, den man beim
+ * Hinschreiben uebersieht: `relative(wurzel, wurzel)` ist die leere
+ * Zeichenkette, und wer nur auf ".." prueft, laesst ausgerechnet das
+ * Repository-Verzeichnis durch.
+ */
+export function liegtImRepo(ziel: string, wurzel: string): boolean {
+  const drin = relative(wurzel, ziel);
+  if (drin === "") return true;
+  return !drin.startsWith("..") && !isAbsolute(drin);
+}
 
 /* ---------- Hashes ---------- */
 
