@@ -16,7 +16,14 @@
 // Rein und deterministisch: keine Systemzeit, kein Netz.
 
 import { createHash } from "node:crypto";
-import { auswertungsmodell, istEndwirkungsmodell, kanonisch, type Messdefinition } from "./definition.ts";
+import {
+  auswertungsmodell,
+  belegtRegime,
+  istEndwirkungsmodell,
+  kanonisch,
+  type Messdefinition,
+  type VerfahrensrechtNachweis,
+} from "./definition.ts";
 import { definitionsHash } from "./definition.ts";
 
 export type TrefferStatus = "eingeschlossen" | "ausgeschlossen" | "ungeklaert";
@@ -138,6 +145,21 @@ export interface Treffer {
   /** Getrennt vom Messausgang: derselbe Weg kann verschieden ausgehen. */
   erledigungsweg?: Erledigungsweg;
   messausgang?: Messausgang;
+  /**
+   * Welches Verfahrensrecht galt fuer GENAU DIESES Verfahren, mit Beleg und
+   * Primaerquelle.
+   *
+   * Optional und allgemein: unter einer Definition, deren Korpus einheitlich
+   * dem BGG untersteht (`rechtskraft_regel.art` = `bundesgericht_art61_bgg`),
+   * wird er nicht verlangt und aendert nichts. Unter dem Uebergangsrecht
+   * (`bundesgericht_uebergangsrecht_art132_bgg`) ist er der einzige Weg, die
+   * Art.-61-Wirkung zu oeffnen — dort sagt die Gerichtssignatur allein nichts
+   * ueber das anwendbare Verfahrensrecht.
+   *
+   * Er gehoert zur Klassifikation, nicht zu den Rohmetadaten, und geht
+   * deshalb NICHT in `metadaten_fingerprint` ein.
+   */
+  verfahrensrecht_nachweis?: VerfahrensrechtNachweis;
 }
 
 export interface Abruf {
@@ -412,6 +434,67 @@ export function pruefeEndwirkung(laufId: string, datenstand: string, treffer: Tr
   return fehler;
 }
 
+/**
+ * Der Nachweis des anwendbaren Verfahrensrechts — zwei getrennte Fragen.
+ *
+ * 1. STRUKTUR: liegt einer vor, muss er etwas nennen. Ein leerer Beleg oder
+ *    eine leere Quelle machen aus einer Feststellung eine Behauptung. Das
+ *    gilt unter jeder Definition, auch wenn sie den Nachweis nicht verlangt.
+ * 2. PFLICHT: nur unter dem Uebergangsrecht, und nur fuer einen Treffer, der
+ *    als eingeschlossen UND abgeschlossen gefuehrt wird — er behauptet damit
+ *    einen endgueltigen Rechtszustand. Ohne belegtes `regime: "bgg"` steht
+ *    die Art.-61-Wirkung nicht zur Verfuegung; "og" und "ungeklaert" fuehren
+ *    hier gleichermassen nicht weiter, "og" mangels hinterlegter
+ *    Rechtskraftregel mit belegter Normgrundlage. Der Treffer bleibt dann
+ *    "ungeklaert" — es wird nichts erfunden (CR-03 Auflage E2 Ziff. 6).
+ *
+ * Ein ungeklaerter oder ausgeschlossener Treffer braucht nie einen Nachweis.
+ */
+export function pruefeVerfahrensrechtNachweis(
+  definition: Messdefinition,
+  treffer: Treffer,
+  wo: string,
+): string[] {
+  const fehler: string[] = [];
+  const nachweis = treffer.verfahrensrecht_nachweis;
+
+  if (nachweis) {
+    if (nachweis.beleg.trim() === "") {
+      fehler.push(
+        `${wo}: verfahrensrecht_nachweis nennt keinen Beleg. ` +
+          `Welches Verfahrensrecht galt, muss nachlesbar sein — sonst ist es eine Behauptung.`,
+      );
+    }
+    if (nachweis.quelle.trim() === "") {
+      fehler.push(
+        `${wo}: verfahrensrecht_nachweis nennt keine Quelle. ` +
+          `Die Feststellung braucht die Primaerquelle, aus der sie stammt.`,
+      );
+    }
+  }
+
+  if (definition.rechtskraft_regel.art !== "bundesgericht_uebergangsrecht_art132_bgg") return fehler;
+  if (treffer.status !== "eingeschlossen" || treffer.abschluss_status !== "abgeschlossen") return fehler;
+
+  if (!nachweis) {
+    fehler.push(
+      `${wo} ist eingeschlossen und abgeschlossen, nennt aber keinen verfahrensrecht_nachweis. ` +
+        `${definition.id} v${definition.version} wertet nach dem Uebergangsrecht aus (Art. 132 BGG): dort sagt die ` +
+        `Gerichtssignatur allein nicht, welches Verfahrensrecht galt. Ohne belegten Nachweis bleibt der Treffer "ungeklaert".`,
+    );
+  } else if (!belegtRegime(nachweis, "bgg")) {
+    fehler.push(
+      `${wo} ist eingeschlossen und abgeschlossen, sein verfahrensrecht_nachweis traegt aber nicht das belegte ` +
+        `Regime "bgg" (angegeben: "${nachweis.regime}"). Nur fuer ein Verfahren, das dem BGG untersteht, steht die ` +
+        `Rechtskraftwirkung nach Art. 61 BGG zur Verfuegung. Fuer "og" ist in dieser Fassung bewusst keine ` +
+        `Rechtskraftregel mit belegter Normgrundlage hinterlegt, und "ungeklaert" ist gerade keine Feststellung — ` +
+        `beides fuehrt hier nicht zu einem Einschluss, sondern zu "ungeklaert".`,
+    );
+  }
+
+  return fehler;
+}
+
 /* ---------- Pruefung ---------- */
 
 function pruefeAbrufe(lauf: Messlauf, definition: Messdefinition): string[] {
@@ -574,6 +657,10 @@ export function pruefeLauf(lauf: Messlauf, definition: Messdefinition): Befund {
     if (treffer.erledigungsweg) {
       fehler.push(...pruefeErledigungsweg(treffer.erledigungsweg, `Lauf ${lauf.id}: Treffer ${treffer.quelle_id}`));
     }
+
+    fehler.push(
+      ...pruefeVerfahrensrechtNachweis(definition, treffer, `Lauf ${lauf.id}: Treffer ${treffer.quelle_id}`),
+    );
 
     /* "offen" ist eine Aussage des Endwirkungsmodells. Unter einer Definition,
        die materiell prueft, hat der Wert keine festgelegte Bedeutung. */

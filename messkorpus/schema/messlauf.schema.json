@@ -139,6 +139,20 @@
               }
             }
           },
+          "verfahrensrecht_nachweis": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["regime", "beleg", "quelle"],
+            "description": "Welches Verfahrensrecht galt fuer GENAU DIESES Verfahren, mit Beleg und Primaerquelle. Optional und allgemein: unter einer Definition, deren Korpus einheitlich dem BGG untersteht (rechtskraft_regel.art = bundesgericht_art61_bgg), wird der Nachweis nicht verlangt und aendert nichts. Unter dem Uebergangsrecht (bundesgericht_uebergangsrecht_art132_bgg) ist er der einzige Weg, die Rechtskraftwirkung nach Art. 61 BGG zu oeffnen — dort sagt die Gerichtssignatur allein nichts ueber das anwendbare Verfahrensrecht. Gehoert zur Klassifikation, nicht zu den Rohmetadaten, und geht deshalb nicht in den metadaten_fingerprint ein.",
+            "properties": {
+              "regime": {
+                "enum": ["bgg", "og", "ungeklaert"],
+                "description": "bgg: das Verfahren untersteht dem Bundesgerichtsgesetz. og: es untersteht noch dem vor dem BGG geltenden Verfahrensrecht — dafuer ist bisher keine Rechtskraftregel mit belegter Normgrundlage hinterlegt, ein Einschluss ist darauf nicht zu stuetzen. ungeklaert: nicht sicher feststellbar; dann wird nichts abgeleitet."
+              },
+              "beleg": { "type": "string", "minLength": 1 },
+              "quelle": { "type": "string", "minLength": 1 }
+            }
+          },
           "messausgang": {
             "type": "object",
             "additionalProperties": false,
