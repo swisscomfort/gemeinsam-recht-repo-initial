@@ -28,6 +28,7 @@ import {
   definitionsHash,
   gehoertZuGericht,
   jahresfenster,
+  monatsfenster,
   relationAus,
   teile,
   vereinige,
@@ -212,9 +213,16 @@ async function haupt(): Promise<void> {
   console.log("Nur Metadaten und Links — keine Volltexte. Abruf gedrosselt (1 Seite/Sekunde).");
   console.log("Das Werkzeug urteilt nicht: jeder Treffer wird als 'ungeklaert' abgelegt.\n");
 
+  const fensterArt = argument("fenster") ?? "jahr";
+  if (fensterArt !== "jahr" && fensterArt !== "monat") {
+    throw new Error(`--fenster muss "jahr" oder "monat" sein, erhalten: "${fensterArt}"`);
+  }
+  const startfenster =
+    fensterArt === "monat" ? monatsfenster(definition.zeitraum) : jahresfenster(definition.zeitraum);
+
   const teileErgebnis: MesslaufTreffer[][] = [];
   const abrufe: AbrufProtokoll[] = [];
-  for (const fenster of jahresfenster(definition.zeitraum)) {
+  for (const fenster of startfenster) {
     const ergebnis = await erhebeFenster(
       definition.abfrage.suchanfrage,
       definition.abfrage.gerichtsfilter,

@@ -87,6 +87,35 @@ export function jahresfenster(zeitraum: Fenster): Fenster[] {
   return fenster;
 }
 
+/**
+ * Startfenster: Kalendermonate mit exakten Raendern. Reine technische
+ * Abrufteilung fuer die Vollstaendigkeitskontrolle je Monat — die Population
+ * des Zeitraums bleibt exakt dieselbe wie bei Jahresfenstern.
+ */
+export function monatsfenster(zeitraum: Fenster): Fenster[] {
+  const fenster: Fenster[] = [];
+  let jahr = Number(zeitraum.von.slice(0, 4));
+  let monat = Number(zeitraum.von.slice(5, 7));
+  const endeJahr = Number(zeitraum.bis.slice(0, 4));
+  const endeMonat = Number(zeitraum.bis.slice(5, 7));
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  while (jahr < endeJahr || (jahr === endeJahr && monat <= endeMonat)) {
+    const erster = `${jahr}-${pad(monat)}-01`;
+    const letzterTag = new Date(Date.UTC(jahr, monat, 0)).getUTCDate();
+    const letzter = `${jahr}-${pad(monat)}-${pad(letzterTag)}`;
+    fenster.push({
+      von: erster < zeitraum.von ? zeitraum.von : erster,
+      bis: letzter > zeitraum.bis ? zeitraum.bis : letzter,
+    });
+    monat += 1;
+    if (monat === 13) {
+      monat = 1;
+      jahr += 1;
+    }
+  }
+  return fenster;
+}
+
 /* ---------- Treffer ---------- */
 
 export interface MesslaufTreffer {
