@@ -137,6 +137,41 @@ describe("rechtskraftAusInstanz", () => {
   });
 });
 
+describe("rechtskraftAusInstanz unter dem Uebergangsrecht (Art. 132 BGG)", () => {
+  // Fuer einen historischen Korpus sagt die Bundesgerichtssignatur nicht, ob
+  // das Verfahren dem BGG untersteht. Die Ableitung aus der Instanz steht
+  // deshalb nicht zur Verfuegung — sonst wuerde die Maschine genau die
+  // Pruefung ueberspringen, die die Definition im Text verlangt.
+  const uebergangsregel = {
+    art: "bundesgericht_uebergangsrecht_art132_bgg",
+    rechtsquelle: "Art. 61 BGG und Art. 132 BGG (SR 173.110)",
+    begruendung:
+      "Art. 61 BGG traegt die Rechtskraft nur fuer ein Verfahren, das nach Art. 132 BGG dem BGG untersteht.",
+    pruefstand: "fachlich_zu_verifizieren",
+  } as const;
+
+  it.each(BUNDESGERICHT_SIGNATUREN)("leitet aus %s NICHTS ab — fail closed", (signatur) => {
+    expect(rechtskraftAusInstanz(definition({ rechtskraft_regel: uebergangsregel }), signatur)).toBe(false);
+  });
+
+  it("verhaelt sich unabhaengig von id und Version — allein die Art steuert", () => {
+    // Zwei kuenstliche Definitionen, verschiedene id und Version, gleiche Art.
+    const eine = definition({ id: "MD-777", version: "1.0.0", rechtskraft_regel: uebergangsregel });
+    const andere = definition({ id: "MD-888", version: "9.42.7", rechtskraft_regel: uebergangsregel });
+    for (const gericht of [...BUNDESGERICHT_SIGNATUREN, "ZH_OG", undefined]) {
+      expect(rechtskraftAusInstanz(eine, gericht)).toBe(rechtskraftAusInstanz(andere, gericht));
+      expect(rechtskraftAusInstanz(eine, gericht)).toBe(false);
+    }
+    // Dieselben beiden Kennungen mit der Art. 61-Art verhalten sich ebenso
+    // gleich — und dort eben nicht fail closed. Der Unterschied liegt allein
+    // in der Art, nicht in der Numerierung.
+    const alt61 = definition({ id: "MD-777", version: "1.0.0" });
+    const alt61Andere = definition({ id: "MD-888", version: "9.42.7" });
+    expect(rechtskraftAusInstanz(alt61, "CH_BGer")).toBe(true);
+    expect(rechtskraftAusInstanz(alt61Andere, "CH_BGer")).toBe(true);
+  });
+});
+
 describe("pruefeDefinitionInhalt", () => {
   it("nimmt eine saubere Definition an", () => {
     expect(pruefeDefinitionInhalt(definition()).ok).toBe(true);

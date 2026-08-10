@@ -31,8 +31,20 @@ export interface Kriterium {
  * am Tag der Ausfaellung). Eine allgemeine Regel "letztinstanzlich" gibt es
  * bewusst NICHT — ein letztinstanzlicher kantonaler Entscheid ist etwas
  * anderes und kann ans Bundesgericht weitergezogen werden.
+ *
+ * "bundesgericht_uebergangsrecht_art132_bgg" ist die historische Fassung
+ * derselben Frage. Art. 61 BGG traegt die Rechtskraft nur fuer ein Verfahren,
+ * das dem BGG tatsaechlich untersteht; nach dem Uebergangsrecht von
+ * Art. 132 BGG ist das bei einem Beschwerdeverfahren nur der Fall, wenn auch
+ * der angefochtene Entscheid nach dem Inkrafttreten des BGG ergangen ist. Aus
+ * der Gerichtssignatur allein folgt das nicht. Wer diese Art waehlt, sagt
+ * damit: das anwendbare Verfahrensrecht ist je Treffer eigens zu belegen, und
+ * ohne diesen Beleg wird nichts abgeleitet.
  */
-export type RechtskraftArt = "bundesgericht_art61_bgg" | "quellenangabe";
+export type RechtskraftArt =
+  | "bundesgericht_art61_bgg"
+  | "bundesgericht_uebergangsrecht_art132_bgg"
+  | "quellenangabe";
 
 /**
  * Nach welchem Modell wird der Messausgang bestimmt?
@@ -85,11 +97,35 @@ export const BUNDESGERICHT_SIGNATUREN = ["CH_BGer", "CH_BGE"] as const;
  * Traegt die Instanz die Rechtskraft nach der Regel der Definition? Nur
  * Bundesgerichtsentscheide; eine kantonale Signatur ergibt false, auch wenn
  * das kantonale Gericht dort letzte Instanz war.
+ *
+ * Gesteuert wird ausschliesslich ueber `rechtskraft_regel.art`. Eine
+ * Fallunterscheidung nach id, Versionsnummer, Dateiname oder Zeitraum gibt es
+ * hier so wenig wie beim Auswertungsmodell — sonst entschiede die Numerierung
+ * spaeterer Fassungen darueber, wie alte Daten zu lesen sind.
  */
 export function rechtskraftAusInstanz(definition: Messdefinition, gericht: string | undefined): boolean {
-  if (definition.rechtskraft_regel.art !== "bundesgericht_art61_bgg") return false;
-  if (gericht === undefined) return false;
-  return (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
+  const art = definition.rechtskraft_regel.art;
+
+  if (art === "bundesgericht_art61_bgg") {
+    // Unveraendert seit v2.0.0: die Signatur allein traegt die Aussage, weil
+    // die Definition erklaert, dass ihr Korpus dem BGG untersteht.
+    if (gericht === undefined) return false;
+    return (BUNDESGERICHT_SIGNATUREN as readonly string[]).includes(gericht);
+  }
+
+  if (art === "bundesgericht_uebergangsrecht_art132_bgg") {
+    // Fail closed, und zwar ausdruecklich: unter dem Uebergangsrecht sagt eine
+    // Bundesgerichtssignatur NICHT, welches Verfahrensrecht auf dieses
+    // Verfahren anwendbar war. Die Ableitung aus der Instanz steht deshalb
+    // nicht zur Verfuegung — der Beleg gehoert an den einzelnen Treffer.
+    // Diese Zeile ist der Grund, warum die Art ueberhaupt existiert; sie darf
+    // nicht durch einen Rueckfall auf die Signaturliste ersetzt werden.
+    return false;
+  }
+
+  // "quellenangabe" und jede spaeter ergaenzte Art: nichts wird abgeleitet,
+  // solange die Semantik nicht hier ausdruecklich steht.
+  return false;
 }
 
 /**

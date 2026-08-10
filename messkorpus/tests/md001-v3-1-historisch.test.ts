@@ -21,6 +21,7 @@ import {
   darfQuoteMaterialisieren,
   definitionsHash,
   findeFassung,
+  rechtskraftAusInstanz,
   sammleFassungen,
   type Messdefinition,
 } from "../tools/definition.ts";
@@ -74,7 +75,16 @@ describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
   it("die Rechtskraftregel traegt die historische Art.-132-BGG-Sicherung", () => {
     const v3 = fassung("3.0.0");
     const v31 = fassung("3.1.0");
-    expect(v31.rechtskraft_regel.art).toBe(v3.rechtskraft_regel.art);
+    // Eigener Regeltyp: die Textregel und die ausfuehrbare Semantik sagen
+    // dasselbe. v3.0.0 behaelt ihre Art unveraendert.
+    expect(v3.rechtskraft_regel.art).toBe("bundesgericht_art61_bgg");
+    expect(v31.rechtskraft_regel.art).toBe("bundesgericht_uebergangsrecht_art132_bgg");
+    // Art. 132 BGG steht im dafuer vorgesehenen Feld, nicht nur in der Prosa.
+    expect(v31.rechtskraft_regel.rechtsquelle).toContain("Art. 132 BGG");
+    expect(v31.rechtskraft_regel.rechtsquelle).toContain("Art. 61 BGG");
+    for (const anker of ["Art. 72 ff.", "Art. 74", "Art. 75", "Art. 90 ff.", "Art. 113 ff."]) {
+      expect(v31.rechtskraft_regel.rechtsquelle).toContain(anker);
+    }
     // Die v3.0.0-Begruendung bleibt vollstaendig erhalten und wird ergaenzt,
     // nicht ersetzt — aber sie ist nicht mehr wortgleich.
     expect(v31.rechtskraft_regel.begruendung).toContain(v3.rechtskraft_regel.begruendung);
@@ -100,6 +110,22 @@ describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
     // Kein stehengebliebener 2026-Text aus der Vorfassung.
     expect(text).not.toContain("2026-01-01 bis 2026-07-31 wurde vor jedem Abruf");
     expect(text).toContain("ML-002");
+  });
+
+  it("die ausfuehrbare Semantik folgt der Textregel: 3.0.0 leitet ab, 3.1.0 nicht", () => {
+    // Der eigentliche Punkt dieser Fassung. Unter v3.0.0 traegt die
+    // Bundesgerichtssignatur die Aussage; unter dem historischen
+    // Uebergangstyp gerade nicht — sonst wuerde die Maschine die Pruefung
+    // ueberspringen, die die Definition im Text verlangt.
+    for (const signatur of ["CH_BGer", "CH_BGE"]) {
+      expect(rechtskraftAusInstanz(fassung("3.0.0"), signatur)).toBe(true);
+      expect(rechtskraftAusInstanz(fassung("3.1.0"), signatur)).toBe(false);
+    }
+    // Keine rueckwirkende Semantikaenderung: auch die Legacy-Fassung bleibt.
+    expect(rechtskraftAusInstanz(fassung("2.0.0"), "CH_BGer")).toBe(true);
+    // Kantonale Signaturen bleiben unter beiden Regeln aussen vor.
+    expect(rechtskraftAusInstanz(fassung("3.0.0"), "ZH_OG")).toBe(false);
+    expect(rechtskraftAusInstanz(fassung("3.1.0"), "ZH_OG")).toBe(false);
   });
 
   it("aus dem Entwurf entsteht keine Quote — Status und Pruefstand sperren doppelt", () => {

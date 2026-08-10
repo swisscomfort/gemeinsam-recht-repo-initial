@@ -89,8 +89,8 @@
       "required": ["art", "rechtsquelle", "begruendung", "pruefstand"],
       "properties": {
         "art": {
-          "enum": ["bundesgericht_art61_bgg", "quellenangabe"],
-          "description": "bundesgericht_art61_bgg: Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag der Ausfaellung in Rechtskraft (Art. 61 BGG); gilt NUR fuer das Bundesgericht, nicht fuer kantonale letztinstanzliche Entscheide. quellenangabe: die Publikation sagt es ausdruecklich."
+          "enum": ["bundesgericht_art61_bgg", "bundesgericht_uebergangsrecht_art132_bgg", "quellenangabe"],
+          "description": "bundesgericht_art61_bgg: Entscheide des Schweizerischen Bundesgerichts erwachsen am Tag der Ausfaellung in Rechtskraft (Art. 61 BGG); gilt NUR fuer das Bundesgericht, nicht fuer kantonale letztinstanzliche Entscheide. bundesgericht_uebergangsrecht_art132_bgg: dieselbe Frage fuer einen historischen Korpus, in dem nicht jedes Bundesgerichtsverfahren dem BGG untersteht — nach dem Uebergangsrecht von Art. 132 BGG gilt das BGG fuer ein Beschwerdeverfahren nur, wenn auch der angefochtene Entscheid nach dessen Inkrafttreten ergangen ist. Aus der Gerichtssignatur allein wird deshalb nichts abgeleitet (fail closed); das anwendbare Verfahrensrecht ist je Treffer eigens zu belegen, sonst bleibt der Treffer ungeklaert. quellenangabe: die Publikation sagt es ausdruecklich."
         },
         "rechtsquelle": { "type": "string", "minLength": 5 },
         "begruendung": { "type": "string", "minLength": 20 },
