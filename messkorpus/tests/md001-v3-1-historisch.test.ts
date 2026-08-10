@@ -1,4 +1,4 @@
-// MD-001 v3.1.0 — historische Replikation 2011-2014 (ENTWURF).
+// MD-001 v3.1.0 — historische Replikation 2011-2014 (EINGEFROREN).
 //
 // Dieselbe Endwirkungsmethode wie die eingefrorene v3.0.0, aber ein
 // vollstaendig getrenntes, frueheres Fenster. Zwei Dinge muessen der Test
@@ -14,7 +14,8 @@
 //      Regel spaeter wieder auf den v3.0.0-Wortlaut zurueckzieht, faellt hier
 //      auf.
 //
-// Der Entwurf traegt keine Quote und ist nicht eingefroren.
+// Seit der Eigentuemerfreigabe vom 2026-08-10 ist die Fassung eingefroren;
+// ihr kanonischer Hash ist hier und in FREEZE.txt derselbe Anker.
 
 import { describe, expect, it } from "vitest";
 import {
@@ -25,8 +26,11 @@ import {
   sammleFassungen,
   type Messdefinition,
 } from "../tools/definition.ts";
-import { leseDefinitionen, leseJson, leseLaeufe, messkorpusPfad } from "../tools/umgebung.ts";
+import { leseDefinitionen, leseJson, leseLaeufe, leseText, messkorpusPfad, repoPfad } from "../tools/umgebung.ts";
 import type { Messlauf } from "../tools/lauf.ts";
+
+/** Kanonischer Freeze-Hash von MD-001@3.1.0 — Eintrag in FREEZE.txt, 2026-08-10. */
+const V31_FREEZE_HASH = "c03d1279245b977ea247c70ec789ec9514506f80d92dc8ab3463cc97e4a462d9";
 
 const register = sammleFassungen(
   leseDefinitionen().map((d) => ({ datei: d.datei, inhalt: d.inhalt as Messdefinition })),
@@ -38,7 +42,7 @@ function fassung(version: string): Messdefinition {
   return (auflösung as { definition: Messdefinition }).definition;
 }
 
-describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
+describe("MD-001 v3.1.0 — eingefrorenes historisches Fenster", () => {
   it("alle drei Fassungen bleiben eindeutig nebeneinander aufloesbar", () => {
     expect(register.doppelte.size).toBe(0);
     expect(definitionsHash(fassung("2.0.0"))).toBe(
@@ -51,11 +55,24 @@ describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
     expect(fassung("3.0.0").status).toBe("eingefroren");
   });
 
-  it("3.1.0 ist ein Entwurf im Endwirkungsmodell mit dem Fenster 2011-2014", () => {
+  it("3.1.0 ist eingefroren, im Endwirkungsmodell, mit dem Fenster 2011-2014", () => {
     const v31 = fassung("3.1.0");
-    expect(v31.status).toBe("entwurf");
+    expect(v31.status).toBe("eingefroren");
     expect(v31.auswertungsmodell).toBe("endwirkung");
     expect(v31.zeitraum).toEqual({ von: "2011-01-01", bis: "2014-12-31" });
+    expect(definitionsHash(v31)).toBe(V31_FREEZE_HASH);
+  });
+
+  it("FREEZE.txt traegt exakt den kanonischen v3.1.0-Hash aus definitionsHash()", () => {
+    // Wie bei v3.0.0: der Eintrag in FREEZE.txt und die kanonische Form der
+    // Datei muessen dasselbe sagen, sonst ist der Freeze-Anker wertlos.
+    const block = leseText(repoPfad("FREEZE.txt")).split("MESSDEFINITION MD-001 v3.1.0")[1];
+    expect(block).toBeDefined();
+    const hashes = block?.match(/[0-9a-f]{64}/g) ?? [];
+    expect(hashes[0]).toBe(V31_FREEZE_HASH);
+    // Der Block nennt die historische Besonderheit, nicht nur den Zeitraum.
+    expect(block).toContain("bundesgericht_uebergangsrecht_art132_bgg");
+    expect(block).toContain("verfahrensrecht_nachweis");
   });
 
   it("der Messgegenstand ist Zeichen fuer Zeichen der von 3.0.0", () => {
@@ -97,10 +114,13 @@ describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
     expect(v31.rechtskraft_regel.begruendung).toContain("Entscheidjahr");
   });
 
-  it("die neue Rechtskraftregel ist ausdruecklich noch nicht fachlich bestaetigt", () => {
-    expect(fassung("3.1.0").rechtskraft_regel.pruefstand).toBe("fachlich_zu_verifizieren");
-    // Die Norm selbst ist gegenueber 3.0.0 unveraendert und bleibt bestaetigt.
+  it("alle drei Pruefstaende sind fachlich bestaetigt", () => {
+    // Die Rechtskraftregel ist mit der Eigentuemerfreigabe vom 2026-08-10
+    // bestaetigt; Norm und Abschlussregel waren es schon und sind gegenueber
+    // 3.0.0 unveraendert.
+    expect(fassung("3.1.0").rechtskraft_regel.pruefstand).toBe("fachlich_bestaetigt");
     expect(fassung("3.1.0").norm.pruefstand).toBe("fachlich_bestaetigt");
+    expect(fassung("3.1.0").abschluss_regel.pruefstand).toBe("fachlich_bestaetigt");
   });
 
   it("die Selektionsneutralitaet nennt das Fenster und seinen prozessrechtlichen Grund", () => {
@@ -128,11 +148,12 @@ describe("MD-001 v3.1.0 — historisches Fenster als Entwurf", () => {
     expect(rechtskraftAusInstanz(fassung("3.1.0"), "ZH_OG")).toBe(false);
   });
 
-  it("aus dem Entwurf entsteht keine Quote — Status und Pruefstand sperren doppelt", () => {
-    const befund = darfQuoteMaterialisieren(fassung("3.1.0"));
-    expect(befund.ok).toBe(false);
-    expect(befund.fehler.join(" ")).toContain("entwurf");
-    expect(befund.fehler.join(" ")).toContain("rechtskraft_regel.pruefstand");
+  it("auf Definitionsebene ist die Quote freigegeben — mehr sagt das nicht", () => {
+    // Eingefroren und dreifach bestaetigt: die Definition sperrt nicht mehr.
+    // Das heisst NICHT, dass ein Lauf eine Quote bekaeme — es gibt keinen,
+    // und ein kuenftiger traegt seine eigenen Sperren (Vollstaendigkeit,
+    // Abschluss, Normausgang je Treffer, Mindestfallzahl).
+    expect(darfQuoteMaterialisieren(fassung("3.1.0"))).toEqual({ ok: true, fehler: [] });
   });
 
   it("die bestehenden Laeufe bleiben an ihren eigenen Fassungen — kein ML-003", () => {
