@@ -238,3 +238,119 @@ export function baueManifest(angaben: ManifestAngaben, dokumente: readonly Dokum
 export function alsDatei(inhalt: unknown): string {
   return `${JSON.stringify(inhalt, null, 2)}\n`;
 }
+
+/* ---------- Abgleich der Ablage gegen das Manifest ---------- */
+
+/** Was beim Nachrechnen einer abgelegten Datei herauskam. */
+export interface GeleseneDatei {
+  sha256: string;
+  bytes: number;
+}
+
+/** Die drei Dateien, die zu einem Dokument gehoeren. */
+export interface GelesenesDokument {
+  volltext: GeleseneDatei;
+  dokument: GeleseneDatei;
+  roh: GeleseneDatei;
+}
+
+/**
+ * Vergleicht die tatsaechlich abgelegten Dateien mit dem, was das Manifest
+ * behauptet. Nachgerechnet wird jede einzelne Zahl — sonst beglaubigte das
+ * Manifest sich selbst.
+ */
+export function pruefeAblage(
+  dokumente: readonly DokumentBefund[],
+  gelesen: ReadonlyMap<string, GelesenesDokument>,
+): string[] {
+  const abweichungen: string[] = [];
+  for (const befund of dokumente) {
+    const da = gelesen.get(befund.quelle_id);
+    if (!da) {
+      abweichungen.push(`${befund.quelle_id}: im Manifest genannt, aber nicht abgelegt.`);
+      continue;
+    }
+    const paare: Array<[string, string, number, GeleseneDatei]> = [
+      ["Volltext", befund.text_sha256, befund.text_bytes, da.volltext],
+      ["Dokument-JSON", befund.document_json_sha256, befund.document_json_bytes, da.dokument],
+      ["MCP-Rohantwort", befund.raw_mcp_sha256, befund.raw_mcp_bytes, da.roh],
+    ];
+    for (const [was, sollHash, sollBytes, ist] of paare) {
+      if (ist.sha256 !== sollHash) {
+        abweichungen.push(
+          `${befund.quelle_id}: ${was} hat sha256 ${ist.sha256.slice(0, 12)}…, das Manifest nennt ${sollHash.slice(0, 12)}….`,
+        );
+      }
+      if (ist.bytes !== sollBytes) {
+        abweichungen.push(
+          `${befund.quelle_id}: ${was} ist ${ist.bytes} Bytes gross, das Manifest nennt ${sollBytes}.`,
+        );
+      }
+    }
+  }
+  return abweichungen;
+}
+
+/* ---------- Deterministisches Bundle ---------- */
+
+/** Eine Datei im Bundle. */
+export interface BundleDatei {
+  name: string;
+  inhalt: Buffer;
+}
+
+const BLOCK = 512;
+
+function oktal(wert: number, laenge: number): string {
+  return wert.toString(8).padStart(laenge - 1, "0") + "\0";
+}
+
+/**
+ * Baut einen ustar-Kopf ohne jede veraenderliche Angabe: Zeitstempel 0,
+ * Eigentuemer 0, feste Rechte. Nur so ergibt dasselbe Material immer
+ * denselben Bundle-Hash — und ein Hash, der sich beim erneuten Packen
+ * aendert, beglaubigt nichts.
+ */
+function tarKopf(name: string, groesse: number): Buffer {
+  if (Buffer.byteLength(name, "utf8") > 100) {
+    throw new Error(`Der Eintragsname "${name}" ist laenger als 100 Zeichen — ustar kann ihn nicht fuehren.`);
+  }
+  const kopf = Buffer.alloc(BLOCK, 0);
+  kopf.write(name, 0, 100, "utf8");
+  kopf.write(oktal(0o644, 8), 100, 8, "ascii"); // mode
+  kopf.write(oktal(0, 8), 108, 8, "ascii"); // uid
+  kopf.write(oktal(0, 8), 116, 8, "ascii"); // gid
+  kopf.write(oktal(groesse, 12), 124, 12, "ascii");
+  kopf.write(oktal(0, 12), 136, 12, "ascii"); // mtime
+  kopf.write("        ", 148, 8, "ascii"); // Pruefsumme zunaechst als Leerzeichen
+  kopf.write("0", 156, 1, "ascii"); // typeflag: normale Datei
+  kopf.write("ustar\0", 257, 6, "ascii");
+  kopf.write("00", 263, 2, "ascii");
+
+  let summe = 0;
+  for (const byte of kopf) summe += byte;
+  kopf.write(`${summe.toString(8).padStart(6, "0")}\0 `, 148, 8, "ascii");
+  return kopf;
+}
+
+/**
+ * Packt die Dateien als tar — deterministisch: nach Namen sortiert, ohne
+ * Zeitstempel. Zweimal packen ergibt Byte fuer Byte dasselbe Ergebnis.
+ */
+export function packeTar(dateien: readonly BundleDatei[]): Buffer {
+  const sortiert = [...dateien].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  const teile: Buffer[] = [];
+  for (const datei of sortiert) {
+    teile.push(tarKopf(datei.name, datei.inhalt.length));
+    teile.push(datei.inhalt);
+    const rest = datei.inhalt.length % BLOCK;
+    if (rest !== 0) teile.push(Buffer.alloc(BLOCK - rest, 0));
+  }
+  teile.push(Buffer.alloc(BLOCK * 2, 0)); // Abschluss
+  return Buffer.concat(teile);
+}
+
+/** SHA-256 ueber Binaerinhalt — fuer das gepackte Bundle. */
+export function sha256Bytes(inhalt: Buffer): string {
+  return createHash("sha256").update(inhalt).digest("hex");
+}
