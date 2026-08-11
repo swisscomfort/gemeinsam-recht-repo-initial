@@ -13,7 +13,10 @@ import {
   bytes,
   feldAus,
   liegtImRepo,
+  packeTar,
+  pruefeAblage,
   sha256,
+  sha256Bytes,
   trefferAusLauf,
   vollstaendigkeit,
   volltextAus,
@@ -179,6 +182,103 @@ describe("baueManifest", () => {
 
   it("wird deterministisch serialisiert", () => {
     expect(alsDatei(manifest)).toBe(`${JSON.stringify(manifest, null, 2)}\n`);
+  });
+});
+
+describe("pruefeAblage", () => {
+  const befund: DokumentBefund = {
+    quelle_id: "a1",
+    document_url: null,
+    original_url: null,
+    text_sha256: sha256("Urteilstext"),
+    text_bytes: bytes("Urteilstext"),
+    document_json_sha256: sha256("{}"),
+    document_json_bytes: 2,
+    raw_mcp_sha256: sha256("roh"),
+    raw_mcp_bytes: 3,
+  };
+  const stimmig = new Map([
+    [
+      "a1",
+      {
+        volltext: { sha256: sha256("Urteilstext"), bytes: bytes("Urteilstext") },
+        dokument: { sha256: sha256("{}"), bytes: 2 },
+        roh: { sha256: sha256("roh"), bytes: 3 },
+      },
+    ],
+  ]);
+
+  it("schweigt, wenn Manifest und Ablage uebereinstimmen", () => {
+    expect(pruefeAblage([befund], stimmig)).toEqual([]);
+  });
+
+  it("meldet einen abweichenden Hash — das Manifest beglaubigt sich nicht selbst", () => {
+    const verfaelscht = new Map(stimmig);
+    verfaelscht.set("a1", {
+      ...stimmig.get("a1")!,
+      volltext: { sha256: sha256("etwas anderes"), bytes: bytes("Urteilstext") },
+    });
+    const befunde = pruefeAblage([befund], verfaelscht);
+    expect(befunde).toHaveLength(1);
+    expect(befunde[0]).toContain("Volltext");
+  });
+
+  it("meldet eine abweichende Groesse", () => {
+    const verfaelscht = new Map(stimmig);
+    verfaelscht.set("a1", { ...stimmig.get("a1")!, roh: { sha256: sha256("roh"), bytes: 999 } });
+    expect(pruefeAblage([befund], verfaelscht).join(" ")).toContain("999");
+  });
+
+  it("meldet ein Dokument, das im Manifest steht, aber nicht abgelegt ist", () => {
+    expect(pruefeAblage([befund], new Map()).join(" ")).toContain("nicht abgelegt");
+  });
+});
+
+describe("packeTar", () => {
+  const dateien = [
+    { name: "volltext/b2.txt", inhalt: Buffer.from("zweiter Text", "utf8") },
+    { name: "volltext/a1.txt", inhalt: Buffer.from("erster Text", "utf8") },
+  ];
+
+  it("packt deterministisch — zweimal packen ergibt Byte fuer Byte dasselbe", () => {
+    // Der eigentliche Punkt: ein Bundle-Hash, der sich beim erneuten Packen
+    // aendert, beglaubigt nichts. Deshalb keine Zeitstempel, keine
+    // Eigentuemer, feste Reihenfolge.
+    expect(sha256Bytes(packeTar(dateien))).toBe(sha256Bytes(packeTar(dateien)));
+  });
+
+  it("ordnet nach Namen, nicht nach Uebergabereihenfolge", () => {
+    const umgekehrt = [...dateien].reverse();
+    expect(sha256Bytes(packeTar(dateien))).toBe(sha256Bytes(packeTar(umgekehrt)));
+  });
+
+  it("aendert den Hash, sobald sich ein Inhalt aendert", () => {
+    const anders = [dateien[0]!, { name: "volltext/a1.txt", inhalt: Buffer.from("anderer Text", "utf8") }];
+    expect(sha256Bytes(packeTar(anders))).not.toBe(sha256Bytes(packeTar(dateien)));
+  });
+
+  it("schreibt gueltige ustar-Koepfe mit Namen, Groesse und Pruefsumme", () => {
+    const tar = packeTar([dateien[1]!]);
+    expect(tar.subarray(0, 12).toString("utf8").replace(/\0+$/, "")).toBe("volltext/a1.");
+    expect(tar.subarray(257, 262).toString("ascii")).toBe("ustar");
+    // Groesse als Oktalzahl, Inhalt im zweiten Block, Abschluss zwei Nullbloecke.
+    expect(parseInt(tar.subarray(124, 135).toString("ascii"), 8)).toBe(11);
+    expect(tar.subarray(512, 523).toString("utf8")).toBe("erster Text");
+    expect(tar.length % 512).toBe(0);
+    expect(tar.subarray(tar.length - 1024).every((b) => b === 0)).toBe(true);
+    // Die Pruefsumme muss zur Kopfzeile passen, sonst lehnt tar das Archiv ab.
+    const kopf = Buffer.from(tar.subarray(0, 512));
+    const gespeichert = parseInt(kopf.subarray(148, 154).toString("ascii"), 8);
+    kopf.write("        ", 148, 8, "ascii");
+    let summe = 0;
+    for (const byte of kopf) summe += byte;
+    expect(gespeichert).toBe(summe);
+  });
+
+  it("weist einen zu langen Eintragsnamen ab statt ihn zu kuerzen", () => {
+    expect(() => packeTar([{ name: `volltext/${"x".repeat(100)}.txt`, inhalt: Buffer.alloc(1) }])).toThrow(
+      /100 Zeichen/,
+    );
   });
 });
 
