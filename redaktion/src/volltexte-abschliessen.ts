@@ -107,6 +107,16 @@ async function haupt(): Promise<void> {
   console.log(`Definitions-Hash: ${lauf.messdefinition.sha256}`);
   console.log(`Bundleverzeichnis: ${ziel}\n`);
 
+  /* Der Checkpoint muss feststehen, BEVOR irgendetwas entsteht: sonst laege am
+     Ende ein Bundle auf der Platte, dessen Herkunft nicht belegt ist. */
+  const checkpoint = rawCheckpoint ?? String(manifest.raw_checkpoint ?? "");
+  if (checkpoint.trim() === "") {
+    throw new Error(
+      "Im Manifest fehlt der raw_checkpoint. Bitte mit --raw-checkpoint <sha> nennen — " +
+        "ohne ihn ist nicht belegt, gegen welche Rohpopulation das Bundle steht. Nichts gepackt.",
+    );
+  }
+
   if (manifest.messdefinition.sha256 !== lauf.messdefinition.sha256) {
     throw new Error(
       `Das Manifest gehoert zu Definitionshash ${manifest.messdefinition.sha256}, der Lauf zu ` +
@@ -186,15 +196,9 @@ async function haupt(): Promise<void> {
   /* 7. Manifest vervollstaendigen — nur die beiden offenen Felder. */
   const vollstaendig = {
     ...manifest,
-    raw_checkpoint: rawCheckpoint ?? manifest.raw_checkpoint,
+    raw_checkpoint: checkpoint,
     bundle: { ...manifest.bundle, filename: bundleName, sha256: bundleSha },
   };
-  if (!vollstaendig.raw_checkpoint) {
-    throw new Error(
-      "Im Manifest fehlt der raw_checkpoint. Bitte mit --raw-checkpoint <sha> nennen — " +
-        "ohne ihn ist nicht belegt, gegen welche Rohpopulation das Bundle steht.",
-    );
-  }
   writeFileSync(manifestPfad, alsDatei(vollstaendig));
   console.log(`Manifest vervollstaendigt: ${manifestPfad}`);
 
