@@ -10,7 +10,10 @@ bundle_sha256: c2f55926000a828c821d80c04f5c9fbeda00bdefff34dbcb1b2d8ab9d0b4b954
 population: 129 Treffer, alle "ungeklaert"
 netz: verboten
 volltexte_im_repo: verboten
-status: "KONSENSREGEL ENTSCHIEDEN (Taktgeber-Review 2026-08-11, GO) — Kodierung kann beginnen, sobald die zwei Modelle benannt sind"
+antwortschema: "gemeinsam-recht.ml003.kodierung.v1 — identisch fuer beide Kodierer"
+kodierer_a: "GPT-5.6 Sol"
+kodierer_b: "Claude Opus 5 (claude-opus-5)"
+status: "STARTBEREIT (Taktgeber 2026-08-11) — Konsensregel entschieden, Zaehleinheit-Regel entschieden, Modelle benannt, Antwortschema und Export stehen"
 ```
 
 ## 0. Ziel in einem Satz
@@ -34,7 +37,7 @@ ML-002 hat den Ablauf zum ersten Mal durchlaufen (7 Fälle, Übereinstimmung
   Modelle, Artefakt-Hashes, Übereinstimmungsquote, jeden Konflikt mit
   Streitpunkt und die Quotensperre fest.
 
-Vier Dinge trugen bei 7 Fällen und tragen bei 129 **nicht** mehr:
+Fünf Dinge trugen bei 7 Fällen und tragen bei 129 **nicht** mehr:
 
 1. **Kein Exportwerkzeug.** Der Stoff wurde ad hoc übergeben. Bei 129 Fällen
    ist weder Vollständigkeit noch Gleichheit der beiden Pakete prüfbar.
@@ -46,8 +49,29 @@ Vier Dinge trugen bei 7 Fällen und tragen bei 129 **nicht** mehr:
    Treffer sechs weitere Felder. Was „Übereinstimmung" heisst, muss **vorher**
    feststehen — sonst wird die Definition nachträglich so gewählt, dass das
    Ergebnis passt.
+5. **Die beiden Antwortartefakte trugen nicht dasselbe Schema.** Befund des
+   Taktgebers an den Originaldateien: Lauf A führte den Zustand als `status_a`,
+   Lauf B2 als `status_b`. Zwei Formen derselben Aussage müssen vor jedem
+   Vergleich aufeinander abgebildet werden. Bei sieben Fällen ist das lästig;
+   bei 129 ist jede Abbildung eine Gelegenheit, das Ergebnis zu beeinflussen —
+   und niemand sieht ihr später an, ob sie neutral war.
+   *(Die Originalartefakte liegen ausserhalb des Repositoriums auf dem Rechner
+   des Taktgebers; ihre SHA-256 waren in der Arbeitsumgebung dieses Commits
+   nicht nachprüfbar. Der Befund wird hier als Befund des Taktgebers geführt,
+   nicht als eigene Feststellung.)*
+
+Die Antwort darauf steht in `redaktion/src/kodierschema.ts`: **ein** Schema
+`gemeinsam-recht.ml003.kodierung.v1` für beide Kodierer, mit denselben
+Feldnamen. Wer geantwortet hat, steht ausschliesslich im Kopf des Artefakts
+(`kodierer.rolle`, `kodierer.modell`) — in keinem Feldnamen und in keinem
+Eintrag. Beide Antworten laufen durch dieselbe Prüffunktion mit demselben
+Kontext.
 
 ## 2. Was ein Kodierer je Treffer liefern muss (aus v3.1 abgeleitet)
+
+Feldnamen und Wertelisten stehen als Schema `gemeinsam-recht.ml003.kodierung.v1`
+in `redaktion/src/kodierschema.ts` und gehen wortgleich ins Kodierpaket. Die
+Tabelle ist die Lesefassung desselben Schemas.
 
 | Feld | Wann | Werte |
 |---|---|---|
@@ -61,6 +85,12 @@ Vier Dinge trugen bei 7 Fällen und tragen bei 129 **nicht** mehr:
 | `messausgang.wert` | bei `eingeschlossen` | `durchgesetzt` · `nicht_durchgesetzt` · `nicht_anwendbar` · `offen` |
 | `messausgang.beleg` / `.quelle` | bei `eingeschlossen` | Textstelle · Primärquelle |
 | `verfahrensrecht_nachweis` | bei `eingeschlossen` **und** `abgeschlossen` | `regime` (`bgg` · `og` · `ungeklaert`) + nichtleerer `beleg` + `quelle` |
+| `begruendung` | immer | Freitext |
+| `offene_frage` | bei `ungeklaert` | Freitext — was offen geblieben ist |
+
+Ausserhalb von `eingeschlossen` trägt ein Eintrag **keines** der
+Einschlussfelder. Bei `ungeklaert` wird nichts erfunden (CR-03 E2 Ziff. 6),
+und ein Feld, das keine Regel liest, täuschte im Abgleich nur Gewicht vor.
 
 Einschluss nur, wenn alle drei Kriterien der Definition **sicher** erfüllt sind
 (`konkrete_kuendigung_angegriffen`, `mietpartei_beruft_sich`,
@@ -80,10 +110,11 @@ erzwingt das bereits.
 ```
    Bundle (129 Volltexte, ausserhalb des Repos)
         │
-   [1] kodierstoff-export          → zwei identische Pakete A und B
+   [1] kodierstoff-export          → EIN Paket für beide
         │                             (Volltext + Kriterien; kein fremder Lauf)
         ├──────────────┬──────────────
    [2] Kodierer A   Kodierer B      getrennte Sitzungen, verschiedene Modelle
+        GPT-5.6 Sol   Claude Opus 5  gleiches Schema, gleicher Stoff
         └──────────────┴──────────────
    [3] kodierabgleich              → prüft jede Antwort einzeln gegen v3.1,
         │                             vergleicht, rechnet die Quote
@@ -91,21 +122,32 @@ erzwingt das bereits.
                                       Audit-Eintrag ins Repository
 ```
 
-**[1] Export.** Ein Werkzeug erzeugt aus dem Bundle je Kodierer ein Paket mit
-denselben 129 Volltexten, den Kriterien und Wertelisten der eingefrorenen
-Definition — und **nichts** vom jeweils anderen Lauf. Beide Pakete tragen
-denselben SHA-256; sind sie ungleich, war der Stoff nicht derselbe. Ablage
-ausserhalb des Repositoriums.
+**[1] Export.** `npm run kodierstoff-export` erzeugt aus dem versiegelten
+Bundle **ein** Paket: die 129 Volltexte, die Kriterien und Wertelisten der
+eingefrorenen Definition, die kanonische Zähleinheit-Regel und das
+Antwortschema — und **nichts** aus einem anderen Lauf, kein vorbelegter
+Status, kein Modellname. Beide Kodierer bekommen dieselbe Datei; wären es
+zwei, müsste man beweisen, dass sie gleich sind. Jeder Volltext wird vorher
+gegen den verankerten `text_sha256` geprüft; weicht einer ab, entsteht kein
+Paket. Der Export ist deterministisch — zweimal erzeugt ergibt Byte für Byte
+dasselbe Paket, sonst taugte sein SHA-256 nicht als gemeinsamer Bezugspunkt
+zweier Antworten. Ablage ausserhalb des Repositoriums.
 
 **[2] Kodierung.** Zwei getrennte Sitzungen, **verschiedene Modelle**
-(MANIFEST §5). Kein Kodierer sieht das Ergebnis des anderen — auch nicht
-teilweise, auch nicht als Zusammenfassung.
+(MANIFEST §5): Kodierer A ist `GPT-5.6 Sol`, Kodierer B ist
+`Claude Opus 5 (claude-opus-5)`. Kein Kodierer sieht das Ergebnis des anderen
+— auch nicht teilweise, auch nicht als Zusammenfassung. Beide antworten im
+Schema `gemeinsam-recht.ml003.kodierung.v1` und nennen im Kopf ihre Rolle,
+ihr Modell und den SHA-256 des Pakets, gegen das sie kodiert haben.
 
-**[3] Abgleich.** Das Werkzeug prüft **zuerst jede Antwort für sich** gegen die
-Definition (Vollständigkeit, erlaubte Werte, Kopplungen, Belegpflicht,
-`stand_datum ≤ datenstand`). Eine Antwort, die dabei durchfällt, wird
-zurückgewiesen — nicht stillschweigend verglichen. Erst danach folgt der
-Vergleich.
+**[3] Abgleich.** Die Einzelprüfung steht bereits:
+`pruefeKodierartefakt()` prüft **jede Antwort für sich** gegen die Definition
+(Kopf, Deckung der 129 Bezeichner, erlaubte Werte, Kopplungen, Belegpflicht,
+`stand_datum ≤ datenstand`, Zähleinheit-Regel, Verfahrensrechtsnachweis).
+Beide Rollen laufen durch dieselbe Funktion mit demselben Kontext. Eine
+Antwort, die dabei durchfällt, wird zurückgewiesen — nicht stillschweigend
+verglichen. Der Vergleich selbst (`kodierabgleich`) ist noch nicht gebaut;
+er folgt der Konsensregel in §4.
 
 **[4] Verankerung.** In `lauf.json` gelangt ausschliesslich der Konsens; die
 Vollartefakte bleiben aussen und sind über SHA-256 verankert.
@@ -134,11 +176,10 @@ zwischen Erledigungsweg, Abschlussstatus und Messausgang — eine Kombination
 „Status von A, Messausgang von B" wurde von keinem der beiden Kodierer je so
 entschieden und wäre eine neue, dritte Aussage.
 
-**`zaehleinheit`:** unterschiedliche Zeichenketten für denselben Streit sind
-kein automatischer Konflikt, wenn die kanonische Ableitungsregel beiden
-vorab bekannt war und beide sie korrekt angewandt haben — dann sind die
-Strings ohnehin identisch. Weichen sie trotzdem ab, ist das ein Feldkonflikt
-wie oben.
+**`zaehleinheit`:** die kanonische Ableitungsregel steht seit dem
+2026-08-11 fest und geht wortgleich im Kodierpaket an beide (unten §4a).
+Wenden beide sie korrekt an, sind die Zeichenketten ohnehin identisch.
+Weichen sie trotzdem ab, ist das ein Feldkonflikt wie oben.
 
 **`erledigungsweg.quelle`:** verschiedene Folgeentscheide als Primärquelle
 sind ein Feldkonflikt ⇒ `ungeklaert` — auch wenn `messausgang.wert` zufällig
@@ -158,9 +199,46 @@ Begründungspflicht über das hinaus, was die Kodierer schon notiert haben.
 Kodierer zitieren nie identisch; geprüft wird die Belegpflicht. Die
 Übereinstimmung hängt an den strukturierten Feldern oben.
 
+## 4a. Die kanonische `zaehleinheit`-Regel — ENTSCHIEDEN (Taktgeber 2026-08-11)
+
+> Diese Regel stand im Entwurf noch unter „später festlegbar". Das ist
+> **korrigiert**: sie ist **vor Kodierungsbeginn entschieden** und liegt beiden
+> Kodierern mit dem Paket vor. Nachträglich festgelegt wäre sie eine Regel,
+> die man in Kenntnis der Antworten hätte wählen können.
+
+> Die bei ML-002 beobachteten Bezeichner entsprachen den jeweiligen
+> **Aktenzeichen**. Das war eine Beobachtung, **keine normative Regel**, und
+> wird auf ML-003 ausdrücklich **nicht** übertragen: 13 der 129 Treffer sind
+> BGE-Publikationsauszüge, die in den Rohmetadaten überhaupt kein Aktenzeichen
+> tragen. Eine Aktenzeichenregel müsste dort aus dem Volltext lesen — also aus
+> dem Entscheid, den zu beurteilen erst die Aufgabe ist.
+
+**Regel.** `zaehleinheit` ist die lexikographisch kleinste `quelle_id` aller
+ML-003-Roh-Treffer, die der jeweilige Kodierer derselben Streitigkeit
+zuordnet. Gehört zu einer Streitigkeit nur ein Roh-Treffer, ist die
+`zaehleinheit` dessen eigene `quelle_id`.
+
+- Nur Roh-Treffer **dieses** Laufs bestimmen den Bezeichner. Ein nach CR-03 E2
+  zulässiger Folgeentscheid ausserhalb der Rohpopulation darf den Endzustand
+  belegen, ändert den Bezeichner aber nicht.
+- Der Bezeichner wird **nie aus dem Ausgang** abgeleitet und **nie
+  nachträglich von Hand umbenannt**.
+- Lässt sich die Zuordnung nicht sicher treffen, wird keine erfunden: der
+  Treffer bleibt `ungeklaert`.
+
+**Was davon maschinell geprüft wird** (`pruefeZaehleinheiten()`): der
+Bezeichner ist eine `quelle_id` dieses Laufs, und er ist lexikographisch nicht
+grösser als die kleinste `quelle_id` seiner Gruppe. Auf **Gleichheit** wird
+bewusst nicht geprüft: die kleinste `quelle_id` einer Streitigkeit kann selbst
+ausgeschlossen oder ungeklärt sein und trägt dann gar keine `zaehleinheit` —
+ein Gleichheitstest verwürfe genau diesen zulässigen Fall. Die Prüfung ist
+damit **notwendig, nicht hinreichend**; ob die Zuordnung zur Streitigkeit
+fachlich richtig war, entscheidet sie nicht.
+
 ## 5. Abbruchbedingungen (fail closed)
 
-- Die beiden Exportpakete haben verschiedene SHA-256 ⇒ Abbruch.
+- Eine Antwort nennt einen anderen `kodierstoff_sha256` als das ausgelieferte
+  Paket ⇒ Abbruch: es wurde gegen anderen Stoff kodiert.
 - Eine Antwortdatei deckt die 129 Bezeichner nicht exakt ⇒ Abbruch.
 - Eine Antwort verletzt die Definition ⇒ zurückgewiesen, nichts verglichen.
 - Ein Treffer wäre `eingeschlossen` + `abgeschlossen` ohne belegtes
@@ -179,8 +257,8 @@ Abgleich sichtbar. Die Erwartung wird hier bewusst nicht formuliert.
 
 Die Doppelkodierung kann beginnen:
 
-- Kein Code-, Schema- oder Freeze-Defekt gefunden; `npm test` (369/369) und
-  `node tools/pruefen.ts` bestätigen einen sauberen, vollständig
+- Kein Code-, Schema- oder Freeze-Defekt gefunden; `npm test` (messkorpus
+  379/379) und `node tools/pruefen.ts` bestätigen einen sauberen, vollständig
   ungeklärten, gesperrten Ausgangszustand für ML-003.
 - `sperren()`/`pruefeLauf` verhindern technisch jede vorzeitige Quote,
   solange auch nur ein Treffer `ungeklaert` bleibt — das deckt den
@@ -189,19 +267,51 @@ Die Doppelkodierung kann beginnen:
   Feldmischung) ist entschieden; keine weitere Entwicklung nötig, um zu
   starten.
 
-**Vor-Merge-Pflichten** — keine Vor-Kodierung-Blocker; beide lassen sich
-parallel zur Kodierung klären, ohne die Blindheit der Läufe zu verletzen:
+**Vor-Merge-Pflicht** — kein Vor-Kodierung-Blocker; sie lässt sich parallel
+zur Kodierung klären, ohne die Blindheit der Läufe zu verletzen:
 
 1. **Automatisierter A/B-Abgleich** (`kodierabgleich` nach §3 Schritt [3]):
    muss stehen, bevor ein Konsens nach `lauf.json` gelangt.
-2. **Kanonische `zaehleinheit`-Ableitungsregel:** rein mechanisch (kennt
-   keinen Ausgang, keine Klassifikation), deshalb parallel festlegbar und
-   beiden Kodierern nachreichbar; spätestens vor dem Abgleich muss sie
-   stehen. Weichen die Strings trotz Regel ab ⇒ Feldkonflikt (§4).
 
-## 8. Offen — einziger Punkt vor Kodierbeginn
+Die frühere zweite Pflicht — die kanonische `zaehleinheit`-Regel — ist
+**erledigt und vorgezogen**: sie steht in §4a, ist vor Kodierungsbeginn
+entschieden und geht mit dem Paket an beide Kodierer. Die Entwurfsaussage,
+sie sei „parallel festlegbar und nachreichbar", gilt **nicht mehr**. Eine
+Regel, die erst nach den Antworten feststünde, könnte in deren Kenntnis
+gewählt worden sein.
 
-**Welche zwei Modelle** (MANIFEST §5: verschiedene Modelle; bei ML-002 waren
-es GPT-5.6 Sol und Claude Opus 5) **und wer davon Kodierer A ist** — die
-Reihenfolge ist für die Unabhängigkeit belanglos, für den Audit-Eintrag aber
-festzuhalten. Das erzwingt kein Code, sondern nur die Durchführung selbst.
+## 8. Besetzung — festgelegt (Taktgeber 2026-08-11)
+
+| Rolle | Modell |
+|---|---|
+| Kodierer A | `GPT-5.6 Sol` |
+| Kodierer B | `Claude Opus 5 (claude-opus-5)` |
+
+Zwei verschiedene Modelle, wie MANIFEST v2.1 §5 es verlangt. Die Reihenfolge
+ist für die Unabhängigkeit belanglos, für den Audit-Eintrag aber festgehalten.
+Beide Angaben stehen im Kopf des jeweiligen Antwortartefakts
+(`kodierer.rolle`, `kodierer.modell`) — und sonst nirgends: kein Feldname und
+kein Eintrag verrät, wer geantwortet hat. Dass tatsächlich zwei verschiedene
+Modelle gelaufen sind, erzwingt kein Code, sondern die Durchführung selbst.
+
+## 9. Stand der Werkzeuge
+
+| Datei | Was sie tut | Stand |
+|---|---|---|
+| `redaktion/src/kodierschema.ts` | Antwortschema `gemeinsam-recht.ml003.kodierung.v1`, Wertelisten, Zähleinheit-Regel, Einzelprüfung einer Antwort | steht |
+| `redaktion/src/kodierstoff.ts` | baut das Kodierpaket, prüft jeden Volltext gegen den Provenienzanker, leitet den Prüfkontext ab | steht |
+| `redaktion/src/kodierstoff-export.ts` | CLI `npm run kodierstoff-export` | steht |
+| `kodierabgleich` (§3 Schritt [3]) | A/B-Vergleich nach §4, Quote, Audit-Eintrag | **fehlt** |
+| Verankerung in `lauf.json` (§3 Schritt [4]) | Konsens eintragen | **fehlt** |
+
+Der Export läuft dort, wo das Bundle liegt — ausserhalb des Repositoriums,
+ohne Netz:
+
+```
+npm run kodierstoff-export -- --lauf ML-003 \
+  --bundle ~/gr-volltexte/ML-003 --ziel ~/gr-kodierung/ML-003
+```
+
+Der ausgegebene SHA-256 des Pakets gehört in den Kopf **beider** Antworten.
+Er entsteht auf der Maschine, die das Bundle hält; im Repository liegt kein
+Volltext und damit auch kein Paket.
