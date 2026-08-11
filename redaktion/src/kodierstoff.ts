@@ -233,7 +233,11 @@ export function kodierkontext(
     datenstand: paket.datenstand,
     messdefinition: paket.messdefinition,
     kodierstoff_sha256: paketSha256,
-    quelle_ids: paket.dokumente.map((d) => d.quelle_id),
+    identitaeten: paket.dokumente.map((d) => ({
+      quelle_id: d.quelle_id,
+      aktenzeichen: d.aktenzeichen,
+      text_sha256: d.text_sha256,
+    })),
     ausschlussgruende: ausschlussgruende(definition),
     verlangt_verfahrensrecht_nachweis: regel?.art === "bundesgericht_uebergangsrecht_art132_bgg",
   };

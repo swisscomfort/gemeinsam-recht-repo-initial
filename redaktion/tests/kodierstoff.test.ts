@@ -274,8 +274,30 @@ describe("kodierkontext", () => {
     expect(kontext.messlauf).toBe("ML-003");
     expect(kontext.datenstand).toBe(echterLauf.datenstand);
     expect(kontext.kodierstoff_sha256).toBe(paketSha);
-    expect(kontext.quelle_ids).toHaveLength(129);
+    expect(kontext.identitaeten).toHaveLength(129);
     expect(kontext.messdefinition.sha256).toBe(DEFINITIONSHASH);
+  });
+
+  it("traegt je Bezeichner die Identitaet aus dem Paket", () => {
+    const paket = baueEchtesPaket();
+    const kontext = kodierkontext(paket, "x", echteDefinition);
+    expect(kontext.identitaeten).toEqual(
+      paket.dokumente.map((d) => ({
+        quelle_id: d.quelle_id,
+        aktenzeichen: d.aktenzeichen,
+        text_sha256: d.text_sha256,
+      })),
+    );
+  });
+
+  it("fuehrt die 13 BGE-Auszuege ohne Aktenzeichen kanonisch als null", () => {
+    // Sie tragen in den Rohmetadaten keines. Der Kodierer ergaenzt dort
+    // nichts aus dem Volltext — der Wert ist null, in Paket und Antwort.
+    const ohne = kodierkontext(baueEchtesPaket(), "x", echteDefinition).identitaeten.filter(
+      (i) => i.aktenzeichen === null,
+    );
+    expect(ohne).toHaveLength(13);
+    for (const i of ohne) expect(i.quelle_id.startsWith("CH_BGE_")).toBe(true);
   });
 
   it("verlangt unter dem Uebergangsrecht den Verfahrensrechtsnachweis", () => {

@@ -75,6 +75,9 @@ Tabelle ist die Lesefassung desselben Schemas.
 
 | Feld | Wann | Werte |
 |---|---|---|
+| `quelle_id` | immer | Bezeichner aus dem Paket, unverändert |
+| `aktenzeichen` | immer | aus dem Paket unverändert; **`null`**, wo das Paket `null` nennt |
+| `text_sha256` | immer | aus dem Paket unverändert |
 | `status` | immer | `eingeschlossen` · `ausgeschlossen` · `ungeklaert` |
 | `ausschlussgrund` | bei `ausgeschlossen` | `andere_rechtsfrage` · `nur_erstreckung` · `kein_mietverhaeltnis` · `nur_prozessuale_nebenfrage` · `text_nicht_zugaenglich` |
 | `zaehleinheit` | bei `eingeschlossen` | Bezeichner der Streitigkeit |
@@ -82,6 +85,7 @@ Tabelle ist die Lesefassung desselben Schemas.
 | `erledigungsweg.modus` | bei `eingeschlossen` | `materiell_entschieden` · `prozessual_erledigt` · `rueckweisung_offen` |
 | `erledigungsweg.prozessgrund` | Schlüssel immer da | einer der sieben Gründe, sonst **`null`** |
 | `erledigungsweg.beleg` / `.stand_datum` / `.quelle` | bei `eingeschlossen` | Textstelle · Datum ≤ Datenstand · Primärquelle |
+| `messausgang.messdefinition_id` / `.messdefinition_version` | bei `eingeschlossen` | genau `MD-001` / `3.1.0` |
 | `messausgang.wert` | bei `eingeschlossen` | `durchgesetzt` · `nicht_durchgesetzt` · `nicht_anwendbar` · `offen` |
 | `messausgang.beleg` / `.quelle` | bei `eingeschlossen` | Textstelle · Primärquelle |
 | `verfahrensrecht_nachweis` | bei `eingeschlossen` **und** `abgeschlossen` | `regime` (`bgg` · `og` · `ungeklaert`) + nichtleerer `beleg` + `quelle` |
@@ -91,6 +95,23 @@ Tabelle ist die Lesefassung desselben Schemas.
 Ausserhalb von `eingeschlossen` trägt ein Eintrag **keines** der
 Einschlussfelder. Bei `ungeklaert` wird nichts erfunden (CR-03 E2 Ziff. 6),
 und ein Feld, das keine Regel liest, täuschte im Abgleich nur Gewicht vor.
+
+**Identität und Bindung sind keine Klassifikation.** `quelle_id`,
+`aktenzeichen`, `text_sha256` und die beiden `messausgang.messdefinition_*`
+sagen, *welcher* Treffer gegen *welche Fassung* beurteilt wurde. Sie werden
+unverändert aus dem Paket übernommen und gegen dieses geprüft; eine Abweichung
+ist **kein Feldkonflikt für den A/B-Abgleich, sondern ein Fehler** — die
+Antwort gehört dann zu einem anderen Gegenstand. `aktenzeichen` wird nie aus
+dem Volltext ergänzt: das wäre bereits eine Auslegung des Entscheids, den zu
+beurteilen erst die Aufgabe ist.
+
+**Das Schema ist geschlossen.** Auf jeder Ebene — Artefakt, `kodierer`,
+`messdefinition`, Eintrag, `erledigungsweg`, `messausgang`,
+`verfahrensrecht_nachweis` — sind nur die deklarierten Schlüssel erlaubt. Ein
+zusätzliches Feld (eine eigene Nebenwertung, ein Konfidenzmass, eine
+Modellanmerkung) macht das Artefakt **ungültig**. Es würde von keiner Regel
+gelesen und von keinem Abgleich verglichen und stünde doch im Material. Was
+gesagt werden soll, gehört in `begruendung` oder in einen der Belege.
 
 Einschluss nur, wenn alle drei Kriterien der Definition **sicher** erfüllt sind
 (`konkrete_kuendigung_angegriffen`, `mietpartei_beruft_sich`,
@@ -239,6 +260,13 @@ fachlich richtig war, entscheidet sie nicht.
 
 - Eine Antwort nennt einen anderen `kodierstoff_sha256` als das ausgelieferte
   Paket ⇒ Abbruch: es wurde gegen anderen Stoff kodiert.
+- Ein Eintrag nennt ein anderes `aktenzeichen` oder einen anderen
+  `text_sha256` als das Paket ⇒ Artefakt ungültig.
+- `messausgang.messdefinition_id`/`.messdefinition_version` ≠ `MD-001`/`3.1.0`
+  ⇒ Artefakt ungültig.
+- Ein unbekannter Schlüssel auf irgendeiner Ebene ⇒ Artefakt ungültig.
+- Rolle und Modell passen nicht zur festgeschriebenen Besetzung ⇒ Artefakt
+  ungültig.
 - Eine Antwortdatei deckt die 129 Bezeichner nicht exakt ⇒ Abbruch.
 - Eine Antwort verletzt die Definition ⇒ zurückgewiesen, nichts verglichen.
 - Ein Treffer wäre `eingeschlossen` + `abgeschlossen` ohne belegtes
@@ -291,8 +319,16 @@ Zwei verschiedene Modelle, wie MANIFEST v2.1 §5 es verlangt. Die Reihenfolge
 ist für die Unabhängigkeit belanglos, für den Audit-Eintrag aber festgehalten.
 Beide Angaben stehen im Kopf des jeweiligen Antwortartefakts
 (`kodierer.rolle`, `kodierer.modell`) — und sonst nirgends: kein Feldname und
-kein Eintrag verrät, wer geantwortet hat. Dass tatsächlich zwei verschiedene
-Modelle gelaufen sind, erzwingt kein Code, sondern die Durchführung selbst.
+kein Eintrag verrät, wer geantwortet hat, und **im Kodierstoff steht keine
+Modellidentität**, sonst wüsste jeder Kodierer, wer der andere ist.
+
+Weil die Besetzung vor Kodierbeginn feststand, wird sie **fail closed
+geprüft**: Rolle `A` nimmt nur `GPT-5.6 Sol` an, Rolle `B` nur
+`Claude Opus 5 (claude-opus-5)`. Eine Antwort unter einer Rolle mit einem
+anderen Modell ist ungültig, nicht bloss auffällig. Dass tatsächlich zwei
+verschiedene Modelle *gelaufen* sind, erzwingt weiterhin kein Code, sondern
+die Durchführung selbst — der Code hält nur fest, dass die Zuordnung nicht
+nachträglich umbesetzt wurde.
 
 ## 9. Stand der Werkzeuge
 

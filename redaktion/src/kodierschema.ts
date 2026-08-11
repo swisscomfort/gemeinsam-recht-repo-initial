@@ -42,6 +42,98 @@ export const VERFAHRENSREGIME = ["bgg", "og", "ungeklaert"] as const;
 export const KODIERER_ROLLEN = ["A", "B"] as const;
 
 /**
+ * Die vor Kodierbeginn festgeschriebene Besetzung (MANIFEST v2.1 §5: zwei
+ * verschiedene Modelle). Sie wird fail closed geprueft: eine Antwort unter
+ * einer Rolle mit einem anderen Modell ist ungueltig, nicht bloss auffaellig.
+ *
+ * Sie steht hier und NICHT im Kodierstoff — das Paket bleibt frei von jeder
+ * Modellidentitaet, sonst wuesste jeder Kodierer, wer der andere ist.
+ */
+export const BESETZUNG = {
+  A: "GPT-5.6 Sol",
+  B: "Claude Opus 5 (claude-opus-5)",
+} as const satisfies Record<(typeof KODIERER_ROLLEN)[number], string>;
+
+/* ---------- Die erlaubten Schluessel, Ebene fuer Ebene ---------- */
+
+/**
+ * Das Schema ist EXAKT, nicht offen: auf jeder Ebene sind genau diese
+ * Schluessel erlaubt, und ein unbekannter macht das Artefakt ungueltig.
+ *
+ * Ohne diese Schliessung koennte ein Modell eine eigene Nebenwertung
+ * mitliefern — "eigene_sonderwertung", "konfidenz", "anmerkung_des_modells" —
+ * und sie bliebe still in einem als gueltig gefuehrten Artefakt stehen. Sie
+ * wuerde von keiner Regel gelesen, von keinem Abgleich verglichen und stuende
+ * doch im Material. Entweder ein Feld gehoert ins Schema, dann steht es hier;
+ * oder es gehoert nicht hinein, dann faellt die Antwort durch.
+ *
+ * Dieselben Listen bauen `antwortschema()`. Dass Beschreibung und Pruefung
+ * uebereinstimmen, sichert `kodierschema.test.ts` Ebene fuer Ebene.
+ */
+export const ARTEFAKT_SCHLUESSEL = [
+  "schema",
+  "kodierer",
+  "messlauf",
+  "messdefinition",
+  "kodierstoff_sha256",
+  "eintraege",
+] as const;
+
+export const KODIERER_SCHLUESSEL = ["rolle", "modell"] as const;
+
+export const MESSDEFINITION_SCHLUESSEL = ["id", "version", "sha256"] as const;
+
+export const EINTRAG_SCHLUESSEL = [
+  "quelle_id",
+  "aktenzeichen",
+  "text_sha256",
+  "status",
+  "begruendung",
+  "offene_frage",
+  "ausschlussgrund",
+  "zaehleinheit",
+  "abschluss_status",
+  "erledigungsweg",
+  "messausgang",
+  "verfahrensrecht_nachweis",
+] as const;
+
+export const ERLEDIGUNGSWEG_SCHLUESSEL = ["modus", "prozessgrund", "beleg", "stand_datum", "quelle"] as const;
+
+export const MESSAUSGANG_SCHLUESSEL = [
+  "messdefinition_id",
+  "messdefinition_version",
+  "wert",
+  "beleg",
+  "quelle",
+] as const;
+
+export const NACHWEIS_SCHLUESSEL = ["regime", "beleg", "quelle"] as const;
+
+/**
+ * Identitaet und Bindung — unveraendert aus dem Kodierpaket uebernommen.
+ *
+ * Das sind KEINE juristischen Klassifikationen und kein Gegenstand des
+ * A/B-Konsenses: sie sagen, WELCHER Treffer beurteilt wurde und gegen welche
+ * Fassung der Messdefinition. Ein abweichender Wert ist deshalb kein
+ * Feldkonflikt, sondern ein Fehler — die Antwort gehoert dann zu einem
+ * anderen Gegenstand als das ausgelieferte Paket. `pruefeKodierartefakt()`
+ * prueft jeden dieser Werte gegen den Kodierstoff.
+ *
+ * `aktenzeichen` wird nie aus dem Volltext ergaenzt: traegt der Roh-Treffer
+ * keines, ist der kanonische Wert `null`. 13 der 129 ML-003-Treffer sind
+ * BGE-Publikationsauszuege ohne Aktenzeichen in den Rohmetadaten — dort etwas
+ * aus dem Entscheidkopf nachzutragen, waere bereits eine Auslegung.
+ */
+export const IDENTITAETSFELDER = [
+  "quelle_id",
+  "aktenzeichen",
+  "text_sha256",
+  "messausgang.messdefinition_id",
+  "messausgang.messdefinition_version",
+] as const;
+
+/**
  * Felder mit fester Werteliste oder Bezeichnercharakter — maschinell
  * vergleichbar. Die Liste sagt NICHT, welche davon konsensblockierend sind;
  * das steht in §4 des Auftrags.
@@ -124,6 +216,9 @@ export interface Erledigungsweg {
 }
 
 export interface Messausgang {
+  /** Bindung an die Fassung: ein Normausgang gilt nur fuer seine eigene. */
+  messdefinition_id: string;
+  messdefinition_version: string;
   wert: string;
   beleg: string;
   quelle: string;
@@ -137,6 +232,9 @@ export interface VerfahrensrechtNachweis {
 
 export interface Kodiereintrag {
   quelle_id: string;
+  /** Aus dem Paket uebernommen; `null`, wo der Roh-Treffer keines traegt. */
+  aktenzeichen: string | null;
+  text_sha256: string;
   status: string;
   begruendung: string;
   offene_frage?: string;
@@ -163,13 +261,24 @@ export interface Kodierartefakt {
   eintraege: Kodiereintrag[];
 }
 
+/**
+ * Die Identitaet eines Treffers, so wie sie im ausgelieferten Kodierpaket
+ * steht. Gegen genau diese Werte wird die Antwort geprueft.
+ */
+export interface TrefferIdentitaet {
+  quelle_id: string;
+  aktenzeichen: string | null;
+  text_sha256: string;
+}
+
 /** Woran eine Antwort gemessen wird — alles aus Lauf, Definition und Paket. */
 export interface KodierKontext {
   messlauf: string;
   datenstand: string;
   messdefinition: { id: string; version: string; sha256: string };
   kodierstoff_sha256: string;
-  quelle_ids: readonly string[];
+  /** Je Bezeichner die erwartete Identitaet — Reihenfolge wie im Paket. */
+  identitaeten: readonly TrefferIdentitaet[];
   ausschlussgruende: readonly string[];
   /**
    * Verlangt die Rechtskraftregel der Definition je eingeschlossenem und
@@ -192,6 +301,23 @@ function text(wert: unknown): string | null {
 
 function gefuellt(wert: unknown): boolean {
   return typeof wert === "string" && wert.trim() !== "";
+}
+
+/**
+ * Meldet jeden Schluessel, den das Schema auf dieser Ebene nicht kennt.
+ *
+ * Eine kleine Funktion statt einer JSON-Schema-Bibliothek: die erlaubten
+ * Schluessel stehen ohnehin schon als Listen da, und eine weitere
+ * Laufzeit-Abhaengigkeit braucht es dafuer nicht.
+ */
+function unbekannteSchluessel(objekt: Record<string, unknown>, erlaubt: readonly string[], wo: string): string[] {
+  const fremd = Object.keys(objekt).filter((name) => !erlaubt.includes(name));
+  if (fremd.length === 0) return [];
+  return [
+    `${wo}: unbekannte Schluessel ${fremd.map((n) => `"${n}"`).join(", ")}. ` +
+      `${KODIERSCHEMA_ID} ist ein exaktes Schema — erlaubt sind hier nur ${erlaubt.join(", ")}. ` +
+      `Eine Zusatzwertung, die keine Regel liest und kein Abgleich vergleicht, darf nicht still im Material stehen.`,
+  ];
 }
 
 /**
@@ -239,7 +365,7 @@ export function istKalenderdatum(iso: string): boolean {
  * A/B-Abgleichs und der beiden Kodierer.
  */
 export function pruefeZaehleinheiten(
-  eintraege: readonly Kodiereintrag[],
+  eintraege: readonly Pick<Kodiereintrag, "quelle_id" | "zaehleinheit">[],
   quelleIds: readonly string[],
 ): string[] {
   const fehler: string[] = [];
@@ -280,7 +406,7 @@ export function pruefeZaehleinheiten(
 /* ---------- Die Pruefung eines Artefakts ---------- */
 
 function pruefeErledigungsweg(weg: Record<string, unknown>, wo: string, datenstand: string): string[] {
-  const fehler: string[] = [];
+  const fehler = unbekannteSchluessel(weg, ERLEDIGUNGSWEG_SCHLUESSEL, `${wo}: erledigungsweg`);
   const modus = text(weg.modus);
 
   if (modus === null || !(ERLEDIGUNGSMODI as readonly string[]).includes(modus)) {
@@ -338,8 +464,26 @@ function pruefeErledigungsweg(weg: Record<string, unknown>, wo: string, datensta
   return fehler;
 }
 
-function pruefeMessausgang(ausgang: Record<string, unknown>, wo: string): string[] {
-  const fehler: string[] = [];
+function pruefeMessausgang(ausgang: Record<string, unknown>, wo: string, kontext: KodierKontext): string[] {
+  const fehler = unbekannteSchluessel(ausgang, MESSAUSGANG_SCHLUESSEL, `${wo}: messausgang`);
+
+  /* Ein Normausgang gilt nur fuer seine eigene Messdefinition UND deren
+     Fassung: mit einer neuen Version koennen sich Messfrage und Kriterien
+     geaendert haben, dann ist dieselbe Kodierung nicht mehr dieselbe Aussage.
+     Dieselbe Bindung prueft `gehoertZu()` spaeter am Lauf. */
+  if (ausgang.messdefinition_id !== kontext.messdefinition.id) {
+    fehler.push(
+      `${wo}: messausgang.messdefinition_id ist "${String(ausgang.messdefinition_id)}", der Lauf gehoert zu ` +
+        `"${kontext.messdefinition.id}".`,
+    );
+  }
+  if (ausgang.messdefinition_version !== kontext.messdefinition.version) {
+    fehler.push(
+      `${wo}: messausgang.messdefinition_version ist "${String(ausgang.messdefinition_version)}", kodiert wird ` +
+        `gegen "${kontext.messdefinition.version}". Eine andere Fassung ist nicht dieselbe Aussage.`,
+    );
+  }
+
   const wert = text(ausgang.wert);
   if (wert === null || !(MESSAUSGANG_WERTE as readonly string[]).includes(wert)) {
     fehler.push(
@@ -353,7 +497,7 @@ function pruefeMessausgang(ausgang: Record<string, unknown>, wo: string): string
 }
 
 function pruefeNachweis(nachweis: Record<string, unknown>, wo: string): string[] {
-  const fehler: string[] = [];
+  const fehler = unbekannteSchluessel(nachweis, NACHWEIS_SCHLUESSEL, `${wo}: verfahrensrecht_nachweis`);
   const regime = text(nachweis.regime);
   if (regime === null || !(VERFAHRENSREGIME as readonly string[]).includes(regime)) {
     fehler.push(
@@ -379,7 +523,50 @@ const EINSCHLUSSFELDER = [
   "verfahrensrecht_nachweis",
 ] as const;
 
-function pruefeEintrag(roh: unknown, kontext: KodierKontext, stelle: string): { fehler: string[]; eintrag: Kodiereintrag | null } {
+/**
+ * Identitaet und Provenienz eines Eintrags gegen das ausgelieferte Paket.
+ *
+ * Diese Felder sind keine Beurteilung: sie sagen, WELCHER Treffer beurteilt
+ * wurde. Weicht einer ab, gehoert die Antwort zu einem anderen Gegenstand —
+ * das ist kein Feldkonflikt fuer den Abgleich, sondern ein Fehler.
+ */
+function pruefeIdentitaet(
+  objekt: Record<string, unknown>,
+  erwartet: TrefferIdentitaet | undefined,
+  wo: string,
+): string[] {
+  if (!erwartet) return []; // Unbekannter Bezeichner: die Deckung meldet ihn.
+  const fehler: string[] = [];
+
+  if (!("aktenzeichen" in objekt)) {
+    fehler.push(
+      `${wo}: aktenzeichen fehlt. Der Schluessel gehoert in jeden Eintrag; traegt der Roh-Treffer keines, ` +
+        `ist der kanonische Wert null.`,
+    );
+  } else if (objekt.aktenzeichen !== erwartet.aktenzeichen) {
+    fehler.push(
+      `${wo}: aktenzeichen ist ${JSON.stringify(objekt.aktenzeichen)}, das Paket nennt ` +
+        `${JSON.stringify(erwartet.aktenzeichen)}. Es wird unveraendert uebernommen und nie aus dem Volltext ` +
+        `ergaenzt — das waere bereits eine Auslegung.`,
+    );
+  }
+
+  if (objekt.text_sha256 !== erwartet.text_sha256) {
+    fehler.push(
+      `${wo}: text_sha256 ist "${String(objekt.text_sha256)}", das Paket nennt "${erwartet.text_sha256}". ` +
+        `Beurteilt wurde dann nicht der ausgelieferte Text.`,
+    );
+  }
+
+  return fehler;
+}
+
+function pruefeEintrag(
+  roh: unknown,
+  kontext: KodierKontext,
+  identitaeten: ReadonlyMap<string, TrefferIdentitaet>,
+  stelle: string,
+): { fehler: string[]; eintrag: Kodiereintrag | null } {
   const objekt = alsObjekt(roh);
   if (!objekt) return { fehler: [`${stelle}: kein Objekt.`], eintrag: null };
 
@@ -387,7 +574,9 @@ function pruefeEintrag(roh: unknown, kontext: KodierKontext, stelle: string): { 
   if (id === null || id === "") return { fehler: [`${stelle}: ohne quelle_id.`], eintrag: null };
 
   const wo = `Eintrag ${id}`;
-  const fehler: string[] = [];
+  const fehler = unbekannteSchluessel(objekt, EINTRAG_SCHLUESSEL, wo);
+  fehler.push(...pruefeIdentitaet(objekt, identitaeten.get(id), wo));
+
   const status = text(objekt.status);
 
   if (status === null || !(STATUS_WERTE as readonly string[]).includes(status)) {
@@ -458,7 +647,7 @@ function pruefeEintrag(roh: unknown, kontext: KodierKontext, stelle: string): { 
       `${wo}: messausgang fehlt. Steht die endgueltige Rechtswirkung noch aus, ist sie als "offen" zu benennen, ` +
         `nicht wegzulassen.`,
     );
-  } else fehler.push(...pruefeMessausgang(ausgang, wo));
+  } else fehler.push(...pruefeMessausgang(ausgang, wo, kontext));
 
   /* Die Kopplungen aus pruefeEndwirkung: Erledigungsweg, Abschlussstatus und
      Messausgang beschreiben denselben Sachverhalt aus drei Richtungen. */
@@ -542,7 +731,7 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
   const objekt = alsObjekt(artefakt);
   if (!objekt) return ["Das Kodierartefakt ist kein Objekt."];
 
-  const fehler: string[] = [];
+  const fehler = unbekannteSchluessel(objekt, ARTEFAKT_SCHLUESSEL, "Artefakt");
 
   if (objekt.schema !== KODIERSCHEMA_ID) {
     fehler.push(`schema ist "${String(objekt.schema)}", erwartet "${KODIERSCHEMA_ID}".`);
@@ -558,29 +747,42 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
   }
 
   const md = alsObjekt(objekt.messdefinition);
-  if (
-    !md ||
-    md.id !== kontext.messdefinition.id ||
-    md.version !== kontext.messdefinition.version ||
-    md.sha256 !== kontext.messdefinition.sha256
-  ) {
-    fehler.push(
-      `messdefinition nennt nicht ${kontext.messdefinition.id}@${kontext.messdefinition.version} ` +
-        `(${kontext.messdefinition.sha256}).`,
-    );
+  if (!md) {
+    fehler.push("messdefinition fehlt oder ist kein Objekt.");
+  } else {
+    fehler.push(...unbekannteSchluessel(md, MESSDEFINITION_SCHLUESSEL, "messdefinition"));
+    if (
+      md.id !== kontext.messdefinition.id ||
+      md.version !== kontext.messdefinition.version ||
+      md.sha256 !== kontext.messdefinition.sha256
+    ) {
+      fehler.push(
+        `messdefinition nennt nicht ${kontext.messdefinition.id}@${kontext.messdefinition.version} ` +
+          `(${kontext.messdefinition.sha256}).`,
+      );
+    }
   }
 
-  /* Rolle und Modell — die einzige Stelle, an der der Kodierer vorkommt. */
+  /* Rolle und Modell — die einzige Stelle, an der der Kodierer vorkommt.
+     Die Besetzung stand vor Kodierbeginn fest; sie wird deshalb geprueft und
+     nicht bloss entgegengenommen. */
   const kodierer = alsObjekt(objekt.kodierer);
   if (!kodierer) {
     fehler.push(`kodierer fehlt. Rolle und Modell gehoeren in den Kopf des Artefakts — und nur dorthin.`);
   } else {
+    fehler.push(...unbekannteSchluessel(kodierer, KODIERER_SCHLUESSEL, "kodierer"));
     const rolle = text(kodierer.rolle);
     if (rolle === null || !(KODIERER_ROLLEN as readonly string[]).includes(rolle)) {
       fehler.push(`kodierer.rolle ist "${String(kodierer.rolle)}", erwartet ${KODIERER_ROLLEN.join(" oder ")}.`);
-    }
-    if (!gefuellt(kodierer.modell)) {
-      fehler.push(`kodierer.modell fehlt oder ist leer. MANIFEST v2.1 §5 verlangt zwei verschiedene Modelle — welche, muss festgehalten sein.`);
+    } else {
+      const erwartet = BESETZUNG[rolle as keyof typeof BESETZUNG];
+      if (kodierer.modell !== erwartet) {
+        fehler.push(
+          `kodierer.modell ist ${JSON.stringify(kodierer.modell)}; fuer Rolle ${rolle} ist "${erwartet}" ` +
+            `festgeschrieben. Die Besetzung stand vor Kodierbeginn fest (MANIFEST v2.1 §5: zwei verschiedene ` +
+            `Modelle) und wird nicht nachtraeglich umbesetzt.`,
+        );
+      }
     }
   }
 
@@ -589,10 +791,13 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
     return fehler;
   }
 
+  const identitaeten = new Map(kontext.identitaeten.map((i) => [i.quelle_id, i]));
+  const quelleIds = kontext.identitaeten.map((i) => i.quelle_id);
+
   const eintraege: Kodiereintrag[] = [];
   const gesehen = new Set<string>();
   for (const [i, roh] of (objekt.eintraege as unknown[]).entries()) {
-    const ergebnis = pruefeEintrag(roh, kontext, `eintraege[${i}]`);
+    const ergebnis = pruefeEintrag(roh, kontext, identitaeten, `eintraege[${i}]`);
     fehler.push(...ergebnis.fehler);
     const id = alsObjekt(roh) ? text((alsObjekt(roh) as Record<string, unknown>).quelle_id) : null;
     if (id !== null && id !== "") {
@@ -604,8 +809,8 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
 
   /* Deckung in beide Richtungen: ein zusaetzlicher Bezeichner ist ebenso ein
      Befund wie ein fehlender — er stammt nicht aus dem Paket. */
-  const erwartet = new Set(kontext.quelle_ids);
-  const fehlend = kontext.quelle_ids.filter((id) => !gesehen.has(id));
+  const erwartet = new Set(quelleIds);
+  const fehlend = quelleIds.filter((id) => !gesehen.has(id));
   const unerwartet = [...gesehen].filter((id) => !erwartet.has(id));
   if (fehlend.length > 0) {
     fehler.push(`${fehlend.length} Bezeichner des Pakets fehlen in der Antwort: ${fehlend.slice(0, 5).join(", ")}${fehlend.length > 5 ? " …" : ""}.`);
@@ -614,7 +819,7 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
     fehler.push(`${unerwartet.length} Bezeichner stehen in der Antwort, aber nicht im Paket: ${unerwartet.slice(0, 5).join(", ")}${unerwartet.length > 5 ? " …" : ""}.`);
   }
 
-  fehler.push(...pruefeZaehleinheiten(eintraege, kontext.quelle_ids));
+  fehler.push(...pruefeZaehleinheiten(eintraege, quelleIds));
 
   return fehler;
 }
@@ -622,63 +827,94 @@ export function pruefeKodierartefakt(artefakt: unknown, kontext: KodierKontext):
 /* ---------- Die Beschreibung, die ins Kodierpaket geht ---------- */
 
 /**
- * Das Antwortschema als Text fuer die Kodierer — aus denselben Konstanten
- * gebaut wie die Pruefung. Waeren es zwei Quellen, koennte das Verlangte vom
- * Gepruef­ten abweichen, und der Kodierer traege die Folge.
+ * Das Antwortschema als Beschreibung fuer die Kodierer — aus denselben
+ * Konstanten gebaut wie die Pruefung. Waeren es zwei Quellen, koennte das
+ * Verlangte vom Geprueften abweichen, und der Kodierer traege die Folge. Dass
+ * die Schluessel jeder Ebene genau den erlaubten entsprechen, sichert
+ * `kodierschema.test.ts`.
+ *
+ * Ohne Modellidentitaet: `kodierer.modell` steht hier als Platzhalter. Stuende
+ * die Besetzung im Paket, wuesste jeder Kodierer, wer der andere ist.
  */
 export function antwortschema(): object {
+  const kopf: Record<string, unknown> = {
+    schema: KODIERSCHEMA_ID,
+    kodierer: { rolle: KODIERER_ROLLEN.join(" | "), modell: "<Modellbezeichnung>" },
+    messlauf: "<Messlauf-ID aus dem Paket>",
+    messdefinition: "<Block messdefinition aus dem Paket, unveraendert>",
+    kodierstoff_sha256: "<sha256 des ausgelieferten Kodierpakets>",
+    eintraege: ["<je ein Eintrag nach dem folgenden Muster>"],
+  };
+
+  const eintrag: Record<string, unknown> = {
+    quelle_id: "<Bezeichner aus dem Paket, unveraendert>",
+    aktenzeichen: "<aus dem Paket unveraendert; null, wo das Paket null nennt — nie aus dem Volltext ergaenzt>",
+    text_sha256: "<aus dem Paket unveraendert>",
+    status: STATUS_WERTE.join(" | "),
+    begruendung: "<kurz, sachlich; immer>",
+    offene_frage: "<nur bei ungeklaert: was offen geblieben ist>",
+    ausschlussgrund: "<nur bei ausgeschlossen: einer der deklarierten Codes>",
+    zaehleinheit: "<nur bei eingeschlossen: nach der kanonischen Regel>",
+    abschluss_status: `<nur bei eingeschlossen: ${ABSCHLUSS_WERTE.join(" | ")}>`,
+    erledigungsweg: {
+      modus: ERLEDIGUNGSMODI.join(" | "),
+      prozessgrund: `<Schluessel immer vorhanden; bei prozessual_erledigt einer von ${PROZESSGRUENDE.join(", ")}, sonst ausdruecklich null>`,
+      beleg: "<konkrete Textstelle>",
+      stand_datum: "<JJJJ-MM-TT, nie nach dem Datenstand des Laufs>",
+      quelle: "<Primaerquelle: der Treffer selbst oder ein nach CR-03 E2 verknuepfter Folgeentscheid>",
+    },
+    messausgang: {
+      messdefinition_id: "<id aus dem Block messdefinition des Pakets>",
+      messdefinition_version: "<version aus dem Block messdefinition des Pakets>",
+      wert: MESSAUSGANG_WERTE.join(" | "),
+      beleg: "<konkrete Textstelle>",
+      quelle: "<Primaerquelle>",
+    },
+    verfahrensrecht_nachweis: {
+      regime: VERFAHRENSREGIME.join(" | "),
+      beleg: "<konkrete Textstelle zum anwendbaren Verfahrensrecht>",
+      quelle: "<Primaerquelle>",
+    },
+  };
+
   return {
     schema: KODIERSCHEMA_ID,
     hinweis:
       "Beide Kodierer antworten in GENAU diesem Schema, mit denselben Feldnamen. Rolle und Modell stehen " +
       "ausschliesslich im Kopf unter kodierer; in keinem Eintrag und in keinem Feldnamen. Ein Eintrag je " +
       "quelle_id des Pakets, keiner mehr und keiner weniger.",
-    kopf: {
-      schema: KODIERSCHEMA_ID,
-      kodierer: { rolle: `${KODIERER_ROLLEN.join(" | ")}`, modell: "<Modellbezeichnung>" },
-      messlauf: "<Messlauf-ID aus dem Paket>",
-      messdefinition: "<Block messdefinition aus dem Paket, unveraendert>",
-      kodierstoff_sha256: "<sha256 des ausgelieferten Kodierpakets>",
-      eintraege: ["<je ein Eintrag nach dem folgenden Muster>"],
+    exakt:
+      "Das Schema ist geschlossen: auf jeder Ebene sind nur die hier genannten Schluessel erlaubt. Ein " +
+      "zusaetzliches Feld — eine eigene Nebenwertung, ein Konfidenzmass, eine Anmerkung — macht das Artefakt " +
+      "ungueltig. Was gesagt werden soll, gehoert in begruendung oder in einen der Belege.",
+    erlaubte_schluessel: {
+      artefakt: ARTEFAKT_SCHLUESSEL,
+      kodierer: KODIERER_SCHLUESSEL,
+      messdefinition: MESSDEFINITION_SCHLUESSEL,
+      eintrag: EINTRAG_SCHLUESSEL,
+      erledigungsweg: ERLEDIGUNGSWEG_SCHLUESSEL,
+      messausgang: MESSAUSGANG_SCHLUESSEL,
+      verfahrensrecht_nachweis: NACHWEIS_SCHLUESSEL,
     },
-    eintrag: {
-      quelle_id: "<Bezeichner aus dem Paket>",
-      status: STATUS_WERTE.join(" | "),
-      begruendung: "<kurz, sachlich; immer>",
-      offene_frage: "<nur bei ungeklaert: was offen geblieben ist>",
-      ausschlussgrund: "<nur bei ausgeschlossen: einer der deklarierten Codes>",
-      zaehleinheit: "<nur bei eingeschlossen: nach der kanonischen Regel>",
-      abschluss_status: `<nur bei eingeschlossen: ${ABSCHLUSS_WERTE.join(" | ")}>`,
-      erledigungsweg: {
-        modus: ERLEDIGUNGSMODI.join(" | "),
-        prozessgrund: `<Schluessel immer vorhanden; bei prozessual_erledigt einer von ${PROZESSGRUENDE.join(", ")}, sonst ausdruecklich null>`,
-        beleg: "<konkrete Textstelle>",
-        stand_datum: "<JJJJ-MM-TT, nie nach dem Datenstand des Laufs>",
-        quelle: "<Primaerquelle: der Treffer selbst oder ein nach CR-03 E2 verknuepfter Folgeentscheid>",
-      },
-      messausgang: {
-        wert: MESSAUSGANG_WERTE.join(" | "),
-        beleg: "<konkrete Textstelle>",
-        quelle: "<Primaerquelle>",
-      },
-      verfahrensrecht_nachweis: {
-        regime: VERFAHRENSREGIME.join(" | "),
-        beleg: "<konkrete Textstelle zum anwendbaren Verfahrensrecht>",
-        quelle: "<Primaerquelle>",
-      },
-    },
+    kopf,
+    eintrag,
     felder: {
+      identitaet: IDENTITAETSFELDER,
       klassifikation: KLASSIFIKATIONSFELDER,
       freitext: FREITEXTFELDER,
       hinweis:
-        "Klassifikationsfelder tragen feste Wertelisten oder Bezeichner und werden maschinell verglichen. " +
-        "Freitext wird auf Vorhandensein geprueft, nie auf Wortgleichheit.",
+        "Identitaetsfelder werden unveraendert aus dem Paket uebernommen und gegen dieses geprueft; sie sind " +
+        "keine Beurteilung. Klassifikationsfelder tragen feste Wertelisten oder Bezeichner und werden " +
+        "maschinell verglichen. Freitext wird auf Vorhandensein geprueft, nie auf Wortgleichheit.",
     },
     pflichten: [
+      "quelle_id, aktenzeichen und text_sha256 stehen in JEDEM Eintrag und sind unveraendert aus dem Paket uebernommen.",
+      "aktenzeichen ist null, wo das Paket null nennt — es wird nie aus dem Volltext ergaenzt oder erraten.",
       "status ist immer gesetzt, begruendung immer gefuellt.",
       "Bei ausgeschlossen: genau ein deklarierter ausschlussgrund, sonst keines der Einschlussfelder.",
       "Bei ungeklaert: offene_frage gefuellt, sonst keines der Einschlussfelder — es wird nichts erfunden (CR-03 Auflage E2 Ziff. 6).",
       "Bei eingeschlossen: zaehleinheit, abschluss_status, erledigungsweg und messausgang vollstaendig.",
+      "messausgang.messdefinition_id und .messdefinition_version nennen genau die Fassung aus dem Block messdefinition des Pakets.",
       "erledigungsweg.prozessgrund ist genau dann gesetzt, wenn modus = prozessual_erledigt; sonst null.",
       "rueckweisung_offen <=> abschluss_status rueckweisung_offen <=> messausgang.wert offen.",
       "materiell_entschieden oder prozessual_erledigt => abschluss_status abgeschlossen und messausgang.wert nicht offen.",
