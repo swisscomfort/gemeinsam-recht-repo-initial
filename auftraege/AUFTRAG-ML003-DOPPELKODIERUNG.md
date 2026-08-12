@@ -298,8 +298,8 @@ Die Doppelkodierung kann beginnen:
 **Vor-Merge-Pflicht** — kein Vor-Kodierung-Blocker; sie lässt sich parallel
 zur Kodierung klären, ohne die Blindheit der Läufe zu verletzen:
 
-1. **Automatisierter A/B-Abgleich** (`kodierabgleich` nach §3 Schritt [3]):
-   muss stehen, bevor ein Konsens nach `lauf.json` gelangt.
+1. **Automatisierter A/B-Abgleich** (`kodierabgleich` nach §3 Schritt [3]): **erledigt**.
+   Der materialisierte ML-003-Abgleich liegt unter `messkorpus/laeufe/ML-003/kodierungsabgleich-A-B.json`; `lauf.json` bleibt bis Schritt [4] unangetastet.
 
 Die frühere zweite Pflicht — die kanonische `zaehleinheit`-Regel — ist
 **erledigt und vorgezogen**: sie steht in §4a, ist vor Kodierungsbeginn
@@ -337,7 +337,7 @@ nachträglich umbesetzt wurde.
 | `redaktion/src/kodierschema.ts` | Antwortschema `gemeinsam-recht.ml003.kodierung.v1`, Wertelisten, Zähleinheit-Regel, Einzelprüfung einer Antwort | steht |
 | `redaktion/src/kodierstoff.ts` | baut das Kodierpaket, prüft jeden Volltext gegen den Provenienzanker, leitet den Prüfkontext ab | steht |
 | `redaktion/src/kodierstoff-export.ts` | CLI `npm run kodierstoff-export` | steht |
-| `kodierabgleich` (§3 Schritt [3]) | A/B-Vergleich nach §4, Quote, Audit-Eintrag | **fehlt** |
+| `kodierabgleich` (§3 Schritt [3]) | A/B-Vergleich nach §4, Quote, Audit-Eintrag | **steht** |
 | Verankerung in `lauf.json` (§3 Schritt [4]) | Konsens eintragen | **fehlt** |
 
 Der Export läuft dort, wo das Bundle liegt — ausserhalb des Repositoriums,
