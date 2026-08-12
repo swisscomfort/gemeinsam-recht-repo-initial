@@ -10,9 +10,11 @@
     "messlauf-erheben": "tsc -p tsconfig.build.json && node dist/messlauf-erheben.js",
     "volltexte-holen": "tsc -p tsconfig.build.json && node dist/volltexte-holen.js",
     "volltexte-abschliessen": "tsc -p tsconfig.build.json && node dist/volltexte-abschliessen.js",
+    "kodierstoff-export": "tsc -p tsconfig.build.json && node dist/kodierstoff-export.js",
     "kodierung-export": "tsc -p tsconfig.build.json && node dist/kodierung-export.js",
     "kodierung-import": "tsc -p tsconfig.build.json && node dist/kodierung-import.js",
-    "test": "tsc --noEmit && vitest run"
+    "test": "tsc --noEmit && vitest run",
+    "kodierabgleich": "tsc -p tsconfig.build.json && node dist/kodierabgleich.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

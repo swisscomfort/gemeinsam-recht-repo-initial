@@ -12,12 +12,13 @@
 
 import { describe, expect, it } from "vitest";
 import { definitionsHash, kanonisch } from "../tools/definition.ts";
-import { metadatenFingerprint } from "../tools/lauf.ts";
+import { istKalenderdatum, metadatenFingerprint } from "../tools/lauf.ts";
 import {
   definitionsHash as definitionsHashRedaktion,
   kanonisch as kanonischRedaktion,
   metadatenFingerprint as fingerprintRedaktion,
 } from "../../redaktion/src/messlauf.ts";
+import { istKalenderdatum as istKalenderdatumRedaktion } from "../../redaktion/src/kodierschema.ts";
 import { leseDefinitionen } from "../tools/umgebung.ts";
 
 const PROBEN: unknown[] = [
@@ -85,5 +86,30 @@ describe("metadatenFingerprint", () => {
     const leer = { ...metadaten, gericht: "" };
     expect(metadatenFingerprint(ohne)).not.toBe(metadatenFingerprint(leer));
     expect(fingerprintRedaktion(ohne)).toBe(metadatenFingerprint(ohne));
+  });
+});
+
+describe("istKalenderdatum", () => {
+  // redaktion/src/kodierschema.ts fuehrt die Pruefung ein zweites Mal: das
+  // gemeinsame Antwortschema prueft erledigungsweg.stand_datum, bevor eine
+  // Antwort ueberhaupt verglichen wird, und darf dafuer nicht aus messkorpus/
+  // importieren. Weichen die Fassungen voneinander ab, liesse die eine ein
+  // Datum durch, das die andere spaeter verwirft — die Antwort waere dann
+  // angenommen und der Lauf trotzdem ungueltig.
+  const PROBEN = [
+    "2011-01-01",
+    "2012-02-29",
+    "2011-02-29",
+    "2011-13-01",
+    "2011-00-10",
+    "2011-04-31",
+    "2011-1-1",
+    "20110101",
+    "",
+    "kein Datum",
+  ];
+
+  it.each(PROBEN)("Probe \"%s\" wird in beiden Fassungen gleich beurteilt", (probe) => {
+    expect(istKalenderdatumRedaktion(probe)).toBe(istKalenderdatum(probe));
   });
 });

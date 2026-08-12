@@ -1,0 +1,2368 @@
+{
+  "schema": "gemeinsam-recht.ml003.kodierabgleich.v1",
+  "messlauf": "ML-003",
+  "datenstand": "2026-08-10",
+  "raw_checkpoint": "7d93a0ccca36a168a4f92d060d08c7e852cfe08f",
+  "messdefinition": {
+    "id": "MD-001",
+    "version": "3.1.0",
+    "sha256": "c03d1279245b977ea247c70ec789ec9514506f80d92dc8ab3463cc97e4a462d9"
+  },
+  "bundle_sha256": "c2f55926000a828c821d80c04f5c9fbeda00bdefff34dbcb1b2d8ab9d0b4b954",
+  "kodierstoff_sha256": "dbb190771e0f2376701e2919369aebc97e59e696410adeb17d9b50b8ae2d6c63",
+  "kodierer_a": {
+    "rolle": "A",
+    "modell": "GPT-5.6 Sol",
+    "artefakt_sha256": "e6ca66f8516c259a7bb79730b71c28ea6b02044aadcbdd1f15e6cc66a4f37cb3",
+    "artefakt_im_repository": false
+  },
+  "kodierer_b": {
+    "rolle": "B",
+    "modell": "Claude Opus 5 (claude-opus-5)",
+    "artefakt_sha256": "9b5fccb7a1f99e80996a1a0c5e4a35d04d675f5be53a507888dfd7acebe9fdf3",
+    "artefakt_im_repository": false
+  },
+  "konsensregel": "Nur vollstaendige Uebereinstimmung aller strukturierten Pflichtfelder des jeweiligen Status wird uebernommen. Jeder Status- oder Feldkonflikt laesst den ganzen Roh-Treffer ungeklaert; Freitext wird nicht auf Wortgleichheit verglichen.",
+  "vergleich": {
+    "roh_treffer": 129,
+    "uebereinstimmung": 91,
+    "konflikte": 38,
+    "statuskonflikte": 21,
+    "feldkonflikte": 17,
+    "doppelt_ungeklaert": 2,
+    "agreement_rate": 0.7054263565891473
+  },
+  "eintraege": [
+    {
+      "quelle_id": "CH_BGE_001_BGE-137-I-167_2011",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "kein_mietverhaeltnis",
+          "b": "andere_rechtsfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_001_BGE-137-I-58_2011",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "kein_mietverhaeltnis",
+          "b": "andere_rechtsfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-137-III-24_2011",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.quelle",
+          "a": "CH_BGer_004_4A-459-2010_2011-01-04",
+          "b": "CH_BGE_005_BGE-137-III-24_2011 (publizierte Fassung von 4A_459/2010 vom 4. Januar 2011); ungekuerzte Fassung desselben Entscheids als CH_BGer_004_4A-459-2010_2011-01-04 im Paket"
+        },
+        {
+          "feld": "messausgang.quelle",
+          "a": "CH_BGer_004_4A-459-2010_2011-01-04",
+          "b": "CH_BGE_005_BGE-137-III-24_2011 (publizierte Fassung von 4A_459/2010 vom 4. Januar 2011)"
+        },
+        {
+          "feld": "verfahrensrecht_nachweis.quelle",
+          "a": "CH_BGer_004_4A-459-2010_2011-01-04",
+          "b": "CH_BGE_005_BGE-137-III-24_2011 (publizierte Fassung von 4A_459/2010); ungekuerzte Fassung als CH_BGer_004_4A-459-2010_2011-01-04 im Paket"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-137-III-389_2011",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-138-III-59_2012",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-139-III-13_2013",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-139-III-145_2013",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-139-III-457_2013",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-139-III-478_2013",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-140-III-244_2014",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-140-III-496_2014",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.quelle",
+          "a": "CH_BGer_004_4A-31-2014_2014-08-27",
+          "b": "CH_BGE_005_BGE-140-III-496_2014 (publizierte Fassung von 4A_31/2014 vom 27. August 2014); ungekuerzte Fassung als CH_BGer_004_4A-31-2014_2014-08-27 im Paket"
+        },
+        {
+          "feld": "messausgang.quelle",
+          "a": "CH_BGer_004_4A-31-2014_2014-08-27",
+          "b": "CH_BGE_005_BGE-140-III-496_2014 (publizierte Fassung von 4A_31/2014 vom 27. August 2014)"
+        },
+        {
+          "feld": "verfahrensrecht_nachweis.quelle",
+          "a": "CH_BGer_004_4A-31-2014_2014-08-27",
+          "b": "CH_BGE_005_BGE-140-III-496_2014 (publizierte Fassung von 4A_31/2014); ungekuerzte Fassung als CH_BGer_004_4A-31-2014_2014-08-27 im Paket"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-140-III-591_2014",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.quelle",
+          "a": "CH_BGer_004_4A-271-2014_2014-11-19",
+          "b": "CH_BGE_005_BGE-140-III-591_2014 (publizierte Fassung von 4A_271/2014 vom 19. November 2014); ungekuerzte Fassung als CH_BGer_004_4A-271-2014_2014-11-19 im Paket"
+        },
+        {
+          "feld": "messausgang.quelle",
+          "a": "CH_BGer_004_4A-271-2014_2014-11-19",
+          "b": "CH_BGE_005_BGE-140-III-591_2014 (publizierte Fassung von 4A_271/2014 vom 19. November 2014)"
+        },
+        {
+          "feld": "verfahrensrecht_nachweis.quelle",
+          "a": "CH_BGer_004_4A-271-2014_2014-11-19",
+          "b": "CH_BGE_005_BGE-140-III-591_2014 (publizierte Fassung von 4A_271/2014); ungekuerzte Fassung als CH_BGer_004_4A-271-2014_2014-11-19 im Paket"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGE_005_BGE-140-III-598_2014",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.quelle",
+          "a": "CH_BGer_004_4A-201-2014_2014-12-02",
+          "b": "CH_BGE_005_BGE-140-III-598_2014 (publizierte Fassung von 4A_201/2014 vom 2. Dezember 2014); ungekuerzte Fassung als CH_BGer_004_4A-201-2014_2014-12-02 im Paket"
+        },
+        {
+          "feld": "messausgang.quelle",
+          "a": "CH_BGer_004_4A-201-2014_2014-12-02",
+          "b": "CH_BGE_005_BGE-140-III-598_2014 (publizierte Fassung von 4A_201/2014 vom 2. Dezember 2014)"
+        },
+        {
+          "feld": "verfahrensrecht_nachweis.quelle",
+          "a": "CH_BGer_004_4A-201-2014_2014-12-02",
+          "b": "CH_BGE_005_BGE-140-III-598_2014 (publizierte Fassung von 4A_201/2014); ungekuerzte Fassung als CH_BGer_004_4A-201-2014_2014-12-02 im Paket"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_002_2C-230-2010_2011-04-12",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "kein_mietverhaeltnis",
+          "b": "andere_rechtsfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-102-2013_2013-10-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "kein_mietverhaeltnis"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-106-2014_2014-05-28",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-106-2014_2014-05-28",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-05-28",
+          "quelle": "CH_BGer_004_4A-106-2014_2014-05-28"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-106-2014_2014-05-28"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-106-2014_2014-05-28"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-108-2012_2012-06-11",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-108-2012_2012-06-11",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-06-11",
+          "quelle": "CH_BGer_004_4A-108-2012_2012-06-11"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-108-2012_2012-06-11"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-108-2012_2012-06-11"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-120-2014_2014-05-19",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-126-2011_2011-04-18",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-126-2012_2012-08-03",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-126-2012_2012-08-03",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-08-03",
+          "quelle": "CH_BGer_004_4A-126-2012_2012-08-03"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-126-2012_2012-08-03"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-126-2012_2012-08-03"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-130-2011_2011-06-08",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-137-2013_2013-11-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-142-2012_2012-04-17",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "messausgang.wert",
+          "a": "nicht_anwendbar",
+          "b": "durchgesetzt"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-143-2014_2014-06-23",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-146-2014_2014-07-03",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-146-2014_2014-07-03",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-07-03",
+          "quelle": "CH_BGer_004_4A-146-2014_2014-07-03"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-146-2014_2014-07-03"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-146-2014_2014-07-03"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-149-2011_2011-05-20",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-151-2011_2011-05-20",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-155-2013_2013-10-21",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-155-2013_2013-10-21",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-10-21",
+          "quelle": "CH_BGer_004_4A-155-2013_2013-10-21"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-155-2013_2013-10-21"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-155-2013_2013-10-21"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-163-2014_2014-06-16",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "andere_rechtsfrage",
+          "b": "nur_prozessuale_nebenfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-167-2012_2012-08-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-167-2012_2012-08-02",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-08-02",
+          "quelle": "CH_BGer_004_4A-167-2012_2012-08-02"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-167-2012_2012-08-02"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-167-2012_2012-08-02"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-170-2014_2014-07-23",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "ungeklaert"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-187-2011_2011-06-09",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-187-2011_2011-06-09",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-06-09",
+          "quelle": "CH_BGer_004_4A-187-2011_2011-06-09"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-187-2011_2011-06-09"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-187-2011_2011-06-09"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-187-2012_2012-05-10",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-189-2011_2011-07-04",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-190-2011_2011-06-06",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "kein_mietverhaeltnis",
+          "b": "andere_rechtsfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-195-2011_2011-06-16",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-195-2011_2011-06-16",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-06-16",
+          "quelle": "CH_BGer_004_4A-195-2011_2011-06-16"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-195-2011_2011-06-16"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-195-2011_2011-06-16"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-198-2014_2014-07-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-198-2014_2014-07-17",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-07-17",
+          "quelle": "CH_BGer_004_4A-198-2014_2014-07-17"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-198-2014_2014-07-17"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-198-2014_2014-07-17"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-201-2014_2014-12-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGE_005_BGE-140-III-598_2014",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-12-02",
+          "quelle": "CH_BGer_004_4A-201-2014_2014-12-02"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-201-2014_2014-12-02"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-201-2014_2014-12-02"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-210-2014_2014-07-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-210-2014_2014-07-17",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-07-17",
+          "quelle": "CH_BGer_004_4A-210-2014_2014-07-17"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-210-2014_2014-07-17"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-210-2014_2014-07-17"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-227-2011_2012-01-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-252-2014_2014-05-28",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-252-2014_2014-05-28",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-05-28",
+          "quelle": "CH_BGer_004_4A-252-2014_2014-05-28"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-252-2014_2014-05-28"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-252-2014_2014-05-28"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-255-2012_2012-07-20",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-255-2012_2012-07-20",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-07-20",
+          "quelle": "CH_BGer_004_4A-255-2012_2012-07-20"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-255-2012_2012-07-20"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-255-2012_2012-07-20"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-258-2011_2011-07-12",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-263-2011_2011-09-20",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-271-2014_2014-11-19",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGE_005_BGE-140-III-591_2014",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-11-19",
+          "quelle": "CH_BGer_004_4A-271-2014_2014-11-19"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-271-2014_2014-11-19"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-271-2014_2014-11-19"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-283-2013_2013-08-20",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-283-2013_2013-08-20",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-08-20",
+          "quelle": "CH_BGer_004_4A-283-2013_2013-08-20"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-283-2013_2013-08-20"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-283-2013_2013-08-20"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-285-2013_2013-11-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-295-2013_2013-09-27",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "eingeschlossen",
+          "b": "ausgeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-299-2011_2011-06-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-299-2011_2011-06-07",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-06-07",
+          "quelle": "CH_BGer_004_4A-299-2011_2011-06-07"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-299-2011_2011-06-07"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-299-2011_2011-06-07"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-305-2011_2011-11-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-305-2011_2011-11-07",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-11-07",
+          "quelle": "CH_BGer_004_4A-305-2011_2011-11-07"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-305-2011_2011-11-07"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-305-2011_2011-11-07"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-31-2013_2013-04-02",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.prozessgrund",
+          "a": "anfechtungsfrist_verwirkt",
+          "b": "instanzverwirkung"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-31-2014_2014-08-27",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGE_005_BGE-140-III-496_2014",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-08-27",
+          "quelle": "CH_BGer_004_4A-31-2014_2014-08-27"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-31-2014_2014-08-27"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-31-2014_2014-08-27"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-313-2012_2012-11-05",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-343-2013_2014-01-13",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-346-2013_2013-10-22",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_prozessuale_nebenfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-36-2011_2011-03-15",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.modus",
+          "a": "prozessual_erledigt",
+          "b": "materiell_entschieden"
+        },
+        {
+          "feld": "erledigungsweg.prozessgrund",
+          "a": "rechtsmittelbegruendung_unzureichend",
+          "b": null
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-363-2011_2011-08-03",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-363-2011_2011-08-03",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "prozessual_erledigt",
+          "prozessgrund": "anfechtungsfrist_verwirkt",
+          "stand_datum": "2011-08-03",
+          "quelle": "CH_BGer_004_4A-363-2011_2011-08-03"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-363-2011_2011-08-03"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-363-2011_2011-08-03"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-364-2014_2014-09-18",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-364-2014_2014-09-18",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "prozessual_erledigt",
+          "prozessgrund": "sonstiger_prozessgrund",
+          "stand_datum": "2014-09-18",
+          "quelle": "CH_BGer_004_4A-364-2014_2014-09-18"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-364-2014_2014-09-18"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-364-2014_2014-09-18"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-366-2012_2012-09-03",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-366-2012_2012-09-03",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-09-03",
+          "quelle": "CH_BGer_004_4A-366-2012_2012-09-03"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-366-2012_2012-09-03"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-366-2012_2012-09-03"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-37-2013_2013-06-28",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-37-2013_2013-06-28",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-06-28",
+          "quelle": "CH_BGer_004_4A-37-2013_2013-06-28"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-37-2013_2013-06-28"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-37-2013_2013-06-28"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-374-2012_2012-11-06",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "kein_mietverhaeltnis"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-379-2011_2011-12-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "kein_mietverhaeltnis"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-383-2012_2012-10-09",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-383-2012_2012-10-09",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-10-09",
+          "quelle": "CH_BGer_004_4A-383-2012_2012-10-09"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-383-2012_2012-10-09"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-383-2012_2012-10-09"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-391-2014_2014-10-29",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-391-2014_2014-10-29",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-10-29",
+          "quelle": "CH_BGer_004_4A-391-2014_2014-10-29"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-391-2014_2014-10-29"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-391-2014_2014-10-29"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-397-2011_2011-08-15",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.prozessgrund",
+          "a": "rechtsmittelbegruendung_unzureichend",
+          "b": "instanzverwirkung"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-397-2013_2014-02-11",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-397-2013_2014-02-11",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-02-11",
+          "quelle": "CH_BGer_004_4A-397-2013_2014-02-11"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-397-2013_2014-02-11"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-397-2013_2014-02-11"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-423-2013_2013-11-13",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-431-2013_2014-01-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-431-2013_2014-01-10",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-01-10",
+          "quelle": "CH_BGer_004_4A-431-2013_2014-01-10"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-431-2013_2014-01-10"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-431-2013_2014-01-10"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-44-2014_2014-03-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-442-2011_2011-11-25",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-442-2011_2011-11-25",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-11-25",
+          "quelle": "CH_BGer_004_4A-442-2011_2011-11-25"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-442-2011_2011-11-25"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-442-2011_2011-11-25"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-447-2011_2011-09-20",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-447-2013_2013-11-20",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-454-2012_2012-10-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-454-2012_2012-10-10",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-10-10",
+          "quelle": "CH_BGer_004_4A-454-2012_2012-10-10"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-454-2012_2012-10-10"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-454-2012_2012-10-10"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-457-2013_2014-02-04",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "ungeklaert"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-459-2010_2011-01-04",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGE_005_BGE-137-III-24_2011",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-01-04",
+          "quelle": "CH_BGer_004_4A-459-2010_2011-01-04"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-459-2010_2011-01-04"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-459-2010_2011-01-04"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-469-2013_2013-11-14",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.prozessgrund",
+          "a": "anfechtungsfrist_verwirkt",
+          "b": "instanzverwirkung"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-475-2012_2012-12-06",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-484-2012_2013-02-28",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-484-2012_2013-02-28",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-02-28",
+          "quelle": "CH_BGer_004_4A-484-2012_2013-02-28"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-484-2012_2013-02-28"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-484-2012_2013-02-28"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-484-2013_2014-02-26",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-484-2013_2014-02-26",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "prozessual_erledigt",
+          "prozessgrund": "rechtsmittelbegruendung_unzureichend",
+          "stand_datum": "2014-02-26",
+          "quelle": "CH_BGer_004_4A-484-2013_2014-02-26"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-484-2013_2014-02-26"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-484-2013_2014-02-26"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-485-2012_2013-01-08",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "ungeklaert"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-491-2012_2012-12-06",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-497-2011_2011-12-22",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-497-2011_2011-12-22",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-12-22",
+          "quelle": "CH_BGer_004_4A-497-2011_2011-12-22"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-497-2011_2011-12-22"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-497-2011_2011-12-22"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-501-2011_2011-11-15",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "ausschlussgrund",
+          "a": "andere_rechtsfrage",
+          "b": "nur_prozessuale_nebenfrage"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-503-2013_2014-03-05",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-503-2013_2014-03-05",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-03-05",
+          "quelle": "CH_BGer_004_4A-503-2013_2014-03-05"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-503-2013_2014-03-05"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-503-2013_2014-03-05"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-520-2013_2014-02-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-545-2013_2013-11-28",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.prozessgrund",
+          "a": "anfechtungsfrist_verwirkt",
+          "b": "instanzverwirkung"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-549-2010_2011-02-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-549-2010_2011-02-17",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-17",
+          "quelle": "CH_BGer_004_4A-549-2010_2011-02-17"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-549-2010_2011-02-17"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-549-2010_2011-02-17"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-549-2013_2013-11-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-549-2013_2013-11-07",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-11-07",
+          "quelle": "CH_BGer_004_4A-549-2013_2013-11-07"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-549-2013_2013-11-07"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-549-2013_2013-11-07"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-550-2010_2011-01-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-550-2010_2011-01-17",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-01-17",
+          "quelle": "CH_BGer_004_4A-550-2010_2011-01-17"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-550-2010_2011-01-17"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-550-2010_2011-01-17"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-561-2014_2014-12-16",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-561-2014_2014-12-16",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-12-16",
+          "quelle": "CH_BGer_004_4A-561-2014_2014-12-16"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-561-2014_2014-12-16"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-561-2014_2014-12-16"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-566-2011_2011-12-06",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-566-2011_2011-12-06",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-12-06",
+          "quelle": "CH_BGer_004_4A-566-2011_2011-12-06"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-566-2011_2011-12-06"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-566-2011_2011-12-06"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-569-2013_2014-03-24",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-569-2013_2014-03-24",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-03-24",
+          "quelle": "CH_BGer_004_4A-569-2013_2014-03-24"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-569-2013_2014-03-24"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-569-2013_2014-03-24"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-585-2010_2011-02-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-585-2010_2011-02-02",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-02",
+          "quelle": "CH_BGer_004_4A-585-2010_2011-02-02"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-585-2010_2011-02-02"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-585-2010_2011-02-02"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-586-2012_2013-09-23",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-586-2012_2013-09-23",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-09-23",
+          "quelle": "CH_BGer_004_4A-586-2012_2013-09-23"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-586-2012_2013-09-23"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-586-2012_2013-09-23"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-588-2013_2014-04-15",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-588-2013_2014-04-15",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-04-15",
+          "quelle": "CH_BGer_004_4A-588-2013_2014-04-15"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-588-2013_2014-04-15"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-588-2013_2014-04-15"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-594-2010_2011-01-12",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-594-2010_2011-01-12",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-01-12",
+          "quelle": "CH_BGer_004_4A-594-2010_2011-01-12"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-594-2010_2011-01-12"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-594-2010_2011-01-12"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-603-2013_2014-03-19",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-603-2013_2014-03-19",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-03-19",
+          "quelle": "CH_BGer_004_4A-603-2013_2014-03-19"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-603-2013_2014-03-19"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-603-2013_2014-03-19"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-609-2012_2013-02-26",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-615-2013_2014-04-04",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-615-2013_2014-04-04",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-04-04",
+          "quelle": "CH_BGer_004_4A-615-2013_2014-04-04"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-615-2013_2014-04-04"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-615-2013_2014-04-04"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-622-2013_2014-05-26",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-623-2010_2011-02-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-623-2010_2011-02-02",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-02",
+          "quelle": "CH_BGer_004_4A-623-2010_2011-02-02"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-623-2010_2011-02-02"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-623-2010_2011-02-02"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-629-2010_2011-02-02",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-629-2010_2011-02-02",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-02",
+          "quelle": "CH_BGer_004_4A-629-2010_2011-02-02"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-629-2010_2011-02-02"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-629-2010_2011-02-02"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-63-2013_2013-03-13",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-631-2010_2011-02-04",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-631-2010_2011-02-04",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-04",
+          "quelle": "CH_BGer_004_4A-631-2010_2011-02-04"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-631-2010_2011-02-04"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-631-2010_2011-02-04"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-641-2011_2012-01-27",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-641-2011_2012-01-27",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-01-27",
+          "quelle": "CH_BGer_004_4A-641-2011_2012-01-27"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-641-2011_2012-01-27"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-641-2011_2012-01-27"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-643-2010_2011-02-24",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-643-2010_2011-02-24",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-24",
+          "quelle": "CH_BGer_004_4A-643-2010_2011-02-24"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-643-2010_2011-02-24"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-643-2010_2011-02-24"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-644-2011_2012-02-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "kein_mietverhaeltnis"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-651-2010_2011-01-11",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-656-2010_2011-02-14",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-656-2010_2011-02-14",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2011-02-14",
+          "quelle": "CH_BGer_004_4A-656-2010_2011-02-14"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-656-2010_2011-02-14"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-656-2010_2011-02-14"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-662-2012_2013-02-07",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-662-2012_2013-02-07",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-02-07",
+          "quelle": "CH_BGer_004_4A-662-2012_2013-02-07"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-662-2012_2013-02-07"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-662-2012_2013-02-07"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-668-2012_2013-03-11",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-671-2012_2013-03-06",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-671-2012_2013-03-06",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-03-06",
+          "quelle": "CH_BGer_004_4A-671-2012_2013-03-06"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-671-2012_2013-03-06"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-671-2012_2013-03-06"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-685-2010_2011-03-28",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "nur_erstreckung"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-687-2011_2012-01-19",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-70-2014_2014-09-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-70-2014_2014-09-10",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2014-09-10",
+          "quelle": "CH_BGer_004_4A-70-2014_2014-09-10"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-70-2014_2014-09-10"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-70-2014_2014-09-10"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-71-2014_2014-04-30",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "kein_mietverhaeltnis"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-722-2012_2013-05-01",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-724-2012_2013-04-19",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "ungeklaert"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-726-2012_2013-04-30",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "erledigungsweg.quelle",
+          "a": "CH_BGer_004_4A-484-2013_2014-02-26",
+          "b": "CH_BGer_004_4A-484-2013_2014-02-26 (Folgeentscheid derselben Streitigkeit, im Paket enthalten)"
+        },
+        {
+          "feld": "messausgang.quelle",
+          "a": "CH_BGer_004_4A-484-2013_2014-02-26",
+          "b": "CH_BGer_004_4A-484-2013_2014-02-26 (Folgeentscheid derselben Streitigkeit, im Paket enthalten)"
+        },
+        {
+          "feld": "verfahrensrecht_nachweis.quelle",
+          "a": "CH_BGer_004_4A-484-2013_2014-02-26",
+          "b": "CH_BGer_004_4A-726-2012_2013-04-30; CH_BGer_004_4A-484-2013_2014-02-26"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-735-2011_2012-01-16",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-735-2011_2012-01-16",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-01-16",
+          "quelle": "CH_BGer_004_4A-735-2011_2012-01-16"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-735-2011_2012-01-16"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-735-2011_2012-01-16"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-739-2011_2012-04-03",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-739-2011_2012-04-03",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-04-03",
+          "quelle": "CH_BGer_004_4A-739-2011_2012-04-03"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-739-2011_2012-04-03"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-739-2011_2012-04-03"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-747-2012_2013-04-05",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-747-2012_2013-04-05",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-04-05",
+          "quelle": "CH_BGer_004_4A-747-2012_2013-04-05"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-747-2012_2013-04-05"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-747-2012_2013-04-05"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-78-2013_2013-05-16",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-78-2013_2013-05-16",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-05-16",
+          "quelle": "CH_BGer_004_4A-78-2013_2013-05-16"
+        },
+        "messausgang": {
+          "wert": "durchgesetzt",
+          "quelle": "CH_BGer_004_4A-78-2013_2013-05-16"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-78-2013_2013-05-16"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-8-2011_2011-03-01",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-87-2012_2012-04-10",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-87-2012_2012-04-10",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2012-04-10",
+          "quelle": "CH_BGer_004_4A-87-2012_2012-04-10"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-87-2012_2012-04-10"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-87-2012_2012-04-10"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-88-2013_2013-07-17",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-88-2013_2013-07-17",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-07-17",
+          "quelle": "CH_BGer_004_4A-88-2013_2013-07-17"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-88-2013_2013-07-17"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-88-2013_2013-07-17"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-89-2013_2013-09-18",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "eingeschlossen",
+        "zaehleinheit": "CH_BGer_004_4A-89-2013_2013-09-18",
+        "abschluss_status": "abgeschlossen",
+        "erledigungsweg": {
+          "modus": "materiell_entschieden",
+          "prozessgrund": null,
+          "stand_datum": "2013-09-18",
+          "quelle": "CH_BGer_004_4A-89-2013_2013-09-18"
+        },
+        "messausgang": {
+          "wert": "nicht_durchgesetzt",
+          "quelle": "CH_BGer_004_4A-89-2013_2013-09-18"
+        },
+        "verfahrensrecht_nachweis": {
+          "regime": "bgg",
+          "quelle": "CH_BGer_004_4A-89-2013_2013-09-18"
+        }
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4A-99-2010_2011-04-04",
+      "ergebnis": "uebereinstimmung",
+      "konsens": {
+        "status": "ausgeschlossen",
+        "ausschlussgrund": "andere_rechtsfrage"
+      },
+      "konflikte": []
+    },
+    {
+      "quelle_id": "CH_BGer_004_4D-20-2011_2011-05-18",
+      "ergebnis": "konflikt",
+      "konsens": {
+        "status": "ungeklaert"
+      },
+      "konflikte": [
+        {
+          "feld": "status",
+          "a": "ausgeschlossen",
+          "b": "eingeschlossen"
+        }
+      ]
+    }
+  ],
+  "quote": {
+    "zulaessig": false,
+    "zaehleinheiten": 61,
+    "durchgesetzt": 15,
+    "nicht_durchgesetzt": 46,
+    "nicht_anwendbar": 0,
+    "quote_durchgesetzt": null,
+    "gruende": [
+      "40 Roh-Treffer bleiben im A/B-Konsens ungeklaert; ohne vollstaendige Zuordnung gibt es keinen vollstaendigen Nenner."
+    ]
+  },
+  "ablage": "Die vollstaendigen A- und B-Kodierartefakte bleiben ausserhalb des Repositoriums und sind im Audit ausschliesslich ueber ihre SHA-256-Werte verankert. lauf.json wird durch diesen Schritt nicht veraendert."
+}
